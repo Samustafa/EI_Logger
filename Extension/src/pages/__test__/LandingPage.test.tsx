@@ -7,19 +7,26 @@ describe('LandingPage', () => {
     beforeEach(() => {
         cleanup();
     })
+
     test('It renders', () => {
         render(<LandingPage/>);
         screen.debug();
     });
-    test('It renders a Log In Button', () => {
-        render(<LandingPage/>);
-        const loginButton = screen.getByRole('button', {name: /Log In/i});
-        expect(loginButton).toBeInTheDocument();
+
+    describe('Log In Button', () => {
+        test('It renders', () => {
+            render(<LandingPage/>);
+            const loginButton = screen.getByRole('button', {name: /Log In/i});
+            expect(loginButton).toBeInTheDocument();
+        });
     });
-    test('It renders a Register Button', () => {
-        render(<LandingPage/>);
-        const registerButton = screen.getByRole('button', {name: /Register/i});
-        expect(registerButton).toBeInTheDocument();
+
+    describe('Register Button', () => {
+        test('It renders a Register Button', () => {
+            render(<LandingPage/>);
+            const registerButton = screen.getByRole('button', {name: /Register/i});
+            expect(registerButton).toBeInTheDocument();
+        });
     });
 
 })
