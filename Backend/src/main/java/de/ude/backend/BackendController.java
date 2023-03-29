@@ -18,10 +18,14 @@ public class BackendController {
     private final UserService userService;
     private final PendingUserService pendingUserService;
 
-    @PostMapping("/addUser")
-    public ResponseEntity<String> addUser() {
-        this.userServer.addUser();
-        return new ResponseEntity<>("User added", HttpStatus.OK);
+    @PostMapping("/addUser/{pendingUserId}")
+    public ResponseEntity<String> addUser(@PathVariable String pendingUserId) {
+        try {
+            return registerNewUserIfPendingUserIdIsValid(pendingUserId);
+        } catch (JsonProcessingException e) {
+            log.error("JsonProcessingException", e);
+            return new ResponseEntity<>("User not added", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/createPendingUsers/{numberOfPendingUsers}")
@@ -36,4 +40,14 @@ public class BackendController {
         }
     }
 
+    private ResponseEntity<String> registerNewUserIfPendingUserIdIsValid(String pendingUserId) throws JsonProcessingException {
+        if (!this.pendingUserService.isPendingUserIdValid(pendingUserId)) {
+            log.warn("Pending User Id not valid.");
+            return new ResponseEntity<>("Pending User Id not valid.", HttpStatus.BAD_REQUEST);
+        }
+        this.pendingUserService.deletePendingUser(pendingUserId);
+        String userJson = this.userService.registerUser();
+        log.info("User added: " + userJson);
+        return new ResponseEntity<>(userJson, HttpStatus.OK);
+    }
 }

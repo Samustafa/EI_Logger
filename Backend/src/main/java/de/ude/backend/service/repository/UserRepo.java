@@ -1,4 +1,4 @@
-package de.ude.backend.repository;
+package de.ude.backend.service.repository;
 
 import de.ude.backend.model.User;
 import org.springframework.data.repository.CrudRepository;
