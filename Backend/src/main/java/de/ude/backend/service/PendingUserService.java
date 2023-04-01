@@ -20,7 +20,7 @@ public class PendingUserService {
      *
      * @param numberOfPendingUsers to create
      * @return PendingUsers as JSON String
-     * @throws JsonProcessingException
+     * @throws JsonProcessingException: if JSON could not be processed
      */
     public String createPendingUsers(int numberOfPendingUsers) throws JsonProcessingException {
         ArrayList<PendingUser> pendingUsers = new ArrayList<>();
@@ -31,7 +31,7 @@ public class PendingUserService {
         return Utils.mapPendingUserToJSON(pendingUsers);
     }
 
-    public boolean isPendingUserIdValid(String id) {
+    public boolean isPendingUserIdExist(String id) {
         return pendingUserRepo.existsById(id);
     }
 
