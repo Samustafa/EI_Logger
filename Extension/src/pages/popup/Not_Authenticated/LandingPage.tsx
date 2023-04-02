@@ -1,10 +1,20 @@
-import React from "react";
-
+import React, {useContext} from "react";
+import {useActor} from "@xstate/react";
+import {GlobalContextProvider} from "@pages/popup/GlobalContextProvider";
+import {buttonStyle} from "@pages/popup/Styles";
 
 export default function LandingPage(): JSX.Element {
+    const authActor = useContext(GlobalContextProvider);
+    const [, send] = useActor(authActor);
+
+    function handleRegisterButton() {
+        send('REGISTER')
+    }
+
     return (
-        <div className="absolute top-0 left-0 right-0 bottom-0 text-center h-full p-3 bg-gray-800">
+        <>
             <h2>welcome to the EI_Logger</h2>
-        </div>
+            <button className={buttonStyle} onClick={handleRegisterButton}>Register</button>
+        </>
     );
 }

@@ -1,14 +1,21 @@
 import {Route, Routes} from "react-router-dom";
 import React from "react";
 import LandingPage from "@pages/popup/Not_Authenticated/LandingPage";
+import RegistrationPage from "@pages/popup/Not_Authenticated/RegistrationPage";
+import Paths from "@pages/popup/Paths";
+import {generalStyle} from "@pages/popup/Styles";
+import {GlobalStateProvider} from "@pages/popup/GlobalContextProvider";
 
 
 export default function Popup(): JSX.Element {
     return (
-        <div className="absolute top-0 left-0 right-0 bottom-0 text-center h-full p-3 bg-gray-800">
-            <Routes>
-                <Route path="/" element={<LandingPage/>}/>
-            </Routes>
+        <div className={generalStyle}>
+            <GlobalStateProvider>
+                <Routes>
+                    <Route path="/" element={<LandingPage/>}/>
+                    <Route path={Paths.registrationPage} element={<RegistrationPage/>}/>
+                </Routes>
+            </GlobalStateProvider>
         </div>
     );
 }
