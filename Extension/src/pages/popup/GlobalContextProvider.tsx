@@ -2,7 +2,7 @@ import React, {createContext} from 'react';
 import {useInterpret} from '@xstate/react';
 import {EI_Machine} from "@pages/popup/Machine/EI_Machine";
 import {useNavigate} from "react-router-dom";
-import Paths from "@pages/popup/Paths";
+import Paths from "@pages/popup/Consts/Paths";
 import {InterpreterFrom} from "xstate";
 
 export const GlobalContextProvider = createContext({} as InterpreterFrom<typeof EI_Machine>);

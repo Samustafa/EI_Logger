@@ -1,5 +1,5 @@
 import {FormEvent, useContext, useState} from "react";
-import {buttonStyle, inputDefaultStyle, registrationLabelStyle} from "@pages/popup/Styles";
+import {buttonStyle, inputDefaultStyle, registrationLabelStyle} from "@pages/popup/Consts/Styles";
 import {useActor} from "@xstate/react";
 import {GlobalContextProvider} from "@pages/popup/GlobalContextProvider";
 

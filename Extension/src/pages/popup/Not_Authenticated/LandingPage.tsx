@@ -1,7 +1,7 @@
 import React, {useContext} from "react";
 import {useActor} from "@xstate/react";
 import {GlobalContextProvider} from "@pages/popup/GlobalContextProvider";
-import {buttonStyle} from "@pages/popup/Styles";
+import {buttonStyle} from "@pages/popup/Consts/Styles";
 
 export default function LandingPage(): JSX.Element {
     const authActor = useContext(GlobalContextProvider);
