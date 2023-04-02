@@ -13,15 +13,14 @@ describe('LandingPage', () => {
         screen.debug();
     });
 
-    describe('Log In Button', () => {
-        test('It renders', () => {
-            render(<LandingPage/>);
-            const loginButton = screen.getByRole('button', {name: /Log In/i});
-            expect(loginButton).toBeInTheDocument();
-        });
-    });
-
     describe('Register Button', () => {
+
+        test('It renders a header', () => {
+            render(<LandingPage/>);
+            const header = screen.getByText(/Welcome to the EI_Logger/i);
+            expect(header).toBeInTheDocument();
+        });
+
         test('It renders a Register Button', () => {
             render(<LandingPage/>);
             const registerButton = screen.getByRole('button', {name: /Register/i});

@@ -1,11 +1,10 @@
 import React, {useContext} from "react";
-import {useActor} from "@xstate/react";
 import {GlobalContextProvider} from "@pages/popup/GlobalContextProvider";
 import {buttonStyle} from "@pages/popup/Consts/Styles";
 
 export default function LandingPage(): JSX.Element {
     const authActor = useContext(GlobalContextProvider);
-    const [, send] = useActor(authActor);
+    const {send} = authActor;
 
     function handleRegisterButton() {
         send('REGISTER')
@@ -13,7 +12,7 @@ export default function LandingPage(): JSX.Element {
 
     return (
         <>
-            <h2>welcome to the EI_Logger</h2>
+            <h2>Welcome to the EI_Logger</h2>
             <button className={buttonStyle} onClick={handleRegisterButton}>Register</button>
         </>
     );

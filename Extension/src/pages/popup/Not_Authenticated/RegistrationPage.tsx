@@ -1,11 +1,10 @@
 import {FormEvent, useContext, useState} from "react";
 import {buttonStyle, inputDefaultStyle, registrationLabelStyle} from "@pages/popup/Consts/Styles";
-import {useActor} from "@xstate/react";
 import {GlobalContextProvider} from "@pages/popup/GlobalContextProvider";
 
 export default function RegistrationPage() {
     const authActor = useContext(GlobalContextProvider);
-    const [, send] = useActor(authActor);
+    const {send} = authActor;
 
     const [registrationCode, setRegistrationCode] = useState<string>("");
 

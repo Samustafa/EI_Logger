@@ -1,6 +1,7 @@
 import React from 'react';
 import {createRoot} from 'react-dom/client';
 import '@assets/styles/tailwind.css';
+import '@pages/popup/index.css';
 import {MemoryRouter as Router} from 'react-router-dom';
 import Popup from "@pages/popup/Popup";
 
