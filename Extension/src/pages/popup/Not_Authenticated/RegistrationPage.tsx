@@ -1,10 +1,7 @@
-import {FormEvent, useContext, useState} from "react";
+import {FormEvent, useState} from "react";
 import {buttonStyle, inputDefaultStyle, registrationLabelStyle} from "@pages/popup/Consts/Styles";
-import {GlobalContextProvider} from "@pages/popup/GlobalContextProvider";
 
 export default function RegistrationPage() {
-    const authActor = useContext(GlobalContextProvider);
-    const {send} = authActor;
 
     const [registrationCode, setRegistrationCode] = useState<string>("");
 
@@ -40,7 +37,9 @@ export default function RegistrationPage() {
                 <InputComponent/>
                 <button type={"submit"} className={buttonStyle}>Submit</button>
             </form>
-            <button className={buttonStyle} onClick={() => send('BACK')}>Back</button>
+            <button className={buttonStyle} onClick={() => {
+            }}>Back
+            </button>
         </>
     );
 };
