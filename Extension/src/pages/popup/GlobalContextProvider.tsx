@@ -9,7 +9,7 @@ export const GlobalContextProvider = createContext({} as InterpreterFrom<typeof 
 
 export const GlobalStateProvider = (props: any) => {
     const navigate = useNavigate();
-    const authActor = useInterpret(EI_Machine, {
+    const machine = useInterpret(EI_Machine, {
         actions: {
             navigateToRegistrationPage: () => navigate(Paths.registrationPage),
             navigateToLandingPage: () => navigate(Paths.landingPage)
@@ -17,7 +17,7 @@ export const GlobalStateProvider = (props: any) => {
     });
 
     return (
-        <GlobalContextProvider.Provider value={authActor}>
+        <GlobalContextProvider.Provider value={machine}>
             {props.children}
         </GlobalContextProvider.Provider>
     );

@@ -3,8 +3,8 @@ import {GlobalContextProvider} from "@pages/popup/GlobalContextProvider";
 import {buttonStyle} from "@pages/popup/Consts/Styles";
 
 export default function LandingPage(): JSX.Element {
-    const authActor = useContext(GlobalContextProvider);
-    const {send} = authActor;
+    const machine = useContext(GlobalContextProvider);
+    const {send} = machine;
 
     function gotoRegistrationPage() {
         send('REGISTER');
