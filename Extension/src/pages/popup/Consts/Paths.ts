@@ -1,4 +1,8 @@
 const landingPage = '/';
 const registrationPage = '/registrationPage';
 
-export default {registrationPage, landingPage}
+function idDisplayPage(id: string = ':id') {
+    return `/idDisplayPage/${id}`;
+}
+
+export default {registrationPage, landingPage, idDisplayPage}
