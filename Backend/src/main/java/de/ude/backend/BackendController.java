@@ -18,21 +18,21 @@ public class BackendController {
     private final UserService userService;
     private final RegistrationCodeService registrationCodeService;
 
-    @PostMapping("/addUser/{pendingUserId}")
-    public ResponseEntity<String> addUser(@PathVariable String pendingUserId) {
+    @PostMapping("/registerUser/{registrationCode}")
+    public ResponseEntity<String> registerUser(@PathVariable String registrationCode) {
         try {
-            return registerNewUserIfPendingUserIdIsValid(pendingUserId);
+            return registerNewUserIfRegistrationCodeIsValid(registrationCode);
         } catch (JsonProcessingException e) {
             log.error("JsonProcessingException", e);
             return new ResponseEntity<>("Internal Server Error: JsonProcessingException", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @GetMapping("/createPendingUsers/{numberOfPendingUsers}")
-    public ResponseEntity<String> createPendingUsers(@PathVariable int numberOfPendingUsers) {
+    @GetMapping("/createRegistrationCode/{numberOfRegistrationCode}")
+    public ResponseEntity<String> createPendingUsers(@PathVariable int numberOfRegistrationCode) {
         try {
-            String userJson = this.registrationCodeService.createRegistrationCode(numberOfPendingUsers);
-            log.info("Created {} pending users: {}.", numberOfPendingUsers, userJson);
+            String userJson = this.registrationCodeService.createRegistrationCode(numberOfRegistrationCode);
+            log.info("Created {} pending users: {}.", numberOfRegistrationCode, userJson);
             return new ResponseEntity<>(userJson, HttpStatus.OK);
         } catch (JsonProcessingException e) {
             log.error("JsonProcessingException", e);
@@ -40,15 +40,15 @@ public class BackendController {
         }
     }
 
-    private ResponseEntity<String> registerNewUserIfPendingUserIdIsValid(String pendingUserId) throws JsonProcessingException {
-        if (!this.registrationCodeService.isRegistrationCodeExist(pendingUserId)) {
-            log.warn("addUser(): Pending User Id not valid.");
+    private ResponseEntity<String> registerNewUserIfRegistrationCodeIsValid(String registrationCode) throws JsonProcessingException {
+        if (!this.registrationCodeService.isRegistrationCodeExist(registrationCode)) {
+            log.warn("registerNewUserIfRegistrationCodeIsValid(): Registration Code not valid.");
             return new ResponseEntity<>("Pending UserId doesn't exist.", HttpStatus.BAD_REQUEST);
         }
 
-        this.registrationCodeService.deleteRegistrationCode(pendingUserId);
+        this.registrationCodeService.deleteRegistrationCode(registrationCode);
         String userJson = this.userService.registerUser();
-        log.info("registerNewUserIfPendingUserIdIsValid(): User added: " + userJson);
+        log.info("registerNewUserIfRegistrationCodeIsValid(): User added: " + userJson);
         return new ResponseEntity<>(userJson, HttpStatus.OK);
     }
 }
