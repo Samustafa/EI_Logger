@@ -1,7 +1,7 @@
 package de.ude.backend;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import de.ude.backend.service.PendingUserService;
+import de.ude.backend.service.RegistrationCodeService;
 import de.ude.backend.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class BackendController {
 
     private final UserService userService;
-    private final PendingUserService pendingUserService;
+    private final RegistrationCodeService registrationCodeService;
 
     @PostMapping("/addUser/{pendingUserId}")
     public ResponseEntity<String> addUser(@PathVariable String pendingUserId) {
@@ -31,7 +31,7 @@ public class BackendController {
     @GetMapping("/createPendingUsers/{numberOfPendingUsers}")
     public ResponseEntity<String> createPendingUsers(@PathVariable int numberOfPendingUsers) {
         try {
-            String userJson = this.pendingUserService.createPendingUsers(numberOfPendingUsers);
+            String userJson = this.registrationCodeService.createRegistrationCode(numberOfPendingUsers);
             log.info("Created {} pending users: {}.", numberOfPendingUsers, userJson);
             return new ResponseEntity<>(userJson, HttpStatus.OK);
         } catch (JsonProcessingException e) {
@@ -41,12 +41,12 @@ public class BackendController {
     }
 
     private ResponseEntity<String> registerNewUserIfPendingUserIdIsValid(String pendingUserId) throws JsonProcessingException {
-        if (!this.pendingUserService.isPendingUserIdExist(pendingUserId)) {
+        if (!this.registrationCodeService.isRegistrationCodeExist(pendingUserId)) {
             log.warn("addUser(): Pending User Id not valid.");
             return new ResponseEntity<>("Pending UserId doesn't exist.", HttpStatus.BAD_REQUEST);
         }
 
-        this.pendingUserService.deletePendingUser(pendingUserId);
+        this.registrationCodeService.deleteRegistrationCode(pendingUserId);
         String userJson = this.userService.registerUser();
         log.info("registerNewUserIfPendingUserIdIsValid(): User added: " + userJson);
         return new ResponseEntity<>(userJson, HttpStatus.OK);

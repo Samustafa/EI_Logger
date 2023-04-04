@@ -10,8 +10,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @Setter
 @AllArgsConstructor
-@Document(collection = "pendingUsers")
-public class PendingUser {
+@Document(collection = "registrationCodes")
+public class RegistrationCode {
     @NonNull
     @Id
     private final String pendingId;
