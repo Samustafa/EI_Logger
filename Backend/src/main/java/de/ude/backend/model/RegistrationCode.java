@@ -14,5 +14,5 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class RegistrationCode {
     @NonNull
     @Id
-    private final String pendingId;
+    private final String code;
 }

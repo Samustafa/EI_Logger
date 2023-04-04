@@ -29,7 +29,7 @@ public class BackendController {
     }
 
     @GetMapping("/createRegistrationCode/{numberOfRegistrationCode}")
-    public ResponseEntity<String> createPendingUsers(@PathVariable int numberOfRegistrationCode) {
+    public ResponseEntity<String> createRegistrationCodes(@PathVariable int numberOfRegistrationCode) {
         try {
             String userJson = this.registrationCodeService.createRegistrationCode(numberOfRegistrationCode);
             log.info("Created {} pending users: {}.", numberOfRegistrationCode, userJson);
@@ -43,7 +43,7 @@ public class BackendController {
     private ResponseEntity<String> registerNewUserIfRegistrationCodeIsValid(String registrationCode) throws JsonProcessingException {
         if (!this.registrationCodeService.isRegistrationCodeExist(registrationCode)) {
             log.warn("registerNewUserIfRegistrationCodeIsValid(): Registration Code not valid.");
-            return new ResponseEntity<>("Pending UserId doesn't exist.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Registration Code not valid.", HttpStatus.BAD_REQUEST);
         }
 
         this.registrationCodeService.deleteRegistrationCode(registrationCode);
