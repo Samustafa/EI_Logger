@@ -5,6 +5,7 @@ import RegistrationPage from "@pages/popup/Components/Not_Authenticated/Registra
 import Paths from "@pages/popup/Consts/Paths";
 import {generalStyle} from "@pages/popup/Consts/Styles";
 import {IdDisplayPage} from "@pages/popup/Components/Authenticated/IdDisplayPage";
+import {TasksPage} from "@pages/popup/Components/Authenticated/TasksPage";
 
 
 export default function Popup(): JSX.Element {
@@ -14,6 +15,7 @@ export default function Popup(): JSX.Element {
                 <Route path="/" element={<LandingPage/>}/>
                 <Route path={Paths.registrationPage} element={<RegistrationPage/>}/>
                 <Route path={Paths.idDisplayPage()} element={<IdDisplayPage/>}/>
+                <Route path={Paths.tasksPage} element={<TasksPage/>}/>
             </Routes>
         </div>
     );
