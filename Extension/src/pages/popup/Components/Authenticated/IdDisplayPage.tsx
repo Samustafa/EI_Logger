@@ -4,7 +4,6 @@ import React from "react";
 
 export function IdDisplayPage() {
     const {id} = useParams<string>();
-
     return (
         <>
             <p>Registration Successful!</p>
