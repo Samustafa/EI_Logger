@@ -51,11 +51,11 @@ export default function RegistrationPage() {
         type="text"
         name="registrationCode"
         id="registrationCode"
-        placeholder={"12345-1234-1234-12345"}
+        placeholder={"12345678-1234-1234-123456789ABC"}
         required={true}
         autoFocus={true}
         autoComplete={"one-time-code"}
-        minLength={3}
+        minLength={31}
         value={registrationCode}
         onChange={event => {
             setRegistrationCode(event.target.value);
@@ -71,7 +71,7 @@ export default function RegistrationPage() {
                 <LoadingButton text={'Submit'} loadingText={'Validating...'} isLoading={isValidating} type={'submit'}/>
             </form>
 
-            {error && <div className={errorDivStyle}>{error}</div>}
+            {error && <div className={errorDivStyle} data-testid="error_text">{error}</div>}
 
             <LoadingButton text={'Back'} loadingText={'Validating...'} isLoading={isValidating} onClick={goBack}/>
         </>
