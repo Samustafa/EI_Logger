@@ -55,12 +55,13 @@ export default function RegistrationPage() {
         required={true}
         autoFocus={true}
         autoComplete={"one-time-code"}
-        minLength={31}
+        minLength={36}
         value={registrationCode}
         onChange={event => {
             setRegistrationCode(event.target.value);
         }}
         form={"registrationForm"}
+        disabled={isValidating}
     />
 
     return (

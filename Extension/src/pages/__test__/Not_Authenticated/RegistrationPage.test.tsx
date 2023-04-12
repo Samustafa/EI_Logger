@@ -2,7 +2,7 @@ import {describe, expect, test, vitest} from "vitest";
 import React from "react";
 import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import '@testing-library/jest-dom';
-import RegistrationPage from "@pages/popup/Not_Authenticated/RegistrationPage";
+import RegistrationPage from "@pages/popup/Components/Not_Authenticated/RegistrationPage";
 import {MemoryRouter} from "react-router-dom";
 import {inputDefaultStyle} from "@pages/popup/Consts/Styles";
 import axios from "axios";
@@ -53,12 +53,18 @@ describe("RegistrationPage", () => {
             const input = screen.getByPlaceholderText('12345678-1234-1234-123456789ABC');
             expect(input).toHaveAttribute("class", inputDefaultStyle);
         });
+        test("is enabled initially", () => {
+            render(<RegistrationPage/>, {wrapper: MemoryRouter});
+            const input = screen.getByPlaceholderText('12345678-1234-1234-123456789ABC');
+            expect(input).not.toBeDisabled();
+        });
         test("has attribute minimum length of 31 characters", () => {
             render(<RegistrationPage/>, {wrapper: MemoryRouter});
             const input = screen.getByPlaceholderText('12345678-1234-1234-123456789ABC');
-            expect(input).toHaveAttribute("minlength", "31");
+            expect(input).toHaveAttribute("minlength", "36");
         });
         test.todo("accepts input of minimum length of 31: UserEvent is missing ./index and testing with fireEvent doesn't work");
+        test.todo("is disabled during validation");
         test("Value changes", () => {
             mockedAxios.post.mockRejectedValueOnce({response: {data: {message: "Test Error"}}});
             render(<RegistrationPage/>, {wrapper: MemoryRouter});
