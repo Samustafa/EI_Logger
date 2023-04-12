@@ -4,6 +4,9 @@ import {useNavigate} from "react-router-dom";
 import Paths from "@pages/popup/Consts/Paths";
 import {LoadingButton} from "@pages/popup/SharedComponents/LoadingButton";
 import {registerUser} from "@pages/popup/ServerAPI";
+import {dataBase} from "@pages/popup/database";
+import {AxiosResponse} from "axios";
+import {IApiException, IUser} from "@pages/popup/Interfaces";
 
 export default function RegistrationPage() {
 
@@ -30,13 +33,26 @@ export default function RegistrationPage() {
         setError(serverException ? serverException.message : error.message);
     }
 
+    function saveToDBAndNavigate(response: AxiosResponse<IUser>) {
+        const {userId} = response.data;
+        console.log("saveToDBAndNavigate", userId)
+        dataBase.user.add({userId: userId})
+            .then(() => {
+                navigate(Paths.idDisplayPage(userId))
+            }).catch((error) => extractAndSetError(error));
+    }
+
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setError(null);
         disableButton();
 
         registerUser(registrationCode)
-            .then((response) => navigate(Paths.idDisplayPage(response.data.code)))
+            .then((response) => {
+                console.log("handleSubmit", response.data)
+
+                saveToDBAndNavigate(response)
+            })
             .catch((error) => extractAndSetError(error))
             .finally(() => enableButton());
 
