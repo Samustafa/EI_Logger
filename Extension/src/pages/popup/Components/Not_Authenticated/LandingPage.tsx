@@ -51,9 +51,8 @@ export default function LandingPage() {
         const {userId} = response.data;
         console.log("saveToDBAndNavigate", userId)
         dataBase.user.add({userId: userId})
-            .then(() => {
-                navigate(Paths.idDisplayPage(userId))
-            }).catch((error) => extractAndSetRegistrationError(error));
+            .then(() => navigate(Paths.idDisplayPage(userId)))
+            .catch((error) => extractAndSetRegistrationError(error));
     }
 
     function handleRegister(event: FormEvent<HTMLFormElement>) {
