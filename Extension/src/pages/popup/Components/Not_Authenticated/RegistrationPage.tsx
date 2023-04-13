@@ -35,11 +35,9 @@ export default function RegistrationPage() {
 
     function saveToDBAndNavigate(response: AxiosResponse<IUser>) {
         const {userId} = response.data;
-        console.log("saveToDBAndNavigate", userId)
         dataBase.user.add({userId: userId})
-            .then(() => {
-                navigate(Paths.idDisplayPage(userId))
-            }).catch((error) => extractAndSetError(error));
+            .then(() => navigate(Paths.demographicsPage))
+            .catch((error) => extractAndSetError(error));
     }
 
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -48,11 +46,7 @@ export default function RegistrationPage() {
         disableButton();
 
         registerUser(registrationCode)
-            .then((response) => {
-                console.log("handleSubmit", response.data)
-
-                saveToDBAndNavigate(response)
-            })
+            .then((response) => saveToDBAndNavigate(response))
             .catch((error) => extractAndSetError(error))
             .finally(() => enableButton());
 
