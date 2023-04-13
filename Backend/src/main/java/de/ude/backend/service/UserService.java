@@ -22,6 +22,9 @@ public class UserService {
         return Utils.mapUserToJSON(user);
     }
 
+    public boolean userExists(String userId) {
+        return userRepo.existsById(userId);
+    }
 
 }
 
