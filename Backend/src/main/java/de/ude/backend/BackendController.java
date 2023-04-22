@@ -50,5 +50,10 @@ public class BackendController {
     public void deleteAllStudies() {
         studyService.deleteAllStudies();
     }
+
+    @GetMapping("/getTestStudy")
+    public ResponseEntity<Study> getTestStudy() {
+        return new ResponseEntity<>(studyService.getTestStudy(), HttpStatus.OK);
+    }
 }
 

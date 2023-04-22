@@ -18,4 +18,8 @@ public class StudyService {
     public void deleteAllStudies() {
         studyRepo.deleteAll();
     }
+
+    public Study getTestStudy() {
+        return studyRepo.findById("64403e8cc131eb07b9cbc554").orElse(null);
+    }
 }
