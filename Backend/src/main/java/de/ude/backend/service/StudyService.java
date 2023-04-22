@@ -11,8 +11,11 @@ import org.springframework.stereotype.Service;
 public class StudyService {
     private final StudyRepo studyRepo;
 
-    public void createStudy(Study study) {
-        studyRepo.save(study);
+    public Study createStudy(Study study) {
+        return studyRepo.save(study);
     }
 
+    public void deleteAllStudies() {
+        studyRepo.deleteAll();
+    }
 }

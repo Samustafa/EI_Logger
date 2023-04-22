@@ -12,11 +12,14 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-@Document(collection = "studies")
+@Document(collection = "Studies")
 public class Study {
-    @NonNull
     @Id
     private String studyId;
-    private List<Task> tasks;
 
+    //@Indexed(unique = true)
+    private String name;
+
+    @NonNull
+    private List<Task> tasks;
 }

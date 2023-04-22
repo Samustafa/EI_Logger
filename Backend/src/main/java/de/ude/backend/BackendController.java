@@ -2,7 +2,9 @@ package de.ude.backend;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import de.ude.backend.exceptions.custom_exceptions.RegistrationCodeNotValid;
+import de.ude.backend.model.Study;
 import de.ude.backend.service.RegistrationCodeService;
+import de.ude.backend.service.StudyService;
 import de.ude.backend.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +20,12 @@ public class BackendController {
 
     private final UserService userService;
     private final RegistrationCodeService registrationCodeService;
+    private final StudyService studyService;
 
     @PostMapping("/registerUser/{registrationCode}")
     public ResponseEntity<String> registerUser(@PathVariable String registrationCode) throws RegistrationCodeNotValid, JsonProcessingException {
         if (!registrationCodeService.isRegistrationCodeExist(registrationCode))
             throw new RegistrationCodeNotValid("Registration Code not valid.");
-
 
         registrationCodeService.deleteRegistrationCode(registrationCode);
         String userJson = userService.registerUser();
@@ -38,4 +40,15 @@ public class BackendController {
         log.info("Created {} pending users: {}.", numberOfRegistrationCode, userJson);
         return new ResponseEntity<>(userJson, HttpStatus.OK);
     }
+
+    @PostMapping("/createStudy")
+    public ResponseEntity<Study> createStudy(@RequestBody Study study) {
+        return new ResponseEntity<>(studyService.createStudy(study), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/deleteAllStudies")
+    public void deleteAllStudies() {
+        studyService.deleteAllStudies();
+    }
 }
+
