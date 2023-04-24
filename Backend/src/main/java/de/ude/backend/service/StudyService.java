@@ -20,6 +20,6 @@ public class StudyService {
     }
 
     public Study getTestStudy() {
-        return studyRepo.findById("64403e8cc131eb07b9cbc554").orElse(null);
+        return studyRepo.findAll().iterator().next();
     }
 }
