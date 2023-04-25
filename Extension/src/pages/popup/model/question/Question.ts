@@ -1,17 +1,16 @@
-import {QuestionType} from "@pages/popup/Types";
+import {QuestionTypeAsString} from "@pages/popup/Types";
 import {IQuestion} from "@pages/popup/Interfaces";
 
 export abstract class Question {
     private _questionId: string;
     private _questionText: string;
-    private _type: QuestionType;
+    private _type: QuestionTypeAsString;
 
-    protected constructor(id: string, question: string, type: QuestionType) {
+    protected constructor(id: string, question: string, type: QuestionTypeAsString) {
         this._questionId = id;
         this._questionText = question;
         this._type = type;
     }
-
 
     get questionId(): string {
         return this._questionId;
@@ -29,13 +28,13 @@ export abstract class Question {
         this._questionText = value;
     }
 
-    get type(): QuestionType {
+    get type(): QuestionTypeAsString {
         return this._type;
     }
 
-    set type(value: QuestionType) {
+    set type(value: QuestionTypeAsString) {
         this._type = value;
     }
 
-    abstract extractTaskQuestions(taskId: string): IQuestion;
+    abstract mapToIQuestion(): IQuestion;
 }

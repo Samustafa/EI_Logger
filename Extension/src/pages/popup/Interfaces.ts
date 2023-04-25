@@ -1,4 +1,4 @@
-import {QuestionType} from "@pages/popup/Types";
+import {QuestionTypeAsString} from "@pages/popup/Types";
 
 export interface IApiException {
     httpStatus: string
@@ -16,16 +16,16 @@ export interface IStudy {
 }
 
 export interface ITask {
-    taskId: string;
     text: string;
     hasPreQuestionnaire: boolean;
     hasPostQuestionnaire: boolean;
+    preQuestionsIds: string[];
+    postQuestionsIds: string[];
 }
 
 export interface IQuestion {
     questionId: string;
-    taskId: string;
-    type: QuestionType;
+    type: QuestionTypeAsString;
     questionText: string;
     choices?: string[];
     range?: number;

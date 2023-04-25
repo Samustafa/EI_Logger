@@ -43,17 +43,18 @@ export function FetchingStudyData() {
         }
 
         const tasks = studyData.tasks.map((task: Task): ITask => ({
-            taskId: task.taskId,
-            text: task.text,
-            hasPostQuestionnaire: task.hasPostQuestionnaire,
-            hasPreQuestionnaire: task.hasPreQuestionnaire,
-        }))
+                text: task.text,
+                hasPostQuestionnaire: task.hasPostQuestionnaire,
+                hasPreQuestionnaire: task.hasPreQuestionnaire,
+                preQuestionsIds: task.getPreQuestionsIds(),
+                postQuestionsIds: task.getPostQuestionsIds(),
+            })
+        )
 
         const questions: IQuestion[] = studyData.getIQuestions();
 
         return {study, tasks, questions}
     }
-
 
     return (
         <>

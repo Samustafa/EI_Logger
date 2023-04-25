@@ -8,7 +8,7 @@ export class Study {
     constructor(studyId: string, name: string, tasks: Task[]) {
         this._studyId = studyId;
         this._name = name;
-        this._tasks = tasks;
+        this._tasks = tasks.map((task: Task) => new Task(task.taskId, task.text, task.preQuestions, task.postQuestions));
     }
 
     getIQuestions() {

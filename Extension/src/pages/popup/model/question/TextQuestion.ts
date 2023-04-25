@@ -19,10 +19,9 @@ export class TextQuestion extends Question {
         this._maxCharacters = value;
     }
 
-    extractTaskQuestions(taskId: string): IQuestion {
+    mapToIQuestion(): IQuestion {
         return {
             questionId: this.questionId,
-            taskId: taskId,
             questionText: this.questionText,
             type: this.type,
             choices: undefined,

@@ -18,10 +18,9 @@ export class RangeQuestion extends Question {
         this._range = value;
     }
 
-    extractTaskQuestions(taskId: string): IQuestion {
+    mapToIQuestion(): IQuestion {
         return {
             questionId: this.questionId,
-            taskId: taskId,
             questionText: this.questionText,
             type: this.type,
             choices: undefined,

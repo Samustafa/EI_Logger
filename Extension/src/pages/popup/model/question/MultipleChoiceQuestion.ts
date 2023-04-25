@@ -18,10 +18,9 @@ export class MultipleChoiceQuestion extends Question {
         this._choices = value;
     }
 
-    extractTaskQuestions(taskId: string): IQuestion {
+    mapToIQuestion(): IQuestion {
         return {
             questionId: this.questionId,
-            taskId: taskId,
             questionText: this.questionText,
             type: this.type,
             choices: this._choices,

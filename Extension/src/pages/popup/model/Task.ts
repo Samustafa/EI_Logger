@@ -1,4 +1,5 @@
 import {Question} from "@pages/popup/model/question/Question";
+import {castToChildQuestion} from "@pages/popup/UtilityFunctions";
 
 export class Task {
     private _taskId: string;
@@ -11,15 +12,23 @@ export class Task {
     constructor(taskId: string, text: string, preQuestions?: Question[], postQuestions?: Question[]) {
         this._taskId = taskId;
         this._text = text;
-        this._preQuestions = preQuestions;
-        this._postQuestions = postQuestions;
+        this._preQuestions = preQuestions?.map((q: Question) => castToChildQuestion(q));
+        this._postQuestions = postQuestions?.map((q: Question) => castToChildQuestion(q));
         this._hasPreQuestionnaire = !!preQuestions && preQuestions.length > 0;
         this._hasPostQuestionnaire = !!postQuestions && postQuestions.length > 0;
     }
 
+    getPreQuestionsIds() {
+        return this._preQuestions?.map(question => question.questionId) ?? [];
+    }
+
+    getPostQuestionsIds() {
+        return this._postQuestions?.map(question => question.questionId) ?? [];
+    }
+
     extractQuestions() {
-        const preQuestions = this._preQuestions?.map((q: Question) => q.extractTaskQuestions(this.taskId)) ?? []
-        const postQuestions = this._postQuestions?.map((q: Question) => q.extractTaskQuestions(this.taskId)) ?? []
+        const preQuestions = this._preQuestions?.map((q: Question) => q.mapToIQuestion()) ?? []
+        const postQuestions = this._postQuestions?.map((q: Question) => q.mapToIQuestion()) ?? []
 
         return [...preQuestions, ...postQuestions]
     }
@@ -56,19 +65,20 @@ export class Task {
         this._hasPostQuestionnaire = value;
     }
 
-    get preQuestions(): Question[] | undefined {
-        return this._preQuestions;
+
+    get preQuestions(): Question[] {
+        return this._preQuestions ?? [];
     }
 
-    set preQuestions(value: Question[] | undefined) {
+    set preQuestions(value: Question[]) {
         this._preQuestions = value;
     }
 
-    get postQuestions(): Question[] | undefined {
-        return this._postQuestions;
+    get postQuestions(): Question[] {
+        return this._postQuestions ?? [];
     }
 
-    set postQuestions(value: Question[] | undefined) {
+    set postQuestions(value: Question[]) {
         this._postQuestions = value;
     }
 }
