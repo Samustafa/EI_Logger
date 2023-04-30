@@ -1,6 +1,8 @@
 import {inputDefaultStyle, inputErrorStyle} from "@pages/popup/Consts/Styles";
 import React, {useState} from "react";
 import {LoadingButton} from "@pages/popup/SharedComponents/LoadingButton";
+import CustomizedMenus from "@pages/popup/SharedComponents/CustomizedMenus";
+import {ErrorMessage} from "@pages/popup/SharedComponents/ErrorMessage";
 
 export function DemographicsPage(): JSX.Element {
     const formId = "demographicsForm";
@@ -8,59 +10,75 @@ export function DemographicsPage(): JSX.Element {
     const [error,] = useState<string | null>(null);
 
 
-    const firstInputId = "firstInput";
-    const [firstValue, setFirstValue] = useState<string>("");
-    const firstPlaceholder = "First Placeholder";
+    const ageInput = "ageInput";
+    const [age, setAge] = useState<string>("");
+    const agePlaceHolder = "Insert Age";
 
-    const secondInputId = "secondInput";
-    const [secondValue,] = useState<string>("");
-    const secondPlaceholder = "Second Placeholder";
+    const jobInput = "jobInput";
+    const [job, setJob] = useState<string>("");
+    const jobPlaceHolder = "Insert Sex";
 
     function handleSubmit() {
         console.log("submitting")
     }
 
-    const firstSection = <>
-        <label htmlFor={firstInputId}>First Name</label>
+    function onAgeChange(event: React.ChangeEvent<HTMLInputElement>) {
+        const enteredValue = event.target.value;
+        const valueIsNumber = !isNaN(Number(enteredValue));
+        if (valueIsNumber) setAge(enteredValue);
+    }
+
+    const ageSection = <>
+        <label htmlFor={ageInput}>First Name</label>
         <input
             form={formId}                      //to associate with the form
-            id={firstInputId}                 //to associate with the label
+            id={ageInput}                 //to associate with the label
             className={error ? inputErrorStyle : inputDefaultStyle}
-            value={firstValue}
-            onChange={(event) => setFirstValue(event.target.value)}
+            value={age}
+            onChange={onAgeChange}
             disabled={isValidating}
             type={"text"}
-            placeholder={firstPlaceholder}
+            placeholder={agePlaceHolder}
             autoFocus={true}
         />
     </>
-    const secondSection = <>
-        <label htmlFor={secondInputId}>Second Name</label>
+
+    const jobSection = <>
+        <label htmlFor={jobInput}>Job</label>
         <input
             form={formId}                      //to associate with the form
-            id={secondInputId}                 //to associate with the label
+            id={jobInput}                 //to associate with the label
             className={error ? inputErrorStyle : inputDefaultStyle}
-            value={secondValue}
-            onChange={(event) => setFirstValue(event.target.value)}
+            value={job}
+            onChange={(event) => setJob(event.target.value)}
             disabled={isValidating}
             type={"text"}
-            placeholder={secondPlaceholder}
+            placeholder={jobPlaceHolder}
         />
+    </>
+    const sexSection = <>
+        <label>Choose Sex</label>
+        <CustomizedMenus/>
     </>
 
     return (
         <>
 
             <form id={formId} onSubmit={handleSubmit}>
-                {firstSection}
+                {ageSection}
                 <br/>
-                {secondSection}
+                {jobSection}
+                <br/>
+                {sexSection}
+                <br/>
                 <LoadingButton text={'Submit'} loadingText={'Validating...'} isLoading={isValidating} type={'submit'}/>
             </form>
 
-            {error && <p>{error}</p>}
+            <ErrorMessage error={error}/>
         </>
     );
 
 
 }
+
+
