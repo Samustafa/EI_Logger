@@ -21,7 +21,5 @@ public class UserService {
         userRepo.save(user);
         return Utils.mapUserToJSON(user);
     }
-
-
 }
 

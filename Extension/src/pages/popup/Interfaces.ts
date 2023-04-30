@@ -1,10 +1,51 @@
+import {QuestionTypeAsString} from "@pages/popup/Types";
+
 export interface IApiException {
     httpStatus: string
     message: string
     timestamp: string
 }
 
-
 export interface IUser {
     userId: string;
+}
+
+export interface IStudy {
+    studyId: string;
+    name: string;
+}
+
+export interface ITask {
+    taskId: string;
+    text: string;
+    hasPreQuestionnaire: boolean;
+    hasPostQuestionnaire: boolean;
+    iPreQuestions: IQuestion[];
+    iPostQuestions: IQuestion[];
+}
+
+export interface IQuestion {
+    questionId: string;
+    type: QuestionTypeAsString;
+}
+
+export interface IMultipleChoiceQuestion extends IQuestion {
+    questionId: string;
+    type: QuestionTypeAsString;
+    questionText: string;
+    choices: string[];
+}
+
+export interface ITextQuestion extends IQuestion {
+    questionId: string;
+    type: QuestionTypeAsString;
+    questionText: string;
+    maxCharacters: number;
+}
+
+export interface IRangeQuestion extends IQuestion {
+    questionId: string;
+    type: QuestionTypeAsString;
+    questionText: string;
+    range: number;
 }

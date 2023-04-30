@@ -7,13 +7,19 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
-@Document(collection = "Users")
-public class User {
-    @NonNull
+@Document(collection = "Studies")
+public class Study {
     @Id
-    private final String userId;
+    private String studyId;
+
+    //@Indexed(unique = true)
+    private String name;
+
+    @NonNull
+    private List<Task> tasks;
 }
