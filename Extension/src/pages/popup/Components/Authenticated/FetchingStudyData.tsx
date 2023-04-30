@@ -20,9 +20,11 @@ import Paths from "@pages/popup/Consts/Paths";
 export function FetchingStudyData() {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [retryFlag, setRetryFlag] = useState<boolean>(false);
     const navigate = useNavigate();
 
-    useEffect(fetchStudy, [])
+
+    useEffect(fetchStudy, [retryFlag])
 
     function fetchStudy() {
         setLoading(true);
@@ -76,6 +78,10 @@ export function FetchingStudyData() {
         return {study, tasks, multipleChoiceQuestions, textQuestions, rangeQuestions}
     }
 
+    function retry() {
+        setRetryFlag(!retryFlag)
+    }
+
     return (
         <>
             <Backdrop
@@ -85,6 +91,7 @@ export function FetchingStudyData() {
                 <CircularProgress color="inherit"/>
             </Backdrop>
             <ErrorMessage error={error}/>
+            {error && <button onClick={retry}>Retry</button>}
         </>
     );
 }
