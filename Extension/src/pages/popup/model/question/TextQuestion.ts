@@ -1,5 +1,5 @@
 import {Question} from "@pages/popup/model/question/Question";
-import {IQuestion} from "@pages/popup/Interfaces";
+import {ITextQuestion} from "@pages/popup/Interfaces";
 
 export class TextQuestion extends Question {
 
@@ -19,14 +19,12 @@ export class TextQuestion extends Question {
         this._maxCharacters = value;
     }
 
-    mapToIQuestion(): IQuestion {
+    mapToIQuestion(): ITextQuestion {
         return {
             questionId: this.questionId,
-            questionText: this.questionText,
             type: this.type,
-            choices: undefined,
-            maxCharacters: this._maxCharacters,
-            range: undefined
+            questionText: this.questionText,
+            maxCharacters: this.maxCharacters
         }
     }
 }

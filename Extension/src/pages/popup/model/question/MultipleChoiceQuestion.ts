@@ -1,5 +1,5 @@
 import {Question} from "@pages/popup/model/question/Question";
-import {IQuestion} from "@pages/popup/Interfaces";
+import {IMultipleChoiceQuestion} from "@pages/popup/Interfaces";
 
 export class MultipleChoiceQuestion extends Question {
 
@@ -18,14 +18,12 @@ export class MultipleChoiceQuestion extends Question {
         this._choices = value;
     }
 
-    mapToIQuestion(): IQuestion {
+    mapToIQuestion(): IMultipleChoiceQuestion {
         return {
             questionId: this.questionId,
-            questionText: this.questionText,
             type: this.type,
-            choices: this._choices,
-            maxCharacters: undefined,
-            range: undefined,
+            questionText: this.questionText,
+            choices: []
         };
     }
 }

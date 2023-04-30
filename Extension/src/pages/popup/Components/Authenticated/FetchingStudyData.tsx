@@ -5,14 +5,24 @@ import {extractAndSetError} from "@pages/popup/UtilityFunctions";
 import {ErrorMessage} from "@pages/popup/SharedComponents/ErrorMessage";
 import {useNavigate} from "react-router-dom";
 import {dataBase} from "@pages/popup/database";
-import {IQuestion, IStudy, ITask} from "@pages/popup/Interfaces";
+import {
+    IMultipleChoiceQuestion,
+    IQuestion,
+    IRangeQuestion,
+    IStudy,
+    ITask,
+    ITextQuestion
+} from "@pages/popup/Interfaces";
 import {Study} from "@pages/popup/model/Study";
 import {Task} from "@pages/popup/model/Task";
+import Paths from "@pages/popup/Consts/Paths";
 
 export function FetchingStudyData() {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+
+    useEffect(fetchStudy, [])
 
     function fetchStudy() {
         setLoading(true);
@@ -22,18 +32,25 @@ export function FetchingStudyData() {
             .finally(() => setLoading(false));
     }
 
-    useEffect(fetchStudy, [])
-
     function saveStudyAndNavigate(study: Study) {
         saveStudyInDB(study);
-        // navigate(Paths.tasksPage);
+        navigate(Paths.tasksPage);
     }
 
     function saveStudyInDB(studyData: Study) {
-        const {study, tasks, questions} = extractStudyData(studyData);
+        const {
+            study,
+            tasks,
+            multipleChoiceQuestions,
+            textQuestions,
+            rangeQuestions
+        } = extractStudyData(studyData);
+
         dataBase.study.add(study)
         dataBase.task.bulkAdd(tasks)
-        dataBase.question.bulkAdd(questions)
+        dataBase.multipleChoiceQuestion.bulkAdd(multipleChoiceQuestions);
+        dataBase.textQuestion.bulkAdd(textQuestions);
+        dataBase.rangeQuestion.bulkAdd(rangeQuestions);
     }
 
     function extractStudyData(studyData: Study) {
@@ -43,17 +60,20 @@ export function FetchingStudyData() {
         }
 
         const tasks = studyData.tasks.map((task: Task): ITask => ({
-                text: task.text,
-                hasPostQuestionnaire: task.hasPostQuestionnaire,
-                hasPreQuestionnaire: task.hasPreQuestionnaire,
-                preQuestionsIds: task.getPreQuestionsIds(),
-                postQuestionsIds: task.getPostQuestionsIds(),
-            })
-        )
+            taskId: task.taskId,
+            text: task.text,
+            hasPostQuestionnaire: task.hasPostQuestionnaire,
+            hasPreQuestionnaire: task.hasPreQuestionnaire,
+            iPreQuestions: task.getIPreQuestions(),
+            iPostQuestions: task.getIPostQuestions(),
+        }))
 
         const questions: IQuestion[] = studyData.getIQuestions();
+        const multipleChoiceQuestions = questions.filter(question => question.type === "MultipleChoiceQuestion") as IMultipleChoiceQuestion[]
+        const textQuestions = questions.filter(question => question.type === "TextQuestion") as ITextQuestion[]
+        const rangeQuestions = questions.filter(question => question.type === "RangeQuestion") as IRangeQuestion[]
 
-        return {study, tasks, questions}
+        return {study, tasks, multipleChoiceQuestions, textQuestions, rangeQuestions}
     }
 
     return (

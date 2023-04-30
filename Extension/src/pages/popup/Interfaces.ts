@@ -16,18 +16,36 @@ export interface IStudy {
 }
 
 export interface ITask {
+    taskId: string;
     text: string;
     hasPreQuestionnaire: boolean;
     hasPostQuestionnaire: boolean;
-    preQuestionsIds: string[];
-    postQuestionsIds: string[];
+    iPreQuestions: IQuestion[];
+    iPostQuestions: IQuestion[];
 }
 
 export interface IQuestion {
     questionId: string;
     type: QuestionTypeAsString;
+}
+
+export interface IMultipleChoiceQuestion extends IQuestion {
+    questionId: string;
+    type: QuestionTypeAsString;
     questionText: string;
-    choices?: string[];
-    range?: number;
-    maxCharacters?: number;
+    choices: string[];
+}
+
+export interface ITextQuestion extends IQuestion {
+    questionId: string;
+    type: QuestionTypeAsString;
+    questionText: string;
+    maxCharacters: number;
+}
+
+export interface IRangeQuestion extends IQuestion {
+    questionId: string;
+    type: QuestionTypeAsString;
+    questionText: string;
+    range: number;
 }

@@ -1,5 +1,6 @@
 import {Question} from "@pages/popup/model/question/Question";
 import {castToChildQuestion} from "@pages/popup/UtilityFunctions";
+import {IQuestion} from "@pages/popup/Interfaces";
 
 export class Task {
     private _taskId: string;
@@ -18,12 +19,12 @@ export class Task {
         this._hasPostQuestionnaire = !!postQuestions && postQuestions.length > 0;
     }
 
-    getPreQuestionsIds() {
-        return this._preQuestions?.map(question => question.questionId) ?? [];
+    getIPreQuestions(): IQuestion[] | [] {
+        return this._preQuestions?.map(question => ({questionId: question.questionId, type: question.type})) ?? [];
     }
 
-    getPostQuestionsIds() {
-        return this._postQuestions?.map(question => question.questionId) ?? [];
+    getIPostQuestions(): IQuestion[] | [] {
+        return this._postQuestions?.map(question => ({questionId: question.questionId, type: question.type})) ?? [];
     }
 
     extractQuestions() {
