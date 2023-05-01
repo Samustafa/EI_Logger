@@ -73,7 +73,7 @@ export function DemographicsPage(): JSX.Element {
                 <br/>
                 {sexSection}
                 <br/>
-                <LoadingButton text={'Submit'} loadingText={'Validating...'} isLoading={isValidating} type={'submit'}/>
+                <LoadingButton text={'Submit'} loadingText={'Validating...'} isLoading={isValidating} type={'button'}/>
             </form>
 
             <ErrorMessage error={error}/>
