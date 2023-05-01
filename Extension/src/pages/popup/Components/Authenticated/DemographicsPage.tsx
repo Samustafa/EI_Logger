@@ -4,10 +4,13 @@ import {LoadingButton} from "@pages/popup/SharedComponents/LoadingButton";
 import CustomizedMenus from "@pages/popup/SharedComponents/CustomizedMenus";
 import {ErrorMessage} from "@pages/popup/SharedComponents/ErrorMessage";
 import dayjs from "dayjs";
+import {IDemographics} from "@pages/popup/Interfaces";
+import {dataBase} from "@pages/popup/database";
 
 export function DemographicsPage(): JSX.Element {
     const formId = "demographicsForm";
     const [isValidating,] = useState<boolean>(false);
+    const demographicsPrimaryKey = '0';
 
 
     const birthDateInput = "birthDate";
@@ -86,6 +89,13 @@ export function DemographicsPage(): JSX.Element {
             return
         }
 
+        const demographics: IDemographics = {
+            id: demographicsPrimaryKey,
+            birthDate: birthDate,
+            job: job,
+            sex: sex
+        }
+        dataBase.setDemographics(demographics)
     }
 
     return (
