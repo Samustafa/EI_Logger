@@ -14,10 +14,10 @@ export default function Popup(): JSX.Element {
     return (
         <div className={generalStyle}>
             <Routes>
-                <Route path={Paths.landingPage} element={<LandingPage/>}/>
+                <Route path={Paths.landingPage + "a"} element={<LandingPage/>}/>
                 <Route path={Paths.registrationPage} element={<RegistrationPage/>}/>
                 <Route path={Paths.idDisplayPage()} element={<IdDisplayPage/>}/>
-                <Route path={Paths.demographicsPage} element={<DemographicsPage/>}/>
+                <Route path={Paths.landingPage} element={<DemographicsPage/>}/>
                 <Route path={Paths.tasksPage} element={<TasksPage/>}/>
                 <Route path={Paths.fetchingStudyData} element={<FetchingStudyData/>}/>
             </Routes>

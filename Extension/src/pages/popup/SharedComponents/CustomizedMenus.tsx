@@ -50,10 +50,11 @@ const StyledMenu = styled((props: MenuProps) => (
 
 interface Props {
     sex: "m" | "f" | "sex",
-    setSex: Dispatch<SetStateAction<"m" | "f" | "sex">>
+    setSex: Dispatch<SetStateAction<"m" | "f" | "sex">>,
+    error: boolean
 }
 
-export default function CustomizedMenus({sex, setSex}: Props) {
+export default function CustomizedMenus({sex, setSex, error}: Props) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -83,6 +84,7 @@ export default function CustomizedMenus({sex, setSex}: Props) {
                 variant="contained"
                 disableElevation
                 onClick={handleClick}
+                color={error ? "error" : "primary"}
                 className={buttonStyle}
             >
                 <ArrowDownIcon text={sex}/>
