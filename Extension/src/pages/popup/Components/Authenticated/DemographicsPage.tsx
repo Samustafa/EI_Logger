@@ -13,21 +13,6 @@ export function DemographicsPage(): JSX.Element {
     const ageInput = "ageInput";
     const [age, setAge] = useState<string>("");
     const agePlaceHolder = "Insert Age";
-
-    const jobInput = "jobInput";
-    const [job, setJob] = useState<string>("");
-    const jobPlaceHolder = "Insert Sex";
-
-    function handleSubmit() {
-        console.log("submitting")
-    }
-
-    function onAgeChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const enteredValue = event.target.value;
-        const valueIsNumber = !isNaN(Number(enteredValue));
-        if (valueIsNumber) setAge(enteredValue);
-    }
-
     const ageSection = <>
         <label htmlFor={ageInput}>First Name</label>
         <input
@@ -43,6 +28,17 @@ export function DemographicsPage(): JSX.Element {
         />
     </>
 
+    function onAgeChange(event: React.ChangeEvent<HTMLInputElement>) {
+        const enteredValue = event.target.value;
+        const valueIsNumber = !isNaN(Number(enteredValue));
+        if (valueIsNumber) setAge(enteredValue);
+    }
+
+
+    const jobInput = "jobInput";
+    const [job, setJob] = useState<string>("");
+    const jobPlaceHolder = "Insert Sex";
+
     const jobSection = <>
         <label htmlFor={jobInput}>Job</label>
         <input
@@ -56,10 +52,16 @@ export function DemographicsPage(): JSX.Element {
             placeholder={jobPlaceHolder}
         />
     </>
+
+    const [sex, setSex] = useState<"m" | "f" | "sex">("sex")
     const sexSection = <>
         <label>Choose Sex</label>
-        <CustomizedMenus/>
+        <CustomizedMenus sex={sex} setSex={setSex}/>
     </>
+
+    function handleSubmit() {
+        console.log("submitting")
+    }
 
     return (
         <>

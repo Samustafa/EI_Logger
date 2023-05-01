@@ -1,9 +1,11 @@
 import * as React from 'react';
-import {useState} from 'react';
+import {Dispatch, SetStateAction} from 'react';
 import {alpha, styled} from '@mui/material/styles';
-import Button from '@mui/material/Button';
 import Menu, {MenuProps} from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import {buttonStyle} from "@pages/popup/Consts/Styles";
+import {ArrowDownIcon} from "@pages/popup/svg/ArrowDownIcon";
+import {Button} from "@mui/material";
 
 const StyledMenu = styled((props: MenuProps) => (
     <Menu
@@ -46,10 +48,14 @@ const StyledMenu = styled((props: MenuProps) => (
     },
 }));
 
-export default function CustomizedMenus() {
+interface Props {
+    sex: "m" | "f" | "sex",
+    setSex: Dispatch<SetStateAction<"m" | "f" | "sex">>
+}
+
+export default function CustomizedMenus({sex, setSex}: Props) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
-    const [sex, setSex] = useState<"m" | "f" | "sex">("sex")
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -77,24 +83,19 @@ export default function CustomizedMenus() {
                 variant="contained"
                 disableElevation
                 onClick={handleClick}
+                className={buttonStyle}
             >
-                {sex}
+                <ArrowDownIcon text={sex}/>
             </Button>
             <StyledMenu
                 id="demo-customized-menu"
-                MenuListProps={{
-                    'aria-labelledby': 'demo-customized-button',
-                }}
+                MenuListProps={{'aria-labelledby': 'demo-customized-button'}}
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
             >
-                <MenuItem onClick={setMale} disableRipple>
-                    {"M"}
-                </MenuItem>
-                <MenuItem onClick={setFemale} disableRipple>
-                    {"F"}
-                </MenuItem>
+                <MenuItem onClick={setMale} disableRipple>{"M"}</MenuItem>
+                <MenuItem onClick={setFemale} disableRipple>{"F"}</MenuItem>
             </StyledMenu>
         </div>
     );
