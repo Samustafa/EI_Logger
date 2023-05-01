@@ -10,21 +10,21 @@ export function DemographicsPage(): JSX.Element {
     const [isValidating,] = useState<boolean>(false);
 
 
-    const ageInput = "ageInput";
-    const [age, setAge] = useState<string>("");
-    const [ageError, setAgeError] = useState<string>('');
-    const agePlaceHolder = "Insert Age";
+    const birthDateInput = "birthDate";
+    const [birthDate, setBirthDate] = useState<string>("");
+    const [birthDateError, setBirthDateError] = useState<string>('');
+    const birthDatePlaceHolder = "Insert Birth Date";
     const ageSection = <>
-        <label htmlFor={ageInput}>Age</label>
+        <label htmlFor={birthDateInput}>Birth Date</label>
         <input
             form={formId}                      //to associate with the form
-            id={ageInput}                 //to associate with the label
-            className={ageError ? inputErrorStyle : inputDefaultStyle}
-            value={age}
-            onChange={(event) => setAge(event.target.value)}
+            id={birthDateInput}                 //to associate with the label
+            className={birthDateError ? inputErrorStyle : inputDefaultStyle}
+            value={birthDate}
+            onChange={(event) => setBirthDate(event.target.value)}
             disabled={isValidating}
             type={"date"}
-            placeholder={agePlaceHolder}
+            placeholder={birthDatePlaceHolder}
             autoFocus={true}
         />
     </>
@@ -32,9 +32,7 @@ export function DemographicsPage(): JSX.Element {
     const jobInput = "jobInput";
     const [job, setJob] = useState<string>("");
     const [jobError, setJobError] = useState<string>('');
-
     const jobPlaceHolder = "Insert Job";
-
     const jobSection = <>
         <label htmlFor={jobInput}>Job</label>
         <input
@@ -56,6 +54,10 @@ export function DemographicsPage(): JSX.Element {
         <CustomizedMenus sex={sex} setSex={setSex} error={Boolean(sexError)}/>
     </>
 
+    function isFormValid() {
+        return isDateValid(birthDate) && isSexSelected() && job !== '';
+    }
+
     function isSexSelected() {
         return sex !== 'sex'
     }
@@ -65,18 +67,14 @@ export function DemographicsPage(): JSX.Element {
         return date.isValid() && date.isBefore(dayjs()) && date.isAfter(dayjs().subtract(100, 'year'));
     }
 
-    function isFormValid() {
-        return isDateValid(age) && isSexSelected() && job !== '';
-    }
-
     function setCorrespondingError() {
-        if (!isDateValid(age)) setAgeError('Invalid Date')
+        if (!isDateValid(birthDate)) setBirthDateError('Invalid Date')
         if (!isSexSelected()) setSexError(' Invalid Sex')
         if (job === '') setJobError(' Invalid Job')
     }
 
     function clearErrors() {
-        setAgeError('')
+        setBirthDateError('')
         setSexError('')
         setJobError('')
     }
@@ -84,9 +82,7 @@ export function DemographicsPage(): JSX.Element {
     function handleSubmit() {
         clearErrors();
         if (!isFormValid()) {
-            console.log('invalid form')
             setCorrespondingError();
-            console.log(ageError)
             return
         }
 
@@ -105,7 +101,7 @@ export function DemographicsPage(): JSX.Element {
                                onClick={handleSubmit}/>
             </form>
 
-            <ErrorMessage error={ageError + sexError + jobError}/>
+            <ErrorMessage error={birthDateError + sexError + jobError}/>
         </>
     );
 }
