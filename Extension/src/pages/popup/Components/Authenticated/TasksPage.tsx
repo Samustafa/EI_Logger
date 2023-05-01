@@ -1,6 +1,6 @@
-import {useEffect, useState} from "react";
 import {Task} from "@pages/popup/model/Task";
 import {dataBase} from "@pages/popup/database";
+import {useEffect, useState} from "react";
 
 export function TasksPage() {
 
@@ -8,7 +8,7 @@ export function TasksPage() {
     useEffect(() => {
         dataBase.getTasks().then((tasks) => {
             setTasks(tasks);
-        });
+        }).catch((error) => console.log(error));
     }, []);
 
     return (

@@ -32,8 +32,8 @@ class DataBase extends Dexie {
         super('DataBase');
         this.version(1).stores({
             user: '++id', // Primary key and indexed props
-            study: 'studyId, studyName, tasks',
-            task: 'taskId, text, hasPreQuestionnaire, hasPostQuestionnaire',
+            study: 'studyId',
+            task: 'taskId, text',
             multipleChoiceQuestion: 'questionId, questionText, type, choices',
             rangeQuestion: 'questionId, questionText, type, range',
             textQuestion: 'questionId, questionText, type, maxCharacters',

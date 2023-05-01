@@ -23,7 +23,7 @@ export class MultipleChoiceQuestion extends Question {
             questionId: this.questionId,
             type: this.type,
             questionText: this.questionText,
-            choices: []
+            choices: this.choices
         };
     }
 }
