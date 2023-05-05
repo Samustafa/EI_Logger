@@ -5,7 +5,7 @@ export class RangeQuestion extends Question {
     private _range: number;
 
 
-    constructor(id: string, question: string, range: number) {
+    constructor(id = "-1", question = "Error", range = 5) {
         super(id, question, "RangeQuestion");
         this._range = range;
     }

@@ -1,20 +1,22 @@
-import {Task} from "@pages/popup/model/Task";
 import {dataBase} from "@pages/popup/database";
 import {useEffect, useState} from "react";
+import {Tasks} from "@pages/popup/Components/Authenticated/Tasks";
+import {ITask} from "@pages/popup/Interfaces";
 
 export function TasksPage() {
 
-    const [tasks, setTasks] = useState<Task[]>([]);
-    useEffect(() => {
-        dataBase.getTasks().then((tasks) => {
-            setTasks(tasks);
+    const [iTasks, setITasks] = useState<ITask[]>([]);
+    useEffect(function fetchTasks() {
+        dataBase.getITasks().then((iTasks) => {
+            setITasks(iTasks);
         }).catch((error) => console.log(error));
     }, []);
+
 
     return (
         <div>
             <h1>Tasks</h1>
-            {tasks.map((task: Task) => <div key={task.taskId}>{task.text}</div>)}
+            <Tasks iTasks={iTasks}/>
         </div>
     );
 

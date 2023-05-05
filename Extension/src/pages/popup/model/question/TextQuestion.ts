@@ -6,7 +6,7 @@ export class TextQuestion extends Question {
     private _maxCharacters: number;
 
 
-    constructor(id: string, question: string, maxCharacters: number) {
+    constructor(id = "-1", question = "Error", maxCharacters = 5) {
         super(id, question, "TextQuestion");
         this._maxCharacters = maxCharacters;
     }

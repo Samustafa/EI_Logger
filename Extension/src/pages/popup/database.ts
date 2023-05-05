@@ -9,8 +9,6 @@ import {
     ITextQuestion,
     IUser
 } from "@pages/popup/Interfaces";
-import {Task} from "@pages/popup/model/Task";
-import {Question} from "@pages/popup/model/question/Question";
 import {MultipleChoiceQuestion} from "@pages/popup/model/question/MultipleChoiceQuestion";
 import {TextQuestion} from "@pages/popup/model/question/TextQuestion";
 import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
@@ -41,60 +39,78 @@ class DataBase extends Dexie {
         });
     }
 
-    async getTasks() {
-        const tasks: Task[] = []
+    // async getTasks() {
+    //     const tasks: Task[] = []
+    //
+    //     await dataBase.task.toArray()
+    //         .then((iTask) => tasks.push(...this._createTasks(iTask)))
+    //     return tasks;
+    // }
 
+    // private _createTasks(iTasks: ITask[]): Task[] {
+    //     return iTasks.map(iTask => this._createTask(iTask));
+    // }
+
+    // private _createTask(iTask: ITask): Task {
+    //     const preQuestionnaire = this.getQuestionsFromInterface(iTask.iPreQuestions);
+    //     const postQuestionnaire = this.getQuestionsFromInterface(iTask.iPostQuestions);
+    //     return new Task(iTask.taskId, iTask.text, preQuestionnaire, postQuestionnaire);
+    // }
+    //
+    // private getQuestionsFromInterface(iQuestions: IQuestion[] | undefined): Question[] {
+    //     return iQuestions?.map(iQuestion => this._createQuestion(iQuestion)).filter(question => question) as Question[] ?? [];
+    // }
+
+    async getITasks() {
+        let iTasks: ITask[] = [];
         await dataBase.task.toArray()
-            .then((iTask) => tasks.push(...this._createTasks(iTask)))
-        return tasks;
+            .then((iTask) => iTasks = iTask);
+        return iTasks;
     }
 
-    private _createTasks(iTasks: ITask[]): Task[] {
-        return iTasks.map(iTask => this._createTask(iTask));
-    }
-
-    private _createTask(iTask: ITask): Task {
-        const preQuestionnaire = this.getQuestionsFromInterface(iTask.iPreQuestions);
-        const postQuestionnaire = this.getQuestionsFromInterface(iTask.iPostQuestions);
-        return new Task(iTask.taskId, iTask.text, preQuestionnaire, postQuestionnaire);
-    }
-
-    private getQuestionsFromInterface(iQuestions: IQuestion[]): Question[] {
-        return iQuestions.map(iQuestion => this._createQuestion(iQuestion)).filter(question => question) as Question[] ?? [];
-    }
-
-    private _createQuestion(iQuestion: IQuestion): Question | undefined {
-        let question: Question | undefined = undefined;
+    async getQuestionUsingInterface(iQuestion: IQuestion) {
         switch (iQuestion.type) {
-            case "MultipleChoiceQuestion":
-                dataBase.multipleChoiceQuestion
-                    .get(iQuestion.questionId)
-                    .then((iMultiQuestion) => {
-                        if (iMultiQuestion?.questionId && iMultiQuestion?.questionText && iMultiQuestion?.choices)
-                            question = new MultipleChoiceQuestion(iMultiQuestion.questionId, iMultiQuestion.questionText, iMultiQuestion.choices)
-                    })
-                    .catch(er => console.log(er));
-                break;
-            case "TextQuestion":
-                dataBase.textQuestion
-                    .get(iQuestion.questionId)
-                    .then((iTextQuestion) => {
-                        if (iTextQuestion?.questionId && iTextQuestion?.questionText && iTextQuestion?.maxCharacters)
-                            question = new TextQuestion(iTextQuestion.questionId, iTextQuestion.questionText, iTextQuestion.maxCharacters)
-                    })
-                    .catch(er => console.log(er));
-                break;
-            case "RangeQuestion":
-                dataBase.rangeQuestion
-                    .get(iQuestion.questionId)
-                    .then((iRangeQuestion) => {
-                        if (iRangeQuestion?.questionId && iRangeQuestion?.questionText && iRangeQuestion?.range)
-                            question = new RangeQuestion(iRangeQuestion.questionId, iRangeQuestion.questionText, iRangeQuestion.range)
-                    })
-                    .catch(er => console.log(er));
-                break;
+            case "MultipleChoiceQuestion": {
+                const iMultiQuestion = await dataBase.multipleChoiceQuestion.get(
+                    iQuestion.questionId
+                );
+
+                return new MultipleChoiceQuestion(
+                    iMultiQuestion?.questionId,
+                    iMultiQuestion?.questionText,
+                    iMultiQuestion?.choices
+                );
+            }
+            case "TextQuestion": {
+                const iTextQuestion = await dataBase.textQuestion.get(
+                    iQuestion.questionId
+                );
+                return new TextQuestion(
+                    iTextQuestion?.questionId,
+                    iTextQuestion?.questionText,
+                    iTextQuestion?.maxCharacters
+                );
+            }
+            case "RangeQuestion": {
+                const iRangeQuestion = await dataBase.rangeQuestion.get(
+                    iQuestion.questionId
+                );
+                return new RangeQuestion(
+                    iRangeQuestion?.questionId,
+                    iRangeQuestion?.questionText,
+                    iRangeQuestion?.range
+                );
+            }
+            default:
+                return new TextQuestion(undefined, undefined, undefined);
         }
-        return question;
+    }
+
+    async getPreQuestionnaire(taskId: string) {
+        let preQuestionnaire: IQuestion[] = [];
+        await dataBase.task.get(taskId)
+            .then(iTask => preQuestionnaire = iTask?.iPreQuestions ?? []);
+        return preQuestionnaire;
     }
 
 }

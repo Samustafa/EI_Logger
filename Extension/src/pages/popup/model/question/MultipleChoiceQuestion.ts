@@ -5,7 +5,7 @@ export class MultipleChoiceQuestion extends Question {
 
     private _choices: string[];
 
-    constructor(id: string, question: string, choices: string[]) {
+    constructor(id = "-1", question = "error", choices = ["error"]) {
         super(id, question, "MultipleChoiceQuestion");
         this._choices = choices;
     }
