@@ -40,4 +40,4 @@ export function addOrUpdateAnswers(iQuestionAnswers: IQuestionAnswer[], answer: 
         return [...iQuestionAnswers, answer];
     }
     return [...iQuestionAnswers.slice(0, index), answer, ...iQuestionAnswers.slice(index + 1)];
-};
+}

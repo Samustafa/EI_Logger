@@ -124,7 +124,7 @@ class DataBase extends Dexie {
     }
 
     async submitPreQuestionnaire(taskId: string, answers: IAnswer[]) {
-        // await dataBase.answers.bulkPut(answers);
+        await dataBase.answers.bulkPut(answers);
     }
 
     async getStudyId() {
