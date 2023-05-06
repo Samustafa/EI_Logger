@@ -45,28 +45,6 @@ class DataBase extends Dexie {
         });
     }
 
-    // async getTasks() {
-    //     const tasks: Task[] = []
-    //
-    //     await dataBase.task.toArray()
-    //         .then((iTask) => tasks.push(...this._createTasks(iTask)))
-    //     return tasks;
-    // }
-
-    // private _createTasks(iTasks: ITask[]): Task[] {
-    //     return iTasks.map(iTask => this._createTask(iTask));
-    // }
-
-    // private _createTask(iTask: ITask): Task {
-    //     const preQuestionnaire = this.getQuestionsFromInterface(iTask.iPreQuestions);
-    //     const postQuestionnaire = this.getQuestionsFromInterface(iTask.iPostQuestions);
-    //     return new Task(iTask.taskId, iTask.text, preQuestionnaire, postQuestionnaire);
-    // }
-    //
-    // private getQuestionsFromInterface(iQuestions: IQuestion[] | undefined): Question[] {
-    //     return iQuestions?.map(iQuestion => this._createQuestion(iQuestion)).filter(question => question) as Question[] ?? [];
-    // }
-
     async getITasks() {
         let iTasks: ITask[] = [];
         await dataBase.task.toArray()
