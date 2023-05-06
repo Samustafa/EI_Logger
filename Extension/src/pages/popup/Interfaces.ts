@@ -47,3 +47,11 @@ export interface IRangeQuestion extends IQuestion {
     questionText: string;
     range: number;
 }
+
+export interface IDemographics {
+    id: string;
+    birthDate: string;
+    job: string;
+    sex: string;
+
+}

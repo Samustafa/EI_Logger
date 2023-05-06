@@ -1,6 +1,7 @@
 // db.ts
 import Dexie, {Table} from 'dexie';
 import {
+    IDemographics,
     IMultipleChoiceQuestion,
     IQuestion,
     IRangeQuestion,
@@ -23,18 +24,20 @@ class DataBase extends Dexie {
     multipleChoiceQuestion!: Table<IMultipleChoiceQuestion, string>;
     rangeQuestion!: Table<IRangeQuestion, string>;
     textQuestion!: Table<ITextQuestion, string>;
+    demographics!: Table<IDemographics, string>;
 
     //...other tables goes here...
 
     constructor() {
         super('DataBase');
-        this.version(1).stores({
+        this.version(2).stores({
             user: '++id', // Primary key and indexed props
             study: 'studyId',
             task: 'taskId, text',
             multipleChoiceQuestion: 'questionId, questionText, type, choices',
             rangeQuestion: 'questionId, questionText, type, range',
             textQuestion: 'questionId, questionText, type, maxCharacters',
+            demographics: 'id, birthDate, job, sex'
             //...other tables goes here...
         });
     }
@@ -113,6 +116,9 @@ class DataBase extends Dexie {
         return preQuestionnaire;
     }
 
+    setDemographics(demographics: IDemographics) {
+        dataBase.demographics.put(demographics);
+    }
 }
 
 export const dataBase = new DataBase();

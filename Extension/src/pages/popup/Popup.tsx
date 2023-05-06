@@ -9,6 +9,7 @@ import {TasksPage} from "@pages/popup/Components/Authenticated/TasksPage";
 import {FetchingStudyData} from "@pages/popup/Components/Authenticated/FetchingStudyData";
 import {PreQuestionnairePage} from "@pages/popup/Components/Authenticated/PreQuestionnairePage";
 import {LoggerPage} from "@pages/popup/Components/Authenticated/LoggerPage";
+import {DemographicsPage} from "@pages/popup/Components/Authenticated/DemographicsPage";
 
 
 export default function Popup(): JSX.Element {
@@ -18,6 +19,7 @@ export default function Popup(): JSX.Element {
                 <Route path={Paths.landingPage + "s"} element={<LandingPage/>}/>
                 <Route path={Paths.registrationPage} element={<RegistrationPage/>}/>
                 <Route path={Paths.idDisplayPage()} element={<IdDisplayPage/>}/>
+                <Route path={Paths.demographicsPage} element={<DemographicsPage/>}/>
                 <Route path={Paths.landingPage} element={<TasksPage/>}/>
                 <Route path={Paths.fetchingStudyData} element={<FetchingStudyData/>}/>
                 <Route path={Paths.preQuestionnairePage()} element={<PreQuestionnairePage/>}/>

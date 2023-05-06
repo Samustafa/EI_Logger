@@ -42,11 +42,7 @@ export default function RegistrationPage() {
         disableButton();
 
         registerUser(registrationCode)
-            .then((response) => {
-                console.log("handleSubmit", response.data)
-
-                saveToDBAndNavigate(response)
-            })
+            .then((response) => saveToDBAndNavigate(response))
             .catch((error) => extractAndSetError(error, setError))
             .finally(() => enableButton());
 
