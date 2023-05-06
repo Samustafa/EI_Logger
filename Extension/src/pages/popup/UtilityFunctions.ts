@@ -1,4 +1,4 @@
-import {IApiException} from "@pages/popup/Interfaces";
+import {IApiException, IQuestionAnswer} from "@pages/popup/Interfaces";
 import {QuestionType} from "@pages/popup/Types";
 import {MultipleChoiceQuestion} from "@pages/popup/model/question/MultipleChoiceQuestion";
 import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
@@ -32,3 +32,12 @@ export function castToChildQuestion(question: Question): QuestionType {
         }
     }
 }
+
+export function addOrUpdateAnswers(iQuestionAnswers: IQuestionAnswer[], answer: IQuestionAnswer) {
+    const index = iQuestionAnswers.findIndex((a) => a.questionId === answer.questionId);
+
+    if (-1 === index) {
+        return [...iQuestionAnswers, answer];
+    }
+    return [...iQuestionAnswers.slice(0, index), answer, ...iQuestionAnswers.slice(index + 1)];
+};

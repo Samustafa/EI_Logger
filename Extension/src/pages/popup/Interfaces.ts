@@ -48,6 +48,20 @@ export interface IRangeQuestion extends IQuestion {
     range: number;
 }
 
+export interface IAnswer {
+    answerId: string;
+    userId: string;
+    studyId: string;
+    taskId: string;
+    questionId: string;
+    answer: string;
+}
+
+export interface IQuestionAnswer {
+    questionId: string;
+    answer: string;
+}
+
 export interface IDemographics {
     id: string;
     birthDate: string;

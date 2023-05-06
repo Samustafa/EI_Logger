@@ -1,6 +1,7 @@
 // db.ts
 import Dexie, {Table} from 'dexie';
 import {
+    IAnswer,
     IDemographics,
     IMultipleChoiceQuestion,
     IQuestion,
@@ -25,19 +26,21 @@ class DataBase extends Dexie {
     rangeQuestion!: Table<IRangeQuestion, string>;
     textQuestion!: Table<ITextQuestion, string>;
     demographics!: Table<IDemographics, string>;
+    answers!: Table<IAnswer, string>;
 
     //...other tables goes here...
 
     constructor() {
         super('DataBase');
-        this.version(2).stores({
+        this.version(3).stores({
             user: '++id', // Primary key and indexed props
             study: 'studyId',
             task: 'taskId, text',
             multipleChoiceQuestion: 'questionId, questionText, type, choices',
             rangeQuestion: 'questionId, questionText, type, range',
             textQuestion: 'questionId, questionText, type, maxCharacters',
-            demographics: 'id, birthDate, job, sex'
+            demographics: 'id, birthDate, job, sex',
+            answers: '++answerId, userId, studyId, taskId, questionId, answer'
             //...other tables goes here...
         });
     }
@@ -116,8 +119,22 @@ class DataBase extends Dexie {
         return preQuestionnaire;
     }
 
-    setDemographics(demographics: IDemographics) {
-        dataBase.demographics.put(demographics);
+    async setDemographics(demographics: IDemographics) {
+        await dataBase.demographics.put(demographics);
+    }
+
+    async submitPreQuestionnaire(taskId: string, answers: IAnswer[]) {
+        await dataBase.answers.bulkPut(answers);
+    }
+
+    async getStudyId() {
+        const studies = await dataBase.study.toArray();
+        return studies[0].studyId;
+    }
+
+    async getUserId() {
+        const users = await dataBase.user.toArray();
+        return users[0].userId;
     }
 }
 

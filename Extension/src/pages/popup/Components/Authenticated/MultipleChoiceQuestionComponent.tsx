@@ -1,23 +1,29 @@
 import {MultipleChoiceQuestion} from "@pages/popup/model/question/MultipleChoiceQuestion";
 import {FormControl, FormControlLabel, FormLabel, Radio, RadioGroup} from "@mui/material";
-import {ChangeEvent, useState} from "react";
+import {ChangeEvent, Dispatch, SetStateAction, useState} from "react";
+import {IQuestionAnswer} from "@pages/popup/Interfaces";
+import {addOrUpdateAnswers} from "@pages/popup/UtilityFunctions";
 
 interface Props {
     question: MultipleChoiceQuestion;
     index: number;
+    setAnswers: Dispatch<SetStateAction<IQuestionAnswer[]>>;
+    isValidating: boolean;
 }
 
-export function MultipleChoiceQuestionElement({question, index}: Props) {
-    const [value, setValue] = useState('female');
+export function MultipleChoiceQuestionElement({question, index, setAnswers, isValidating}: Props) {
+    const [value, setValue] = useState(question.choices[0]);
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setValue((event.target as HTMLInputElement).value);
+        const answer = (event.target as HTMLInputElement).value;
+        setValue(answer);
+        setAnswers((prev) => addOrUpdateAnswers(prev, {questionId: question.questionId, answer: answer}));
     };
 
 
     return <>
         <div>{index}{question.questionText}</div>
-        <FormControl>
-            <FormLabel id="demo-controlled-radio-buttons-group">Ansers</FormLabel>
+        <FormControl disabled={isValidating}>
+            <FormLabel id="demo-controlled-radio-buttons-group">Answers</FormLabel>
             <RadioGroup
                 row
                 aria-labelledby="demo-controlled-radio-buttons-group"
