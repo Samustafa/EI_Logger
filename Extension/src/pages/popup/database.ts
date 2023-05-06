@@ -32,10 +32,10 @@ class DataBase extends Dexie {
 
     constructor() {
         super('DataBase');
-        this.version(3).stores({
+        this.version(4).stores({
             user: '++id', // Primary key and indexed props
             study: 'studyId',
-            task: 'taskId, text',
+            task: 'taskId, text, iPreQuestions, iPostQuestions, isPreQuestionsSubmitted, isPostQuestionsSubmitted',
             multipleChoiceQuestion: 'questionId, questionText, type, choices',
             rangeQuestion: 'questionId, questionText, type, range',
             textQuestion: 'questionId, questionText, type, maxCharacters',
@@ -124,7 +124,7 @@ class DataBase extends Dexie {
     }
 
     async submitPreQuestionnaire(taskId: string, answers: IAnswer[]) {
-        await dataBase.answers.bulkPut(answers);
+        // await dataBase.answers.bulkPut(answers);
     }
 
     async getStudyId() {
@@ -135,6 +135,15 @@ class DataBase extends Dexie {
     async getUserId() {
         const users = await dataBase.user.toArray();
         return users[0].userId;
+    }
+
+    async isPreQuestionnaireSubmitted(taskId: string) {
+        const iTask = await dataBase.task.get(taskId).catch(error => console.log(error));
+        return iTask?.isPreQuestionsSubmitted ?? false;
+    }
+
+    async setPreQuestionnaireSubmitted(taskId: string) {
+        dataBase.task.update(taskId, {isPreQuestionsSubmitted: true});
     }
 }
 

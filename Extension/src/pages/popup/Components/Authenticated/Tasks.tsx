@@ -16,7 +16,14 @@ export function Tasks({iTasks}: Props) {
     const navigate = useNavigate();
 
     function getTaskById(taskId: string) {
-        const defaultITask: ITask = {taskId: "", text: "", iPreQuestions: [], iPostQuestions: []}
+        const defaultITask: ITask = {
+            taskId: "",
+            text: "",
+            isPreQuestionsSubmitted: false,
+            isPostQuestionsSubmitted: false,
+            iPreQuestions: [],
+            iPostQuestions: []
+        }
         return iTasks.find((task) => task.taskId === taskId) ?? defaultITask;
     }
 
