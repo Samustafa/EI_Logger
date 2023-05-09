@@ -8,11 +8,11 @@ import {IdDisplayPage} from "@pages/popup/Components/Authenticated/IdDisplayPage
 import {TasksPage} from "@pages/popup/Components/Authenticated/TasksPage";
 import {FetchingStudyData} from "@pages/popup/Components/Authenticated/FetchingStudyData";
 import {PreQuestionnairePage} from "@pages/popup/Components/Authenticated/PreQuestionnairePage";
-import {LoggerPage} from "@pages/popup/Components/Authenticated/LoggerPage";
 import {DemographicsPage} from "@pages/popup/Components/Authenticated/DemographicsPage";
+import {LoggerReadyPage} from "@pages/popup/Components/Authenticated/LoggerReady/LoggerReadyPage";
 
 
-export default function Popup(): JSX.Element {
+export default function Popup() {
     return (
         <div className={generalStyle}>
             <Routes>
@@ -20,10 +20,10 @@ export default function Popup(): JSX.Element {
                 <Route path={Paths.registrationPage} element={<RegistrationPage/>}/>
                 <Route path={Paths.idDisplayPage()} element={<IdDisplayPage/>}/>
                 <Route path={Paths.demographicsPage} element={<DemographicsPage/>}/>
-                <Route path={Paths.landingPage} element={<TasksPage/>}/>
+                <Route path={Paths.tasksPage} element={<TasksPage/>}/>
                 <Route path={Paths.fetchingStudyData} element={<FetchingStudyData/>}/>
                 <Route path={Paths.preQuestionnairePage()} element={<PreQuestionnairePage/>}/>
-                <Route path={Paths.loggerPage()} element={<LoggerPage/>}/>
+                <Route path={Paths.landingPage} element={<LoggerReadyPage/>}/>
             </Routes>
         </div>
     );

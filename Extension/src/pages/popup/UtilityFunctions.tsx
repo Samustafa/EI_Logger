@@ -41,3 +41,7 @@ export function addOrUpdateAnswers(iQuestionAnswers: IQuestionAnswer[], answer: 
     }
     return [...iQuestionAnswers.slice(0, index), answer, ...iQuestionAnswers.slice(index + 1)];
 }
+
+export function display(message: string) {
+    return (<div>{message}</div>);
+}
