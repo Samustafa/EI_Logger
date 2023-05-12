@@ -1,64 +1,45 @@
-import {OnActivatedActiveInfoType, OnUpdatedChangeInfoType, Tab, TabAction, TabWithGroupId} from "@pages/popup/Types";
+import {
+    OnActivatedActiveInfoType,
+    OnCompletedDetailsType,
+    OnUpdatedChangeInfoType,
+    Tab,
+    TabAction,
+    TabWithGroupId
+} from "@pages/popup/Types";
 import dayjs from "dayjs";
 import {ITab} from "@pages/popup/Interfaces";
 import {loggingConstants} from "@pages/background/LoggingConstants";
 import {dataBase} from "@pages/popup/database";
+import {tabs} from "webextension-polyfill";
 
 
-const dataBaseBuffer = new Map<number, ITab>();
 const openedTabsCache = new Map<number, string>();
 
+export function handleOnCompleted(details: OnCompletedDetailsType) {
+    const tabFinishedLoading = 0;
+    if (details.frameId !== tabFinishedLoading) return
+
+    tabs.get(details.tabId)
+        .then(tab => handleSaveAfterNewTabOrNewUrl(tab, "TAB:CREATED"))
+        .catch(e => console.error("handleOnCompleted " + JSON.stringify(e)));
+}
 
 export function handleTabUpdated(id: number, changeInfo: OnUpdatedChangeInfoType, tab: Tab) {
 
+    const isNewURL = (changeInfo.url !== undefined) && (changeInfo.url !== openedTabsCache.get(id))
 
-    const isNewWebSite = (changeInfo.url !== undefined) && (changeInfo.url !== openedTabsCache.get(id))
-    console.log("isNewWebSite", isNewWebSite)
-    console.log("openedTabsCache", openedTabsCache)
-    if (isNewWebSite) handleOldTabNewUrl(tab)
-    else handleOldTabOldURL(changeInfo, tab)
-
-
-    function handleOldTabNewUrl(tab: Tab) {
-        console.log("handleOldTabNewUrl")
-        const iTab = prePareTabFromTab(tab, "TAB:URL_CHANGED");
-        addToCacheAndBuffer(iTab);
+    if (isNewURL) handleSaveAfterNewTabOrNewUrl(tab, "TAB:URL_CHANGED")
+    else if (changeInfo.pinned !== undefined) {
+        const iTab = prePareITabFromTab(tab, changeInfo.pinned ? "TAB:PINNED" : "TAB:UNPINNED");
+        dataBase.saveTabInfo(iTab);
     }
-
-    function handleOldTabOldURL(changeInfo: OnUpdatedChangeInfoType, tab: Tab) {
-        const isTitleChangeForTabInBuffer = changeInfo.title && dataBaseBuffer.has(id);
-
-        if (isTitleChangeForTabInBuffer) handleTitleUpdated(changeInfo?.title ?? "", tab);
-        else if (changeInfo.pinned !== undefined) {
-            const iTab = prePareTabFromTab(tab, changeInfo.pinned ? "TAB:PINNED" : "TAB:UNPINNED");
-            dataBase.saveTabInfo(iTab);
-        }
-
-        function handleTitleUpdated(title: string, tab: Tab) {
-            const tabId = tab?.id ?? -1;
-
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const tabToSave = dataBaseBuffer.get(tabId)!;
-            tabToSave.title = title;
-
-            dataBase.saveTabInfo(tabToSave);
-
-            dataBaseBuffer.delete(tabId);
-        }
-    }
-
-}
-
-export function handleTabCreated(tab: Tab) {
-    const iTab = prePareTabFromTab(tab, "TAB:CREATED");
-    addToCacheAndBuffer(iTab);
 }
 
 export function handleTabRemoved(tabId: number) {
     dataBase.getLastTabWithId(tabId)
         .then((iTab) => {
             if (!iTab) throw new Error(`handleTabRemoved: Couldn't fetch tab with the ID ${tabId}`)
-            dataBase.saveTabInfo(prePareTabFromITab(iTab, "TAB:CLOSED"));
+            dataBase.saveTabInfo(prePareITabFromITab(iTab, "TAB:CLOSED"));
         })
         .catch((e) => console.error("e -->", e))
 }
@@ -67,18 +48,19 @@ export function handleTabActivated(onActivatedActiveInfoType: OnActivatedActiveI
     dataBase.getLastTabWithId(onActivatedActiveInfoType.tabId)
         .then((iTab) => {
             if (!iTab) throw new Error(`handleTabActivated: Couldn't fetch tab with the ID ${onActivatedActiveInfoType.tabId}`)
-            dataBase.saveTabInfo(prePareTabFromITab(iTab, "TAB:ACTIVATED"))
+            dataBase.saveTabInfo(prePareITabFromITab(iTab, "TAB:ACTIVATED"))
         })
         .catch((e) => console.error("e -->", e))
 }
 
+
 //Helper Functions
-function prePareTabFromTab(tab: Tab, tabAction: TabAction) {
+function prePareITabFromTab(tab: Tab, tabAction: TabAction): ITab {
     const tabExtended = tab as TabWithGroupId;
 
     const timeStamp = dayjs().format("YYYY-MM-DD HH:mm:ss");
 
-    const iTab: ITab = {
+    return {
         action: tabAction,
         timeStamp: timeStamp,
         userId: loggingConstants.userId,
@@ -91,14 +73,13 @@ function prePareTabFromTab(tab: Tab, tabAction: TabAction) {
         title: tab?.title ?? "",
         url: tab?.pendingUrl ?? tab?.url ?? "",
     }
-    return iTab;
 }
 
-function prePareTabFromITab(tab: ITab, tabAction: TabAction) {
+function prePareITabFromITab(tab: ITab, tabAction: TabAction): ITab {
 
     const timeStamp = dayjs().format("YYYY-MM-DD HH:mm:ss");
 
-    const iTab: ITab = {
+    return {
         action: tabAction,
         timeStamp: timeStamp,
         userId: loggingConstants.userId,
@@ -111,10 +92,10 @@ function prePareTabFromITab(tab: ITab, tabAction: TabAction) {
         title: tab.title,
         url: tab.url,
     }
-    return iTab;
 }
 
-function addToCacheAndBuffer(iTab: ITab) {
-    dataBaseBuffer.set(iTab.tabId, iTab);
-    openedTabsCache.set(iTab.tabId, iTab.url);
+function handleSaveAfterNewTabOrNewUrl(tab: Tab, tabAction: TabAction) {
+    const iTab = prePareITabFromTab(tab, tabAction);
+    dataBase.saveTabInfo(iTab);
+    openedTabsCache.set(iTab.tabId, iTab.url)
 }

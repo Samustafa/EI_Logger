@@ -21,8 +21,8 @@ export type OnUpdatedChangeInfoType = browser.Tabs.OnUpdatedChangeInfoType;
 export type Tab = browser.Tabs.Tab;
 export type TabWithGroupId = Tab & { groupId: number };
 export type Port = browser.Runtime.Port;
-export type OnRemovedRemoveInfoType = browser.Tabs.OnRemovedRemoveInfoType;
 export type OnActivatedActiveInfoType = browser.Tabs.OnActivatedActiveInfoType;
+export type OnCompletedDetailsType = browser.WebNavigation.OnCompletedDetailsType;
 export type TabAction =
     "TAB:CREATED"
     | "TAB:CLOSED"

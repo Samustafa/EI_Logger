@@ -1,5 +1,5 @@
 import browser from "webextension-polyfill";
-import {handleTabActivated, handleTabCreated, handleTabRemoved, handleTabUpdated} from "@pages/background/Handlers";
+import {handleOnCompleted, handleTabActivated, handleTabRemoved, handleTabUpdated} from "@pages/background/Handlers";
 import {Port} from "@pages/popup/Types";
 
 
@@ -14,18 +14,15 @@ function connectPort(port: Port) {
 
 function receiveMessage(message: { data: string }) {
     console.log(`service worker received message ${message.data}`);
-    listenTabUpdated();
-    listenTabCreated();
-    listenTabRemoved();
-    listenTabActivated()
+    // listenTabUpdated();
+    // listenTabCreated();
+    // listenTabRemoved();
+    // listenTabActivated()
+    listenOnCompleted();
 }
 
 function listenTabUpdated() {
     browser.tabs.onUpdated.addListener(handleTabUpdated)
-}
-
-function listenTabCreated() {
-    browser.tabs.onCreated.addListener(handleTabCreated)
 }
 
 function listenTabRemoved() {
@@ -34,4 +31,11 @@ function listenTabRemoved() {
 
 function listenTabActivated() {
     browser.tabs.onActivated.addListener(handleTabActivated)
+}
+
+/**
+ * listen to a tab When a tab when it completes loading: listens to tab creation
+ */
+function listenOnCompleted() {
+    browser.webNavigation.onCompleted.addListener(handleOnCompleted);
 }
