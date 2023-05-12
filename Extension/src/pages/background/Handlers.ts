@@ -1,4 +1,4 @@
-import {OnUpdatedChangeInfoType, Tab, TabAction, TabWithGroupId} from "@pages/popup/Types";
+import {OnRemovedRemoveInfoType, OnUpdatedChangeInfoType, Tab, TabAction, TabWithGroupId} from "@pages/popup/Types";
 import dayjs from "dayjs";
 import {ITab} from "@pages/popup/Interfaces";
 import {loggingConstants} from "@pages/background/LoggingConstants";
@@ -54,6 +54,23 @@ export function handleTabCreated(tab: Tab) {
     addToCacheAndBuffer(iTab);
 }
 
+export function handleTabRemoved(tabId: number, removeInfo: OnRemovedRemoveInfoType) {
+    const iTab: ITab = {
+        action: "TAB:CLOSED",
+        taskId: loggingConstants.taskId,
+        studyId: loggingConstants.studyId,
+        userId: loggingConstants.userId,
+        tabId: tabId,
+        windowId: removeInfo.windowId,
+        timeStamp: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+        title: "",
+        url: "",
+        groupId: -1,
+        tabIndex: -1,
+    };
+    dataBase.saveTabInfo(iTab);
+    openedTabsCache.delete(tabId);
+}
 
 //Helper Functions
 function prePareTab(tab: Tab, tabAction: TabAction) {

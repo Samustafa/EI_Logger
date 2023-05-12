@@ -135,7 +135,6 @@ class DataBase extends Dexie {
 
     saveTabInfo(iTab: ITab) {
         dataBase.tabs.add(iTab);
-
     }
 }
 
