@@ -1,4 +1,4 @@
-import {OnRemovedRemoveInfoType, OnUpdatedChangeInfoType, Tab, TabAction, TabWithGroupId} from "@pages/popup/Types";
+import {OnActivatedActiveInfoType, OnUpdatedChangeInfoType, Tab, TabAction, TabWithGroupId} from "@pages/popup/Types";
 import dayjs from "dayjs";
 import {ITab} from "@pages/popup/Interfaces";
 import {loggingConstants} from "@pages/background/LoggingConstants";
@@ -21,7 +21,7 @@ export function handleTabUpdated(id: number, changeInfo: OnUpdatedChangeInfoType
 
     function handleOldTabNewUrl(tab: Tab) {
         console.log("handleOldTabNewUrl")
-        const iTab = prePareTab(tab, "TAB:URL_CHANGED");
+        const iTab = prePareTabFromTab(tab, "TAB:URL_CHANGED");
         addToCacheAndBuffer(iTab);
     }
 
@@ -30,7 +30,7 @@ export function handleTabUpdated(id: number, changeInfo: OnUpdatedChangeInfoType
 
         if (isTitleChangeForTabInBuffer) handleTitleUpdated(changeInfo?.title ?? "", tab);
         else if (changeInfo.pinned !== undefined) {
-            const iTab = prePareTab(tab, changeInfo.pinned ? "TAB:PINNED" : "TAB:UNPINNED");
+            const iTab = prePareTabFromTab(tab, changeInfo.pinned ? "TAB:PINNED" : "TAB:UNPINNED");
             dataBase.saveTabInfo(iTab);
         }
 
@@ -50,30 +50,30 @@ export function handleTabUpdated(id: number, changeInfo: OnUpdatedChangeInfoType
 }
 
 export function handleTabCreated(tab: Tab) {
-    const iTab = prePareTab(tab, "TAB:CREATED");
+    const iTab = prePareTabFromTab(tab, "TAB:CREATED");
     addToCacheAndBuffer(iTab);
 }
 
-export function handleTabRemoved(tabId: number, removeInfo: OnRemovedRemoveInfoType) {
-    const iTab: ITab = {
-        action: "TAB:CLOSED",
-        taskId: loggingConstants.taskId,
-        studyId: loggingConstants.studyId,
-        userId: loggingConstants.userId,
-        tabId: tabId,
-        windowId: removeInfo.windowId,
-        timeStamp: dayjs().format("YYYY-MM-DD HH:mm:ss"),
-        title: "",
-        url: "",
-        groupId: -1,
-        tabIndex: -1,
-    };
-    dataBase.saveTabInfo(iTab);
-    openedTabsCache.delete(tabId);
+export function handleTabRemoved(tabId: number) {
+    dataBase.getLastTabWithId(tabId)
+        .then((iTab) => {
+            if (!iTab) throw new Error(`handleTabRemoved: Couldn't fetch tab with the ID ${tabId}`)
+            dataBase.saveTabInfo(prePareTabFromITab(iTab, "TAB:CLOSED"));
+        })
+        .catch((e) => console.error("e -->", e))
+}
+
+export function handleTabActivated(onActivatedActiveInfoType: OnActivatedActiveInfoType) {
+    dataBase.getLastTabWithId(onActivatedActiveInfoType.tabId)
+        .then((iTab) => {
+            if (!iTab) throw new Error(`handleTabActivated: Couldn't fetch tab with the ID ${onActivatedActiveInfoType.tabId}`)
+            dataBase.saveTabInfo(prePareTabFromITab(iTab, "TAB:ACTIVATED"))
+        })
+        .catch((e) => console.error("e -->", e))
 }
 
 //Helper Functions
-function prePareTab(tab: Tab, tabAction: TabAction) {
+function prePareTabFromTab(tab: Tab, tabAction: TabAction) {
     const tabExtended = tab as TabWithGroupId;
 
     const timeStamp = dayjs().format("YYYY-MM-DD HH:mm:ss");
@@ -90,6 +90,26 @@ function prePareTab(tab: Tab, tabAction: TabAction) {
         windowId: tab?.windowId ?? -1,
         title: tab?.title ?? "",
         url: tab?.pendingUrl ?? tab?.url ?? "",
+    }
+    return iTab;
+}
+
+function prePareTabFromITab(tab: ITab, tabAction: TabAction) {
+
+    const timeStamp = dayjs().format("YYYY-MM-DD HH:mm:ss");
+
+    const iTab: ITab = {
+        action: tabAction,
+        timeStamp: timeStamp,
+        userId: loggingConstants.userId,
+        studyId: loggingConstants.studyId,
+        taskId: loggingConstants.taskId,
+        groupId: tab.groupId,
+        tabId: tab.tabId,
+        tabIndex: tab.tabIndex,
+        windowId: tab.windowId,
+        title: tab.title,
+        url: tab.url,
     }
     return iTab;
 }

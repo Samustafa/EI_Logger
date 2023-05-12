@@ -136,6 +136,10 @@ class DataBase extends Dexie {
     saveTabInfo(iTab: ITab) {
         dataBase.tabs.add(iTab);
     }
+
+    getLastTabWithId(tabId: number) {
+        return dataBase.tabs.where("tabId").equals(tabId).last();
+    }
 }
 
 export const dataBase = new DataBase();
