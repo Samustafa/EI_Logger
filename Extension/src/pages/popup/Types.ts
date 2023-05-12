@@ -19,4 +19,17 @@ export type BadgeText = {
 
 export type OnUpdatedChangeInfoType = browser.Tabs.OnUpdatedChangeInfoType;
 export type Tab = browser.Tabs.Tab;
+export type TabWithGroupId = Tab & { groupId: number };
 export type Port = browser.Runtime.Port;
+
+export type TabAction =
+    "TAB:CREATED"
+    | "TAB:CLOSED"
+    | "TAB:URL_CHANGED"
+    | "TAB:FOCUSED"
+    | "TAB:ADD:BOOKMARK"
+    | "TAB:REMOVE:BOOKMARK"
+    | "TAB:PINNED"
+    | "TAB:UNPINNED"
+    | "TAB:ATTACHED:TO:WINDOW"
+    | "TAB:DETACH:FROM:WINDOW"

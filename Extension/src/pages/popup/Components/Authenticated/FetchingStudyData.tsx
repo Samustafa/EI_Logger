@@ -29,7 +29,7 @@ export function FetchingStudyData() {
     function fetchStudy() {
         setLoading(true);
         getStudy()
-            .then((response) => saveStudyAndNavigate(new Study(response.data.studyId, response.data.name, response.data.tasks)))
+            .then((response) => saveStudyAndNavigate(new Study(response.studyId, response.name, response.tasks)))
             .catch(error => extractAndSetError(error, setError))
             .finally(() => setLoading(false));
     }

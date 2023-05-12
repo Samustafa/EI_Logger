@@ -7,6 +7,7 @@ import {Paper} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import {ITask} from "@pages/popup/Interfaces";
 import Paths from "@pages/popup/Consts/Paths";
+import {loggingConstants} from "@pages/background/LoggingConstants";
 
 interface Props {
     iTasks: ITask[];
@@ -30,6 +31,7 @@ export function Tasks({iTasks}: Props) {
     function handleListItemClick(taskId: string) {
         const task = getTaskById(taskId);
         const hasPreQuestionnaire = task.iPreQuestions.length > 0;
+        loggingConstants.taskId = taskId;
         if (hasPreQuestionnaire) navigate(Paths.preQuestionnairePage(taskId));
         else navigate(Paths.loggerPage(taskId))
     }

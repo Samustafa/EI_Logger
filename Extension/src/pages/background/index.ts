@@ -1,3 +1,3 @@
 import {initializeBackground} from "@pages/background/backgroundFunctions";
 
-initializeBackground();
+initializeBackground().then(() => console.log("background initialized"));

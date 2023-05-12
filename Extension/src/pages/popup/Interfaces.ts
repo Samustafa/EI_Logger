@@ -1,4 +1,4 @@
-import {QuestionTypeAsString} from "@pages/popup/Types";
+import {QuestionTypeAsString, TabAction} from "@pages/popup/Types";
 
 export interface IApiException {
     httpStatus: string
@@ -70,4 +70,18 @@ export interface IDemographics {
     job: string;
     sex: string;
 
+}
+
+export interface ITab {
+    tabId: number;
+    action: TabAction;
+    timeStamp: string;
+    userId: string
+    studyId: string;
+    taskId: string;
+    groupId: number
+    tabIndex: number;
+    windowId: number;
+    title: string;
+    url: string;
 }

@@ -7,6 +7,7 @@ import {
     IQuestion,
     IRangeQuestion,
     IStudy,
+    ITab,
     ITask,
     ITextQuestion,
     IUser
@@ -27,21 +28,22 @@ class DataBase extends Dexie {
     textQuestion!: Table<ITextQuestion, string>;
     demographics!: Table<IDemographics, string>;
     answers!: Table<IAnswer, string>;
+    tabs!: Table<ITab, string>;
 
     //...other tables goes here...
 
     constructor() {
         super('DataBase');
-        this.version(4).stores({
-            user: '++id', // Primary key and indexed props
+        this.version(5).stores({
+            user: '++id',
             study: 'studyId',
             task: 'taskId, text, iPreQuestions, iPostQuestions, isPreQuestionsSubmitted, isPostQuestionsSubmitted',
             multipleChoiceQuestion: 'questionId, questionText, type, choices',
             rangeQuestion: 'questionId, questionText, type, range',
             textQuestion: 'questionId, questionText, type, maxCharacters',
             demographics: 'id, birthDate, job, sex',
-            answers: '++answerId, userId, studyId, taskId, questionId, answer'
-            //...other tables goes here...
+            answers: 'answerId, userId, studyId, taskId, questionId, answer',
+            tabs: '++id, tabId, action, timeStamp, userId, studyId, taskId, groupId, tabIndex, windowId, title, url'
         });
     }
 
@@ -112,7 +114,7 @@ class DataBase extends Dexie {
 
     async getUserId() {
         const users = await dataBase.user.toArray();
-        return users[0].userId;
+        return users[0]?.userId ?? "userId";
     }
 
     async isPreQuestionnaireSubmitted(taskId: string) {
@@ -122,6 +124,18 @@ class DataBase extends Dexie {
 
     async setPreQuestionnaireSubmitted(taskId: string) {
         dataBase.task.update(taskId, {isPreQuestionsSubmitted: true});
+    }
+
+    async getLoggingConstants() {
+        const userId = await this.getUserId();
+        const studyId = await this.getStudyId();
+
+        return {userId: userId, studyId: studyId};
+    }
+
+    saveTabInfo(iTab: ITab) {
+        dataBase.tabs.add(iTab);
+
     }
 }
 
