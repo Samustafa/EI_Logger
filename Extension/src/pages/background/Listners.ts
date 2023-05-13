@@ -23,8 +23,6 @@ function connectPort(port: Port) {
 
 function receiveMessage(message: { data: string }) {
     console.log(`service worker received message ${message.data}`);
-    listenTabDetahed();
-    listenTabAttached();
 }
 
 function listenTabUpdated() {
