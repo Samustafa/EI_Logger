@@ -13,7 +13,7 @@ export function LoggerReadyPage() {
 
     function handleClick() {
         dataBase.doesTaskHasPostQuestionnaire(loggingConstants.taskId)
-            .then((hasPostQuestionnaire) => navigate(hasPostQuestionnaire ? Paths.postQuestionnaire : Paths.tasksPage))
+            .then((hasPostQuestionnaire) => navigate(hasPostQuestionnaire ? Paths.questionnairePage('post') : Paths.tasksPage))
             .catch((error) => console.error("LoggerReadyPage handleClick " + error));
     }
 
