@@ -140,6 +140,10 @@ class DataBase extends Dexie {
     getLastTabWithId(tabId: number) {
         return dataBase.tabs.where("tabId").equals(tabId).last();
     }
+
+    doesTaskHasPostQuestionnaire(taskId: string) {
+        return dataBase.task.get(taskId).then(iTask => iTask?.iPostQuestions.length !== 0);
+    }
 }
 
 export const dataBase = new DataBase();
