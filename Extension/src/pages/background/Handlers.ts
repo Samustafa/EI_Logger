@@ -1,7 +1,9 @@
 import {
+    BookMark,
     OnActivatedActiveInfoType,
     OnCompletedDetailsType,
     OnUpdatedChangeInfoType,
+    RemoveInfo,
     Tab,
     TabAction,
     TabWithGroupId
@@ -53,6 +55,16 @@ export function handleTabActivated(onActivatedActiveInfoType: OnActivatedActiveI
         .catch((e) => console.error("e -->", e))
 }
 
+export function handleBookmarkCreated(id: string, bookmark: BookMark) {
+    const iTab = prePareITabFromBookMark(bookmark, "TAB:BOOKMARK:ADDED");
+    dataBase.saveTabInfo(iTab);
+}
+
+export function handleBookmarkRemoved(id: string, removeInfo: RemoveInfo) {
+    const iTab = prePareITabFromBookMark(removeInfo.node, "TAB:BOOKMARK:REMOVED");
+    dataBase.saveTabInfo(iTab);
+}
+
 
 //Helper Functions
 function prePareITabFromTab(tab: Tab, tabAction: TabAction): ITab {
@@ -91,6 +103,27 @@ function prePareITabFromITab(tab: ITab, tabAction: TabAction): ITab {
         windowId: tab.windowId,
         title: tab.title,
         url: tab.url,
+    }
+}
+
+/**
+ * Creates an ITab from a bookmark. The ITab has empty values for groupId, tabId, tabIndex and windowId because they are not available for type BookMark.
+ * @param bookmark the bookmark node
+ * @param tabAction
+ */
+function prePareITabFromBookMark(bookmark: BookMark, tabAction: "TAB:BOOKMARK:REMOVED" | "TAB:BOOKMARK:ADDED"): ITab {
+    return {
+        action: tabAction,
+        timeStamp: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+        userId: loggingConstants.userId,
+        studyId: loggingConstants.studyId,
+        taskId: loggingConstants.taskId,
+        groupId: -1,
+        tabId: -1,
+        tabIndex: -1,
+        windowId: -1,
+        title: bookmark.title,
+        url: bookmark.url ?? "",
     }
 }
 

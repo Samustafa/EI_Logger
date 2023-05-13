@@ -37,7 +37,7 @@ const manifest: Manifest.WebExtensionManifest = {
             matches: [],
         },
     ],
-    permissions: ["tabs", "storage", "webNavigation"]
+    permissions: ["tabs", "storage", "webNavigation", "bookmarks"]
 };
 
 export default manifest;

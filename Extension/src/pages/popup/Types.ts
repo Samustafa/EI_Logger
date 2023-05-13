@@ -23,14 +23,17 @@ export type TabWithGroupId = Tab & { groupId: number };
 export type Port = browser.Runtime.Port;
 export type OnActivatedActiveInfoType = browser.Tabs.OnActivatedActiveInfoType;
 export type OnCompletedDetailsType = browser.WebNavigation.OnCompletedDetailsType;
+export type BookMark = browser.Bookmarks.BookmarkTreeNode
+export type RemoveInfo = { parentId: string, index: number, node: BookMark }
+
 export type TabAction =
     "TAB:CREATED"
     | "TAB:CLOSED"
     | "TAB:URL_CHANGED"
     | "TAB:ACTIVATED"
-    | "TAB:ADD:BOOKMARK"
-    | "TAB:REMOVE:BOOKMARK"
+    | "TAB:BOOKMARK:ADDED"
+    | "TAB:BOOKMARK:REMOVED"
     | "TAB:PINNED"
     | "TAB:UNPINNED"
     | "TAB:ATTACHED:TO:WINDOW"
-    | "TAB:DETACH:FROM:WINDOW"
+    | "TAB:DETACHED:FROM:WINDOW"

@@ -1,5 +1,12 @@
 import browser from "webextension-polyfill";
-import {handleOnCompleted, handleTabActivated, handleTabRemoved, handleTabUpdated} from "@pages/background/Handlers";
+import {
+    handleBookmarkCreated,
+    handleBookmarkRemoved,
+    handleOnCompleted,
+    handleTabActivated,
+    handleTabRemoved,
+    handleTabUpdated
+} from "@pages/background/Handlers";
 import {Port} from "@pages/popup/Types";
 
 
@@ -14,11 +21,6 @@ function connectPort(port: Port) {
 
 function receiveMessage(message: { data: string }) {
     console.log(`service worker received message ${message.data}`);
-    // listenTabUpdated();
-    // listenTabCreated();
-    // listenTabRemoved();
-    // listenTabActivated()
-    listenOnCompleted();
 }
 
 function listenTabUpdated() {
@@ -38,4 +40,12 @@ function listenTabActivated() {
  */
 function listenOnCompleted() {
     browser.webNavigation.onCompleted.addListener(handleOnCompleted);
+}
+
+function listenBookmarkCreated() {
+    browser.bookmarks.onCreated.addListener(handleBookmarkCreated);
+}
+
+function listenBookmarkRemoved() {
+    browser.bookmarks.onRemoved.addListener(handleBookmarkRemoved);
 }
