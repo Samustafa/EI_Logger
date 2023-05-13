@@ -11,10 +11,16 @@ export function LoggerReadyPage() {
     const [logging, setLogging] = useState<boolean>(false);
     const navigate = useNavigate();
 
-    function handleClick() {
-        dataBase.doesTaskHasPostQuestionnaire(loggingConstants.taskId)
+    function handleFinishedTask() {
+        dataBase.doesTaskHasQuestionnaire(loggingConstants.taskId, 'post')
             .then((hasPostQuestionnaire) => navigate(hasPostQuestionnaire ? Paths.questionnairePage('post') : Paths.tasksPage))
             .catch((error) => console.error("LoggerReadyPage handleClick " + error));
+    }
+
+    function handleBackButton() {
+        dataBase.doesTaskHasQuestionnaire(loggingConstants.taskId, 'pre')
+            .then((hasPreQuestionnaire) => navigate(hasPreQuestionnaire ? Paths.questionnairePage('pre') : Paths.tasksPage))
+            .catch((error) => console.error("LoggerReadyPage handleBackButton " + error));
     }
 
     return (
@@ -24,7 +30,12 @@ export function LoggerReadyPage() {
             <div>
                 <button className={logging ? buttonDisabledStyle : buttonStyle}
                         disabled={logging}
-                        onClick={() => handleClick()}>
+                        onClick={() => handleBackButton()}>
+                    Back
+                </button>
+                <button className={logging ? buttonDisabledStyle : buttonStyle}
+                        disabled={logging}
+                        onClick={() => handleFinishedTask()}>
                     Finished Task
                 </button>
             </div>

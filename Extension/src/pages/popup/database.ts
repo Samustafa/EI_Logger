@@ -15,6 +15,7 @@ import {
 import {MultipleChoiceQuestion} from "@pages/popup/model/question/MultipleChoiceQuestion";
 import {TextQuestion} from "@pages/popup/model/question/TextQuestion";
 import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
+import {QuestionnaireType} from "@pages/popup/Types";
 
 
 class DataBase extends Dexie {
@@ -156,8 +157,10 @@ class DataBase extends Dexie {
         return dataBase.tabs.where("tabId").equals(tabId).last();
     }
 
-    doesTaskHasPostQuestionnaire(taskId: string) {
-        return dataBase.task.get(taskId).then(iTask => iTask?.iPostQuestions.length !== 0);
+    doesTaskHasQuestionnaire(taskId: string, questionnaireType: QuestionnaireType) {
+        return dataBase.task.get(taskId).then(iTask => {
+            return questionnaireType === 'pre' ? iTask?.iPreQuestions.length !== 0 : iTask?.iPostQuestions.length !== 0
+        });
     }
 }
 
