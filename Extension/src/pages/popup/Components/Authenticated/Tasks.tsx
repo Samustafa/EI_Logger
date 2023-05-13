@@ -16,7 +16,7 @@ interface Props {
 export function Tasks({iTasks}: Props) {
     const navigate = useNavigate();
 
-    function getTaskById(taskId: string) {
+    function doesTaskHasPreQuestionnaire(taskId: string) {
         const defaultITask: ITask = {
             taskId: "",
             text: "",
@@ -25,12 +25,12 @@ export function Tasks({iTasks}: Props) {
             iPreQuestions: [],
             iPostQuestions: []
         }
-        return iTasks.find((task) => task.taskId === taskId) ?? defaultITask;
+        const iTask = iTasks.find((task) => task.taskId === taskId) ?? defaultITask;
+        return iTask.iPreQuestions.length > 0;
     }
 
     function handleListItemClick(taskId: string) {
-        const task = getTaskById(taskId);
-        const hasPreQuestionnaire = task.iPreQuestions.length > 0;
+        const hasPreQuestionnaire = doesTaskHasPreQuestionnaire(taskId);
         loggingConstants.taskId = taskId;
         if (hasPreQuestionnaire) navigate(Paths.preQuestionnairePage(taskId));
         else navigate(Paths.loggerPage(taskId))
