@@ -25,7 +25,8 @@ export type OnActivatedActiveInfoType = browser.Tabs.OnActivatedActiveInfoType;
 export type OnCompletedDetailsType = browser.WebNavigation.OnCompletedDetailsType;
 export type BookMark = browser.Bookmarks.BookmarkTreeNode
 export type RemoveInfo = { parentId: string, index: number, node: BookMark }
-
+export type AttachInfo = { newWindowId: number, newPosition: number }
+export type DetachInfo = { oldWindowId: number, oldPosition: number }
 export type TabAction =
     "TAB:CREATED"
     | "TAB:CLOSED"

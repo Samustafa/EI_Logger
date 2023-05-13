@@ -1,5 +1,7 @@
 import {
+    AttachInfo,
     BookMark,
+    DetachInfo,
     OnActivatedActiveInfoType,
     OnCompletedDetailsType,
     OnUpdatedChangeInfoType,
@@ -65,6 +67,43 @@ export function handleBookmarkRemoved(id: string, removeInfo: RemoveInfo) {
     dataBase.saveTabInfo(iTab);
 }
 
+export async function handleTabAttached(tabId: number, attachInfo: AttachInfo) {
+    const tab = await tabs.get(tabId);
+    const iTab: ITab = {
+        action: "TAB:ATTACHED:TO:WINDOW",
+        groupId: -1,
+        studyId: loggingConstants.studyId,
+        tabId: tabId,
+        tabIndex: attachInfo.newPosition,
+        taskId: loggingConstants.taskId,
+        timeStamp: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+        title: tab?.title ?? "",
+        url: tab?.url ?? "",
+        userId: loggingConstants.userId,
+        windowId: attachInfo.newWindowId,
+    };
+    console.log("attached tab -->", iTab);
+    dataBase.saveTabInfo(iTab);
+}
+
+export async function handleTabDetached(tabId: number, detachInfo: DetachInfo) {
+    const tab = await tabs.get(tabId);
+    const iTab: ITab = {
+        action: "TAB:DETACHED:FROM:WINDOW",
+        groupId: -1,
+        studyId: loggingConstants.studyId,
+        tabId: tabId,
+        tabIndex: detachInfo.oldPosition,
+        taskId: loggingConstants.taskId,
+        timeStamp: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+        title: tab?.title ?? "",
+        url: tab?.url ?? "",
+        userId: loggingConstants.userId,
+        windowId: detachInfo.oldWindowId,
+    }
+    console.log("detached tab -->", iTab);
+    dataBase.saveTabInfo(iTab);
+}
 
 //Helper Functions
 function prePareITabFromTab(tab: Tab, tabAction: TabAction): ITab {
@@ -132,3 +171,4 @@ function handleSaveAfterNewTabOrNewUrl(tab: Tab, tabAction: TabAction) {
     dataBase.saveTabInfo(iTab);
     openedTabsCache.set(iTab.tabId, iTab.url)
 }
+

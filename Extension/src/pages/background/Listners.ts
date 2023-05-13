@@ -4,6 +4,8 @@ import {
     handleBookmarkRemoved,
     handleOnCompleted,
     handleTabActivated,
+    handleTabAttached,
+    handleTabDetached,
     handleTabRemoved,
     handleTabUpdated
 } from "@pages/background/Handlers";
@@ -21,6 +23,8 @@ function connectPort(port: Port) {
 
 function receiveMessage(message: { data: string }) {
     console.log(`service worker received message ${message.data}`);
+    listenTabDetahed();
+    listenTabAttached();
 }
 
 function listenTabUpdated() {
@@ -48,4 +52,12 @@ function listenBookmarkCreated() {
 
 function listenBookmarkRemoved() {
     browser.bookmarks.onRemoved.addListener(handleBookmarkRemoved);
+}
+
+function listenTabAttached() {
+    browser.tabs.onAttached.addListener(handleTabAttached)
+}
+
+function listenTabDetahed() {
+    browser.tabs.onDetached.addListener(handleTabDetached)
 }
