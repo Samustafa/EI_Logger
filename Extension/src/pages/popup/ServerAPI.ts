@@ -8,7 +8,8 @@ import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
 
 
 export async function registerUser(code: string) {
-    return await axios.post<IUser>(`http://localhost:8080/logger/registerUser/${code}`);
+    const axiosResponse = await axios.post<IUser>(`http://localhost:8080/logger/registerUser/${code}`);
+    return axiosResponse.data;
 }
 
 export async function getStudy(): Promise<Study> {
@@ -26,6 +27,11 @@ export async function getStudy(): Promise<Study> {
     return new Study("64456e83d6b1e3463ca52923", "study 1", tasks);
 }
 
+/**
+ * Sends a request to the server to log in the user
+ * returns 200 if user exists, 401 if not, which then will be handled by the catch block
+ * @param userId
+ */
 export async function login(userId: string) {
-    return await axios.get(`http://localhost:8080/logger/authenticateUser/${userId}`);
+    await axios.get(`http://localhost:8080/logger/authenticateUser/${userId}`);
 }

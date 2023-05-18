@@ -10,7 +10,8 @@ import {
     ITab,
     ITask,
     ITextQuestion,
-    IUser
+    IUser,
+    IUserExtensionInteraction
 } from "@pages/popup/Interfaces";
 import {MultipleChoiceQuestion} from "@pages/popup/model/question/MultipleChoiceQuestion";
 import {TextQuestion} from "@pages/popup/model/question/TextQuestion";
@@ -29,12 +30,13 @@ class DataBase extends Dexie {
     demographics!: Table<IDemographics, string>;
     answers!: Table<IAnswer, string>;
     tabs!: Table<ITab, string>;
+    userExtensionInteraction!: Table<IUserExtensionInteraction, string>;
 
     //...other tables goes here...
 
     constructor() {
         super('DataBase');
-        this.version(5).stores({
+        this.version(6).stores({
             user: '++id',
             study: 'studyId',
             task: 'taskId, text, iPreQuestions, iPostQuestions, isPreQuestionsSubmitted, isPostQuestionsSubmitted',
@@ -43,8 +45,13 @@ class DataBase extends Dexie {
             textQuestion: 'questionId, questionText, type, maxCharacters',
             demographics: 'id, birthDate, job, sex',
             answers: 'answerId, userId, studyId, taskId, questionId, answer',
-            tabs: '++id, tabId, action, timeStamp, userId, studyId, taskId, groupId, tabIndex, windowId, title, url'
+            tabs: '++id, tabId, action, timeStamp, userId, studyId, taskId, groupId, tabIndex, windowId, title, url',
+            userExtensionInteraction: '++id, action, timeStamp, userId, studyId, taskId'
         });
+    }
+
+    addUserToDataBase(userId: IUser) {
+        dataBase.user.add(userId);
     }
 
     async getITasks() {
@@ -107,14 +114,14 @@ class DataBase extends Dexie {
         await dataBase.answers.bulkPut(answers);
     }
 
-    async getStudyId() {
+    async getStudyId(): Promise<string | undefined> {
         const studies = await dataBase.study.toArray();
-        return studies[0].studyId;
+        return studies[0]?.studyId;
     }
 
-    async getUserId() {
+    async getUserId(): Promise<string | undefined> {
         const users = await dataBase.user.toArray();
-        return users[0]?.userId ?? "userId";
+        return users[0]?.userId;
     }
 
     async isPreQuestionnaireSubmitted(taskId: string) {
@@ -130,6 +137,7 @@ class DataBase extends Dexie {
         const userId = await this.getUserId();
         const studyId = await this.getStudyId();
 
+        if (userId === undefined || studyId === undefined) throw new Error('User or study id is undefined');
         return {userId: userId, studyId: studyId};
     }
 
@@ -143,6 +151,10 @@ class DataBase extends Dexie {
 
     doesTaskHasPostQuestionnaire(taskId: string) {
         return dataBase.task.get(taskId).then(iTask => iTask?.iPostQuestions.length !== 0);
+    }
+
+    logUserExtensionInteraction(interaction: IUserExtensionInteraction): void {
+        console.log(interaction);
     }
 }
 

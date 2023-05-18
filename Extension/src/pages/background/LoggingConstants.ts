@@ -1,16 +1,16 @@
 class LoggingConstants {
-    private _studyId: string;
-    private _userId: string;
-    private _taskId: string;
+    private _studyId?: string;
+    private _userId?: string;
+    private _taskId?: string;
 
-    constructor(studyId: string, userId: string, taskId: string) {
+    constructor(studyId?: string, userId?: string, taskId?: string) {
         this._studyId = studyId;
         this._userId = userId;
         this._taskId = taskId;
     }
 
     get studyId(): string {
-        return this._studyId;
+        return <string>this._studyId;
     }
 
     set studyId(value: string) {
@@ -18,7 +18,7 @@ class LoggingConstants {
     }
 
     get userId(): string {
-        return this._userId;
+        return <string>this._userId;
     }
 
     set userId(value: string) {
@@ -26,7 +26,7 @@ class LoggingConstants {
     }
 
     get taskId(): string {
-        return this._taskId;
+        return <string>this._taskId;
     }
 
     set taskId(value: string) {
@@ -39,4 +39,4 @@ class LoggingConstants {
     }
 }
 
-export const loggingConstants = new LoggingConstants("studyId", "userId", "taskId");
+export const loggingConstants = new LoggingConstants(undefined, undefined, undefined);

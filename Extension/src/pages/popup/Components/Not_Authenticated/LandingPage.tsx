@@ -5,10 +5,8 @@ import Paths from "@pages/popup/Consts/Paths";
 import {LoadingButton} from "@pages/popup/SharedComponents/LoadingButton";
 import {login, registerUser} from "@pages/popup/ServerAPI";
 import {dataBase} from "@pages/popup/database";
-import {AxiosResponse} from "axios";
-import {IUser} from "@pages/popup/Interfaces";
 import {Input36Component} from "@pages/popup/SharedComponents/Input36Component";
-import {extractAndSetError} from "@pages/popup/UtilityFunctions";
+import {extractAndSetError, getUserExtensionInteraction} from "@pages/popup/UtilityFunctions";
 
 export default function LandingPage() {
 
@@ -39,13 +37,6 @@ export default function LandingPage() {
         setLoginError(null);
     }
 
-    function saveToDBAndNavigate(response: AxiosResponse<IUser>) {
-        const {userId} = response.data;
-        console.log("saveToDBAndNavigate", userId)
-        dataBase.user.add({userId: userId})
-            .then(() => navigate(Paths.idDisplayPage(userId)))
-            .catch((error) => extractAndSetError(error, setRegistrationError));
-    }
 
     function handleRegister(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -54,12 +45,15 @@ export default function LandingPage() {
         setUserId("");
 
         registerUser(registrationCode)
-            .then(response => saveToDBAndNavigate(response))
+            .then(iUser => {
+                dataBase.addUserToDataBase(iUser) //add try catch on original function to throw more comprehensive custom errors
+                dataBase.logUserExtensionInteraction(getUserExtensionInteraction("SIGNED:UP", iUser.userId));
+            })
+            .then(() => navigate(Paths.idDisplayPage(userId)))
             .catch(error => extractAndSetError(error, setRegistrationError))
             .finally(() => enableButtons());
 
     }
-
 
     function handleLogin(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -68,7 +62,8 @@ export default function LandingPage() {
         setRegistrationCode("");
 
         login(userId)
-            .then(() => navigate("not implemented"))
+            .then(() => dataBase.logUserExtensionInteraction(getUserExtensionInteraction("SIGNED:IN", userId)))
+            .then(() => navigate(Paths.idDisplayPage(userId)))
             .catch((error) => extractAndSetError(error, setLoginError))
             .finally(() => enableButtons());
     }
