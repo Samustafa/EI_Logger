@@ -1,5 +1,4 @@
 const landingPage = '/';
-const registrationPage = '/registrationPage';
 const tasksPage = "/tasksPage";
 const fetchingStudyData = '/fetchingStudyData';
 const demographicsPage = '/demographicsPage';
@@ -19,7 +18,6 @@ function loggerPage(taskId = ':taskId') {
 
 
 export default {
-    registrationPage,
     landingPage,
     idDisplayPage,
     tasksPage,
