@@ -6,8 +6,9 @@ import {LoadingButton} from "@pages/popup/SharedComponents/LoadingButton";
 import {login, registerUser} from "@pages/popup/ServerAPI";
 import {dataBase} from "@pages/popup/database";
 import {AxiosResponse} from "axios";
-import {IApiException, IUser} from "@pages/popup/Interfaces";
+import {IUser} from "@pages/popup/Interfaces";
 import {Input36Component} from "@pages/popup/SharedComponents/Input36Component";
+import {extractAndSetError} from "@pages/popup/UtilityFunctions";
 
 export default function LandingPage() {
 
@@ -38,21 +39,12 @@ export default function LandingPage() {
         setLoginError(null);
     }
 
-    /**
-     * Extracts the server exception from response or extracts error message if server didn't respond
-     * @param error
-     */
-    function extractAndSetRegistrationError(error: any) {
-        const serverException: IApiException = error.response?.data;
-        setRegistrationError(serverException ? serverException.message : error.message);
-    }
-
     function saveToDBAndNavigate(response: AxiosResponse<IUser>) {
         const {userId} = response.data;
         console.log("saveToDBAndNavigate", userId)
         dataBase.user.add({userId: userId})
             .then(() => navigate(Paths.idDisplayPage(userId)))
-            .catch((error) => extractAndSetRegistrationError(error));
+            .catch((error) => extractAndSetError(error, setRegistrationError));
     }
 
     function handleRegister(event: FormEvent<HTMLFormElement>) {
@@ -63,15 +55,11 @@ export default function LandingPage() {
 
         registerUser(registrationCode)
             .then(response => saveToDBAndNavigate(response))
-            .catch(error => extractAndSetRegistrationError(error))
+            .catch(error => extractAndSetError(error, setRegistrationError))
             .finally(() => enableButtons());
 
     }
 
-    function extractAndSetLoginError(error: any) {
-        const serverException: IApiException = error.response?.data;
-        setLoginError(serverException ? serverException.message : error.message);
-    }
 
     function handleLogin(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -81,7 +69,7 @@ export default function LandingPage() {
 
         login(userId)
             .then(() => navigate("not implemented"))
-            .catch((error) => extractAndSetLoginError(error))
+            .catch((error) => extractAndSetError(error, setLoginError))
             .finally(() => enableButtons());
     }
 
@@ -114,4 +102,4 @@ export default function LandingPage() {
                 <div className={errorDivStyle} data-testid="error_text">{loginError}</div>}
         </>
     );
-};
+}
