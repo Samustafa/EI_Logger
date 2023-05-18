@@ -1,4 +1,4 @@
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {dataBase} from "@pages/popup/database";
 import {QuestionElement} from "@pages/popup/Components/Authenticated/QuestionElement";
@@ -14,7 +14,8 @@ import {buttonDisabledStyle, buttonStyle} from "@pages/popup/Consts/Styles";
 import {loggingConstants} from "@pages/background/LoggingConstants";
 
 
-export function PreQuestionnairePage() {
+export function QuestionnairePage() {
+    const {questionnaireType} = useParams<string>();
     const taskId = loggingConstants.taskId;
     const [iQuestions, setIQuestions] = useState<IQuestion[]>([]);
     const [isValidating, setIsValidating] = useState<boolean>(false);
@@ -25,12 +26,12 @@ export function PreQuestionnairePage() {
     const navigate = useNavigate();
 
     useEffect(function fetchQuestions() {
-        dataBase.getPreQuestionnaire(taskId)
+        dataBase.getQuestionnaire(taskId, questionnaireType)
             .then((questions) => setIQuestions(questions))
             .catch((error) => extractAndSetError(error, setError))
     }, [taskId])
-    useEffect(function checkIfNextIsDisabled() {
-        dataBase.isPreQuestionnaireSubmitted(taskId)
+    useEffect(function isNextButtonDisabled() {
+        dataBase.isQuestionnaireSubmitted(taskId, questionnaireType)
             .then((isSubmitted) => setIsNextDisabled(!isSubmitted))
             .catch((error) => extractAndSetError(error, setError))
     }, [taskId]);
@@ -55,8 +56,8 @@ export function PreQuestionnairePage() {
         const userId = loggingConstants.userId;
         const iAnswers = answers.map(answer => mapIQuestionAnswerToIAnswer(answer, studyId, userId));
 
-        dataBase.submitPreQuestionnaire(taskId, iAnswers)
-            .then(() => dataBase.setPreQuestionnaireSubmitted(taskId))
+        dataBase.submitQuestionnaire(taskId, iAnswers, questionnaireType)
+            .then(() => dataBase.setQuestionnaireSubmitted(taskId, questionnaireType))
             .then(() => handlePostSubmit())
             .catch((error) => extractAndSetError(error, setError))
             .finally(() => setIsValidating(false));
@@ -65,11 +66,11 @@ export function PreQuestionnairePage() {
     }
 
     function handleBack() {
-        navigate(Paths.tasksPage);
+        navigate(questionnaireType === 'pre' ? Paths.tasksPage : Paths.loggerPage);
     }
 
     function handleNext() {
-        navigate(Paths.loggerPage());
+        navigate(questionnaireType === 'pre' ? Paths.loggerPage : Paths.tasksPage);
     }
 
     function handlePostSubmit() {
@@ -77,9 +78,13 @@ export function PreQuestionnairePage() {
         setIsNextDisabled(false);
     }
 
+    function getTitle(questionnaireType: string | undefined) {
+        return questionnaireType === 'pre' ? <h1>Pre Questionnaire</h1> : <h1>Post Questionnaire</h1>;
+    }
+
     return (
         <>
-            <h1>Pre Questionnaire</h1>
+            {getTitle(questionnaireType)}
             <LoadingButton text={"back"} loadingText={"Loading..."} isLoading={isValidating} onClick={handleBack}/>
             <button className={isNextDisabled ? buttonDisabledStyle : buttonStyle}
                     onClick={handleNext}

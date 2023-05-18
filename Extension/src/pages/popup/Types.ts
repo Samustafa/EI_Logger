@@ -12,6 +12,8 @@ export type PortName = "port1" | "port2"
 
 export type BadgeText = 'ON' | 'OFF'
 
+export type QuestionnaireType = 'pre' | 'post';
+
 
 export type OnUpdatedChangeInfoType = browser.Tabs.OnUpdatedChangeInfoType;
 export type Tab = browser.Tabs.Tab;

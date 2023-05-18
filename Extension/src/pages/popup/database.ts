@@ -16,6 +16,7 @@ import {
 import {MultipleChoiceQuestion} from "@pages/popup/model/question/MultipleChoiceQuestion";
 import {TextQuestion} from "@pages/popup/model/question/TextQuestion";
 import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
+import {QuestionnaireType} from "@pages/popup/Types";
 import {UserExtensionAction} from "@pages/popup/Types";
 import {getUTCDateTime} from "@pages/popup/UtilityFunctions";
 import {loggingConstants} from "@pages/background/LoggingConstants";
@@ -100,18 +101,27 @@ class DataBase extends Dexie {
         }
     }
 
-    async getPreQuestionnaire(taskId: string) {
-        let preQuestionnaire: IQuestion[] = [];
+    async getQuestionnaire(taskId: string, questionnaireType: string | undefined) {
+        const isQuestionnaireTypeLegal = questionnaireType === 'pre' || questionnaireType === 'post';
+        if (!isQuestionnaireTypeLegal) throw new Error("questionnaireType is not legal");
+
+        let questions: IQuestion[] = [];
         await dataBase.task.get(taskId)
-            .then(iTask => preQuestionnaire = iTask?.iPreQuestions ?? []);
-        return preQuestionnaire;
+            .then(iTask => {
+                if (questionnaireType === 'pre') questions = iTask?.iPreQuestions ?? []
+                else questions = iTask?.iPostQuestions ?? []
+            });
+        return questions;
     }
 
     async setDemographics(demographics: IDemographics) {
         await dataBase.demographics.put(demographics);
     }
 
-    async submitPreQuestionnaire(taskId: string, answers: IAnswer[]) {
+    async submitQuestionnaire(taskId: string, answers: IAnswer[], questionnaireType: string | undefined) {
+        const isQuestionnaireTypeLegal = questionnaireType === 'pre' || questionnaireType === 'post';
+        if (!isQuestionnaireTypeLegal) throw new Error("questionnaireType is not legal");
+
         await dataBase.answers.bulkPut(answers);
     }
 
@@ -125,13 +135,19 @@ class DataBase extends Dexie {
         return users[0]?.userId;
     }
 
-    async isPreQuestionnaireSubmitted(taskId: string) {
-        const iTask = await dataBase.task.get(taskId).catch(error => console.log(error));
-        return iTask?.isPreQuestionsSubmitted ?? false;
+    async isQuestionnaireSubmitted(taskId: string, questionnaireType: string | undefined) {
+        const isQuestionnaireTypeLegal = questionnaireType === 'pre' || questionnaireType === 'post';
+        if (!isQuestionnaireTypeLegal) throw new Error("questionnaireType is not legal");
+
+        const iTask = await dataBase.task.get(taskId);
+        return questionnaireType === 'pre' ? iTask?.isPreQuestionsSubmitted : iTask?.isPostQuestionsSubmitted;
     }
 
-    async setPreQuestionnaireSubmitted(taskId: string) {
-        dataBase.task.update(taskId, {isPreQuestionsSubmitted: true});
+    async setQuestionnaireSubmitted(taskId: string, questionnaireType: string | undefined) {
+        const isQuestionnaireTypeLegal = questionnaireType === 'pre' || questionnaireType === 'post';
+        if (!isQuestionnaireTypeLegal) throw new Error("questionnaireType is not legal");
+        const updatedItem = questionnaireType === 'pre' ? {isPreQuestionsSubmitted: true} : {isPostQuestionsSubmitted: true};
+        dataBase.task.update(taskId, updatedItem);
     }
 
     async getLoggingConstants() {
@@ -150,8 +166,10 @@ class DataBase extends Dexie {
         return dataBase.tabs.where("tabId").equals(tabId).last();
     }
 
-    doesTaskHasPostQuestionnaire(taskId: string) {
-        return dataBase.task.get(taskId).then(iTask => iTask?.iPostQuestions.length !== 0);
+    doesTaskHasQuestionnaire(taskId: string, questionnaireType: QuestionnaireType) {
+        return dataBase.task.get(taskId).then(iTask => {
+            return questionnaireType === 'pre' ? iTask?.iPreQuestions.length !== 0 : iTask?.iPostQuestions.length !== 0
+        });
     }
 
     logUserExtensionInteraction(action: UserExtensionAction): void {

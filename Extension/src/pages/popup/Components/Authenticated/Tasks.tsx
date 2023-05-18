@@ -32,8 +32,8 @@ export function Tasks({iTasks}: Props) {
     function handleListItemClick(taskId: string) {
         const hasPreQuestionnaire = doesTaskHasPreQuestionnaire(taskId);
         loggingConstants.taskId = taskId;
-        if (hasPreQuestionnaire) navigate(Paths.preQuestionnairePage(taskId));
-        else navigate(Paths.loggerPage(taskId));
+        if (hasPreQuestionnaire) navigate(Paths.questionnairePage('pre'));
+        else navigate(Paths.loggerPage)
     }
 
     return (
