@@ -15,13 +15,13 @@ export default function Popup() {
     return (
         <div className={generalStyle}>
             <Routes>
-                <Route path={Paths.landingPage + "s"} element={<LandingPage/>}/>
+                <Route path={Paths.landingPage} element={<LandingPage/>}/>
                 <Route path={Paths.idDisplayPage()} element={<IdDisplayPage/>}/>
                 <Route path={Paths.demographicsPage} element={<DemographicsPage/>}/>
                 <Route path={Paths.tasksPage} element={<TasksPage/>}/>
                 <Route path={Paths.fetchingStudyData} element={<FetchingStudyData/>}/>
                 <Route path={Paths.preQuestionnairePage()} element={<PreQuestionnairePage/>}/>
-                <Route path={Paths.landingPage} element={<LoggerReadyPage/>}/>
+                <Route path={Paths.loggerPage()} element={<LoggerReadyPage/>}/>
             </Routes>
         </div>
     );
