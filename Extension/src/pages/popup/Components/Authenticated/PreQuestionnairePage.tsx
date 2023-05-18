@@ -1,4 +1,4 @@
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {dataBase} from "@pages/popup/database";
 import {QuestionElement} from "@pages/popup/Components/Authenticated/QuestionElement";
@@ -11,10 +11,11 @@ import {SuccessMessage} from "@pages/popup/SharedComponents/SuccessMessage";
 import {v4 as uuidv4} from 'uuid';
 import Paths from "@pages/popup/Consts/Paths";
 import {buttonDisabledStyle, buttonStyle} from "@pages/popup/Consts/Styles";
+import {loggingConstants} from "@pages/background/LoggingConstants";
 
 
 export function PreQuestionnairePage() {
-    const {taskId} = useParams<string>();
+    const taskId = loggingConstants.taskId;
     const [iQuestions, setIQuestions] = useState<IQuestion[]>([]);
     const [isValidating, setIsValidating] = useState<boolean>(false);
     const [isNextDisabled, setIsNextDisabled] = useState<boolean>(true);
@@ -24,12 +25,12 @@ export function PreQuestionnairePage() {
     const navigate = useNavigate();
 
     useEffect(function fetchQuestions() {
-        dataBase.getPreQuestionnaire(taskId ?? "")
+        dataBase.getPreQuestionnaire(taskId)
             .then((questions) => setIQuestions(questions))
             .catch((error) => extractAndSetError(error, setError))
     }, [taskId])
     useEffect(function checkIfNextIsDisabled() {
-        dataBase.isPreQuestionnaireSubmitted(taskId ?? "")
+        dataBase.isPreQuestionnaireSubmitted(taskId)
             .then((isSubmitted) => setIsNextDisabled(!isSubmitted))
             .catch((error) => extractAndSetError(error, setError))
     }, [taskId]);
@@ -38,7 +39,7 @@ export function PreQuestionnairePage() {
         return {
             answerId: uuidv4(),
             questionId: iQuestionAnswer.questionId,
-            taskId: taskId ?? "",
+            taskId: taskId,
             answer: iQuestionAnswer.answer,
             studyId: studyId,
             userId: userId
@@ -50,12 +51,12 @@ export function PreQuestionnairePage() {
         setError("");
         setIsSuccess(false);
 
-        const studyId = await dataBase.getStudyId();
-        const userId = await dataBase.getUserId();
+        const studyId = loggingConstants.studyId;
+        const userId = loggingConstants.userId;
         const iAnswers = answers.map(answer => mapIQuestionAnswerToIAnswer(answer, studyId, userId));
 
-        dataBase.submitPreQuestionnaire(taskId ?? "", iAnswers)
-            .then(() => dataBase.setPreQuestionnaireSubmitted(taskId ?? ""))
+        dataBase.submitPreQuestionnaire(taskId, iAnswers)
+            .then(() => dataBase.setPreQuestionnaireSubmitted(taskId))
             .then(() => handlePostSubmit())
             .catch((error) => extractAndSetError(error, setError))
             .finally(() => setIsValidating(false));

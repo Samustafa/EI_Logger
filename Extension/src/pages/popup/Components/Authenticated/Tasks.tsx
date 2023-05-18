@@ -33,7 +33,7 @@ export function Tasks({iTasks}: Props) {
         const hasPreQuestionnaire = doesTaskHasPreQuestionnaire(taskId);
         loggingConstants.taskId = taskId;
         if (hasPreQuestionnaire) navigate(Paths.preQuestionnairePage(taskId));
-        else navigate(Paths.loggerPage(taskId))
+        else navigate(Paths.loggerPage(taskId));
     }
 
     return (
