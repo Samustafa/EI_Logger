@@ -1,4 +1,4 @@
-import {QuestionTypeAsString, TabAction} from "@pages/popup/Types";
+import {QuestionTypeAsString, TabAction, UserExtensionAction} from "@pages/popup/Types";
 
 export interface IApiException {
     httpStatus: string
@@ -84,4 +84,12 @@ export interface ITab {
     windowId: number;
     title: string;
     url: string;
+}
+
+export interface IUserExtensionInteraction {
+    action: UserExtensionAction;
+    timeStamp: string;
+    userId?: string;
+    studyId?: string;
+    taskId?: string;
 }
