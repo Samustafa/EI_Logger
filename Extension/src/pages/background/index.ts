@@ -1,1 +1,3 @@
-console.log('background script loaded');
+import {initializeBackground} from "@pages/background/backgroundFunctions";
+
+initializeBackground().then(() => console.log("background initialized"));
