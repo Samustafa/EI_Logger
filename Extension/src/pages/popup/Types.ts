@@ -39,4 +39,9 @@ export type TabAction =
     | "TAB:ATTACHED:TO:WINDOW"
     | "TAB:DETACHED:FROM:WINDOW"
 
-export type UserExtensionAction = "SIGNED:UP" | "SIGNED:IN" | "STARTED:STUDY";
+export type UserExtensionAction =
+    "SIGNED:UP"
+    | "SIGNED:IN"
+    | "STARTED:STUDY"
+    | "OPENED:DEMOGRAPHICS"
+    | "SUBMITTED:DEMOGRAPHICS";

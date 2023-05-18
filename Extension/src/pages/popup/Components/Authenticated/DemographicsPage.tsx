@@ -1,16 +1,23 @@
 import {inputDefaultStyle, inputErrorStyle} from "@pages/popup/Consts/Styles";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {LoadingButton} from "@pages/popup/SharedComponents/LoadingButton";
 import CustomizedMenus from "@pages/popup/SharedComponents/CustomizedMenus";
 import {ErrorMessage} from "@pages/popup/SharedComponents/ErrorMessage";
 import dayjs from "dayjs";
 import {IDemographics} from "@pages/popup/Interfaces";
 import {dataBase} from "@pages/popup/database";
+import {useNavigate} from "react-router-dom";
+import Paths from "@pages/popup/Consts/Paths";
+import {extractAndSetError} from "@pages/popup/UtilityFunctions";
+import {loggingConstants} from "@pages/background/LoggingConstants";
 
-export function DemographicsPage(): JSX.Element {
+export function DemographicsPage() {
+
+    const navigate = useNavigate();
     const formId = "demographicsForm";
     const [isValidating,] = useState<boolean>(false);
     const demographicsPrimaryKey = '0';
+    const [generalError, setGeneralError] = useState<string>('');
 
 
     const birthDateInput = "birthDate";
@@ -57,6 +64,10 @@ export function DemographicsPage(): JSX.Element {
         <CustomizedMenus sex={sex} setSex={setSex} error={Boolean(sexError)}/>
     </>
 
+    useEffect(function logOpenedDemographics() {
+        dataBase.logUserExtensionInteraction('OPENED:DEMOGRAPHICS', loggingConstants.userId)
+    }, []);
+
     function isFormValid() {
         return isDateValid(birthDate) && isSexSelected() && job !== '';
     }
@@ -96,6 +107,9 @@ export function DemographicsPage(): JSX.Element {
             sex: sex
         }
         dataBase.setDemographics(demographics)
+            .then(() => dataBase.logUserExtensionInteraction('SUBMITTED:DEMOGRAPHICS', loggingConstants.userId))
+            .then(() => navigate(Paths.fetchingStudyData))
+            .catch((error) => extractAndSetError(error, setGeneralError))
     }
 
     return (
@@ -111,7 +125,7 @@ export function DemographicsPage(): JSX.Element {
                                onClick={handleSubmit}/>
             </form>
 
-            <ErrorMessage error={birthDateError + sexError + jobError}/>
+            <ErrorMessage error={generalError + birthDateError + sexError + jobError}/>
         </>
     );
 }
