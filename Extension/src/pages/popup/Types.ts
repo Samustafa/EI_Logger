@@ -6,16 +6,12 @@ import browser from "webextension-polyfill";
 export type QuestionTypeAsString = "TextQuestion" | "MultipleChoiceQuestion" | "RangeQuestion";
 export type QuestionType = TextQuestion | MultipleChoiceQuestion | RangeQuestion;
 
-export type MessageType = {
-    data: "message1"
-}
-export type PortName = {
-    name: "port1" | "port2"
-}
+export type MessageType = "START_LOGGING" | "STOP_LOGGING"
+export type PortName = "port1" | "port2"
 
-export type BadgeText = {
-    text: 'ON' | 'OFF'
-}
+
+export type BadgeText = 'ON' | 'OFF'
+
 
 export type OnUpdatedChangeInfoType = browser.Tabs.OnUpdatedChangeInfoType;
 export type Tab = browser.Tabs.Tab;
@@ -44,4 +40,4 @@ export type UserExtensionAction =
     | "SIGNED:IN"
     | "STARTED:STUDY"
     | "OPENED:DEMOGRAPHICS"
-    | "SUBMITTED:DEMOGRAPHICS";
+    | "SUBMITTED:DEMOGRAPHICS" | "STOPPED:LOGGING" | "STARTED:LOGGING";

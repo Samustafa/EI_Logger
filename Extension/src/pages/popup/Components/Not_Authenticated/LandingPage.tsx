@@ -8,7 +8,7 @@ import {dataBase} from "@pages/popup/database";
 import {Input36Component} from "@pages/popup/SharedComponents/Input36Component";
 import {extractAndSetError} from "@pages/popup/UtilityFunctions";
 import {loggingConstants} from "@pages/background/LoggingConstants";
-
+//99746344-7382-4d7c-9e60-6ed3a3cef427
 export default function LandingPage() {
 
     const [userId, setUserId] = useState<string>("");
@@ -48,7 +48,7 @@ export default function LandingPage() {
         registerUser(registrationCode)
             .then(iUser => {
                 dataBase.addUserToDataBase(iUser) //TODO: add try catch on original function to throw more comprehensive custom errors
-                dataBase.logUserExtensionInteraction("SIGNED:UP", iUser.userId);
+                dataBase.logUserExtensionInteraction("SIGNED:UP");
                 loggingConstants.userId = iUser.userId;
             })
             .then(() => navigate(Paths.idDisplayPage))
@@ -65,7 +65,7 @@ export default function LandingPage() {
 
         login(userId)
             .then(() => {
-                dataBase.logUserExtensionInteraction("SIGNED:IN", userId);
+                dataBase.logUserExtensionInteraction("SIGNED:IN");
                 loggingConstants.userId = userId;
             })
             .then(() => navigate(Paths.fetchingStudyData))

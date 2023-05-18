@@ -5,7 +5,7 @@ import {dataBase} from "@pages/popup/database";
 import {loggingConstants} from "@pages/background/LoggingConstants";
 
 export async function initializeBackground() {
-    browser.runtime.onInstalled.addListener(() => setBadgeText({text: 'OFF'}));
+    browser.runtime.onInstalled.addListener(() => setBadgeText('OFF'));
     await initializeLoggingConstants();
     startListening();
 }
@@ -18,7 +18,7 @@ async function initializeLoggingConstants() {
 }
 
 export function setBadgeText(badgeText: BadgeText) {
-    browser.action.setBadgeText({text: badgeText.text}).then(() => console.log("set badge to OFF"));
+    browser.action.setBadgeText({text: badgeText}).then(() => console.log("set badge to", badgeText));
 }
 
 //look again at the original files

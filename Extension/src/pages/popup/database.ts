@@ -18,12 +18,11 @@ import {TextQuestion} from "@pages/popup/model/question/TextQuestion";
 import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
 import {UserExtensionAction} from "@pages/popup/Types";
 import {getUTCDateTime} from "@pages/popup/UtilityFunctions";
+import {loggingConstants} from "@pages/background/LoggingConstants";
 
 
 class DataBase extends Dexie {
-    // Declare implicit table properties.
-    // (just to inform Typescript. Instantiated by Dexie in stores() method)
-    user!: Table<IUser, string>; // string = type of the primaryKey
+    user!: Table<IUser, string>;
     study!: Table<IStudy, string>;
     task!: Table<ITask, string>;
     multipleChoiceQuestion!: Table<IMultipleChoiceQuestion, string>;
@@ -155,12 +154,12 @@ class DataBase extends Dexie {
         return dataBase.task.get(taskId).then(iTask => iTask?.iPostQuestions.length !== 0);
     }
 
-    logUserExtensionInteraction(action: UserExtensionAction, userId?: string, studyId?: string): void {
+    logUserExtensionInteraction(action: UserExtensionAction): void {
         const log = {
             action: action,
             timeStamp: getUTCDateTime(),
-            userId: userId,
-            studyId: studyId,
+            userId: loggingConstants.userId,
+            studyId: loggingConstants.studyId,
         }
 
         dataBase.userExtensionInteraction.add(log);

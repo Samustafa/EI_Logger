@@ -9,7 +9,6 @@ import {dataBase} from "@pages/popup/database";
 import {useNavigate} from "react-router-dom";
 import Paths from "@pages/popup/Consts/Paths";
 import {extractAndSetError} from "@pages/popup/UtilityFunctions";
-import {loggingConstants} from "@pages/background/LoggingConstants";
 
 export function DemographicsPage() {
 
@@ -66,7 +65,7 @@ export function DemographicsPage() {
     </>
 
     useEffect(function logOpenedDemographics() {
-        dataBase.logUserExtensionInteraction('OPENED:DEMOGRAPHICS', loggingConstants.userId)
+        dataBase.logUserExtensionInteraction('OPENED:DEMOGRAPHICS')
     }, []);
 
     useEffect(function checkIfStudyExists() {
@@ -114,7 +113,7 @@ export function DemographicsPage() {
             sex: sex
         }
         dataBase.setDemographics(demographics)
-            .then(() => dataBase.logUserExtensionInteraction('SUBMITTED:DEMOGRAPHICS', loggingConstants.userId))
+            .then(() => dataBase.logUserExtensionInteraction('SUBMITTED:DEMOGRAPHICS'))
             .then(() => navigate(isStudyExists ? Paths.tasksPage : Paths.fetchingStudyData))
             .catch((error) => extractAndSetError(error, setGeneralError))
     }

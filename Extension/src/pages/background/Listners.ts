@@ -9,7 +9,8 @@ import {
     handleTabRemoved,
     handleTabUpdated
 } from "@pages/background/Handlers";
-import {Port} from "@pages/popup/Types";
+import {MessageType, Port} from "@pages/popup/Types";
+import {setBadgeText} from "@pages/background/backgroundFunctions";
 
 
 export function startListening() {
@@ -21,20 +22,63 @@ function connectPort(port: Port) {
     port.onMessage.addListener(receiveMessage);
 }
 
-function receiveMessage(message: { data: string }) {
-    console.log(`service worker received message ${message.data}`);
+function receiveMessage(message: MessageType) {
+    if (message === "START_LOGGING") {
+        console.log("start logging");
+        activateAllListens();
+        setBadgeText('ON');
+    } else if (message === "STOP_LOGGING") {
+        console.log("stop logging");
+        disRegardAllListeners();
+        setBadgeText('OFF');
+    }
+}
+
+function activateAllListens() {
+    listenOnCompleted();
+    listenTabActivated();
+    listenTabRemoved();
+    listenTabUpdated();
+    listenBookmarkCreated();
+    listenBookmarkRemoved();
+    listenTabAttached();
+    listenTabDetached();
+
+}
+
+function disRegardAllListeners() {
+    disregardOnCompleted();
+    disregardTabActivated();
+    disregardTabRemoved();
+    disregardTabUpdated();
+    disregardBookmarkCreated();
+    disregardBookmarkRemoved();
+    disregardTabAttached();
+    disregardTabDetached();
 }
 
 function listenTabUpdated() {
     browser.tabs.onUpdated.addListener(handleTabUpdated)
 }
 
+function disregardTabUpdated() {
+    browser.tabs.onUpdated.removeListener(handleTabUpdated)
+}
+
 function listenTabRemoved() {
     browser.tabs.onRemoved.addListener(handleTabRemoved);
 }
 
+function disregardTabRemoved() {
+    browser.tabs.onRemoved.removeListener(handleTabRemoved);
+}
+
 function listenTabActivated() {
     browser.tabs.onActivated.addListener(handleTabActivated)
+}
+
+function disregardTabActivated() {
+    browser.tabs.onActivated.removeListener(handleTabActivated);
 }
 
 /**
@@ -44,18 +88,38 @@ function listenOnCompleted() {
     browser.webNavigation.onCompleted.addListener(handleOnCompleted);
 }
 
+function disregardOnCompleted() {
+    browser.webNavigation.onCompleted.removeListener(handleOnCompleted);
+}
+
 function listenBookmarkCreated() {
     browser.bookmarks.onCreated.addListener(handleBookmarkCreated);
+}
+
+function disregardBookmarkCreated() {
+    browser.bookmarks.onCreated.removeListener(handleBookmarkCreated);
 }
 
 function listenBookmarkRemoved() {
     browser.bookmarks.onRemoved.addListener(handleBookmarkRemoved);
 }
 
+function disregardBookmarkRemoved() {
+    browser.bookmarks.onRemoved.removeListener(handleBookmarkRemoved);
+}
+
 function listenTabAttached() {
     browser.tabs.onAttached.addListener(handleTabAttached)
 }
 
-function listenTabDetahed() {
+function disregardTabAttached() {
+    browser.tabs.onAttached.removeListener(handleTabAttached)
+}
+
+function listenTabDetached() {
     browser.tabs.onDetached.addListener(handleTabDetached)
+}
+
+function disregardTabDetached() {
+    browser.tabs.onDetached.removeListener(handleTabDetached)
 }

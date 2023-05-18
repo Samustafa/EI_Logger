@@ -30,7 +30,7 @@ export function FetchingStudyData() {
         getStudy()
             .then((response) => saveStudyInDatabase(new Study(response.studyId, response.name, response.tasks)))
             .then(studyId => {
-                dataBase.logUserExtensionInteraction("STARTED:STUDY", loggingConstants.userId, studyId)
+                dataBase.logUserExtensionInteraction("STARTED:STUDY")
                 loggingConstants.studyId = studyId;
             })
             .then(() => navigate(Paths.tasksPage))

@@ -1,11 +1,12 @@
 import {IApiException, IQuestionAnswer} from "@pages/popup/Interfaces";
-import {QuestionType} from "@pages/popup/Types";
+import {MessageType, Port, PortName, QuestionType} from "@pages/popup/Types";
 import {MultipleChoiceQuestion} from "@pages/popup/model/question/MultipleChoiceQuestion";
 import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
 import {TextQuestion} from "@pages/popup/model/question/TextQuestion";
 import {Question} from "@pages/popup/model/question/Question";
 import utc from "dayjs/plugin/utc";
 import dayjs from "dayjs";
+import browser from "webextension-polyfill";
 
 dayjs.extend(utc);
 
@@ -54,3 +55,12 @@ export function display(message: string) {
 export function getUTCDateTime(): string {
     return dayjs.utc().format("YYYY-MM-DD HH:mm:ss");
 }
+
+export function connectToPort(portName: PortName): Port {
+    return browser.runtime.connect({name: portName});
+}
+
+export function sendMessages(port: Port, message: MessageType) {
+    port.postMessage(message);
+}
+

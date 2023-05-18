@@ -1,32 +1,20 @@
 import React from 'react';
 import {PlayButton} from "./PlayButton";
-import {display} from "@pages/popup/UtilityFunctions";
-import {MessageType, Port, PortName} from "@pages/popup/Types";
-import browser from "webextension-polyfill";
+import {display, sendMessages} from "@pages/popup/UtilityFunctions";
+import {Port} from "@pages/popup/Types";
+import {dataBase} from "@pages/popup/database";
 
 interface Props {
     setLogging: React.Dispatch<React.SetStateAction<boolean>>;
+    port: Port;
 }
 
-export function Paused({setLogging}: Props) {
-
-    function addUrlListener() {
-
-        const portInfo: PortName = {name: "port1"};
-        const port = connectToPort(portInfo);
-
-        const message: MessageType = {data: "message1"};
-        port.postMessage(message);
-        console.log("Sent message1")
-    }
-
-    function connectToPort(portInfo: PortName): Port {
-        return browser.runtime.connect({name: portInfo.name})
-    }
+export function Paused({setLogging, port}: Props) {
 
     function startLogging() {
-        addUrlListener();
         setLogging(true);
+        sendMessages(port, "START_LOGGING");
+        dataBase.logUserExtensionInteraction("STARTED:LOGGING");
     }
 
     return (
