@@ -38,6 +38,7 @@ export type TabAction =
 export type UserExtensionAction =
     "SIGNED:UP"
     | "SIGNED:IN"
-    | "STARTED:STUDY"
     | "OPENED:DEMOGRAPHICS"
-    | "SUBMITTED:DEMOGRAPHICS" | "STOPPED:LOGGING" | "STARTED:LOGGING";
+    | "SUBMITTED:DEMOGRAPHICS"
+    | "STOPPED:LOGGING"
+    | "STARTED:LOGGING";

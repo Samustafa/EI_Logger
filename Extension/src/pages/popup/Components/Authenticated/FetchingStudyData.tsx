@@ -29,10 +29,7 @@ export function FetchingStudyData() {
         setLoading(true);
         getStudy()
             .then((response) => saveStudyInDatabase(new Study(response.studyId, response.name, response.tasks)))
-            .then(studyId => {
-                dataBase.logUserExtensionInteraction("STARTED:STUDY")
-                loggingConstants.studyId = studyId;
-            })
+            .then(studyId => loggingConstants.studyId = studyId)
             .then(() => navigate(Paths.tasksPage))
             .catch(error => extractAndSetError(error, setError))
             .finally(() => setLoading(false));
