@@ -16,6 +16,7 @@ import {
 import {Study} from "@pages/popup/model/Study";
 import {Task} from "@pages/popup/model/Task";
 import Paths from "@pages/popup/Consts/Paths";
+import {loggingConstants} from "@pages/background/LoggingConstants";
 
 export function FetchingStudyData() {
     const [loading, setLoading] = useState<boolean>(true);
@@ -24,22 +25,20 @@ export function FetchingStudyData() {
     const navigate = useNavigate();
 
 
-    useEffect(fetchStudy, [retryFlag])
-
-    function fetchStudy() {
+    useEffect(function fetchStudy() {
         setLoading(true);
         getStudy()
-            .then((response) => saveStudyAndNavigate(new Study(response.studyId, response.name, response.tasks)))
+            .then((response) => saveStudyInDatabase(new Study(response.studyId, response.name, response.tasks)))
+            .then(studyId => {
+                dataBase.logUserExtensionInteraction("STARTED:STUDY", loggingConstants.userId, studyId)
+                loggingConstants.studyId = studyId;
+            })
+            .then(() => navigate(Paths.tasksPage))
             .catch(error => extractAndSetError(error, setError))
             .finally(() => setLoading(false));
-    }
+    }, [retryFlag]);
 
-    function saveStudyAndNavigate(study: Study) {
-        saveStudyInDB(study);
-        navigate(Paths.tasksPage);
-    }
-
-    function saveStudyInDB(studyData: Study) {
+    function saveStudyInDatabase(studyData: Study) {
         const {
             study,
             tasks,
@@ -48,11 +47,10 @@ export function FetchingStudyData() {
             rangeQuestions
         } = extractStudyData(studyData);
 
-        dataBase.study.add(study)
-        dataBase.task.bulkAdd(tasks)
-        dataBase.multipleChoiceQuestion.bulkAdd(multipleChoiceQuestions);
-        dataBase.textQuestion.bulkAdd(textQuestions);
-        dataBase.rangeQuestion.bulkAdd(rangeQuestions);
+
+        dataBase.saveStudyInfo(study, tasks, multipleChoiceQuestions, textQuestions, rangeQuestions);
+
+        return study.studyId;
     }
 
     function extractStudyData(studyData: Study) {

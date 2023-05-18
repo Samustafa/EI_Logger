@@ -1,5 +1,5 @@
-import {IApiException, IQuestionAnswer, IUserExtensionInteraction} from "@pages/popup/Interfaces";
-import {QuestionType, UserExtensionAction} from "@pages/popup/Types";
+import {IApiException, IQuestionAnswer} from "@pages/popup/Interfaces";
+import {QuestionType} from "@pages/popup/Types";
 import {MultipleChoiceQuestion} from "@pages/popup/model/question/MultipleChoiceQuestion";
 import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
 import {TextQuestion} from "@pages/popup/model/question/TextQuestion";
@@ -49,26 +49,6 @@ export function addOrUpdateAnswers(iQuestionAnswers: IQuestionAnswer[], answer: 
 
 export function display(message: string) {
     return (<div>{message}</div>);
-}
-
-export function getUserExtensionInteraction(action: UserExtensionAction, userId?: string): IUserExtensionInteraction {
-
-    switch (action) {
-        case "SIGNED:UP":
-            return {
-                action: action,
-                timeStamp: getUTCDateTime(),
-                userId: userId,
-                studyId: undefined,
-            }
-        case "SIGNED:IN":
-            return {
-                action: action,
-                timeStamp: getUTCDateTime(),
-                userId: userId,
-                studyId: undefined,
-            }
-    }
 }
 
 export function getUTCDateTime(): string {

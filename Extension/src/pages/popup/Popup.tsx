@@ -16,7 +16,7 @@ export default function Popup() {
         <div className={generalStyle}>
             <Routes>
                 <Route path={Paths.landingPage} element={<LandingPage/>}/>
-                <Route path={Paths.idDisplayPage()} element={<IdDisplayPage/>}/>
+                <Route path={Paths.idDisplayPage} element={<IdDisplayPage/>}/>
                 <Route path={Paths.demographicsPage} element={<DemographicsPage/>}/>
                 <Route path={Paths.tasksPage} element={<TasksPage/>}/>
                 <Route path={Paths.fetchingStudyData} element={<FetchingStudyData/>}/>

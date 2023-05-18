@@ -6,7 +6,8 @@ import {LoadingButton} from "@pages/popup/SharedComponents/LoadingButton";
 import {login, registerUser} from "@pages/popup/ServerAPI";
 import {dataBase} from "@pages/popup/database";
 import {Input36Component} from "@pages/popup/SharedComponents/Input36Component";
-import {extractAndSetError, getUserExtensionInteraction} from "@pages/popup/UtilityFunctions";
+import {extractAndSetError} from "@pages/popup/UtilityFunctions";
+import {loggingConstants} from "@pages/background/LoggingConstants";
 
 export default function LandingPage() {
 
@@ -46,10 +47,11 @@ export default function LandingPage() {
 
         registerUser(registrationCode)
             .then(iUser => {
-                dataBase.addUserToDataBase(iUser) //add try catch on original function to throw more comprehensive custom errors
-                dataBase.logUserExtensionInteraction(getUserExtensionInteraction("SIGNED:UP", iUser.userId));
+                dataBase.addUserToDataBase(iUser) //TODO: add try catch on original function to throw more comprehensive custom errors
+                dataBase.logUserExtensionInteraction("SIGNED:UP", iUser.userId);
+                loggingConstants.userId = iUser.userId;
             })
-            .then(() => navigate(Paths.idDisplayPage(userId)))
+            .then(() => navigate(Paths.idDisplayPage))
             .catch(error => extractAndSetError(error, setRegistrationError))
             .finally(() => enableButtons());
 
@@ -62,8 +64,11 @@ export default function LandingPage() {
         setRegistrationCode("");
 
         login(userId)
-            .then(() => dataBase.logUserExtensionInteraction(getUserExtensionInteraction("SIGNED:IN", userId)))
-            .then(() => navigate(Paths.idDisplayPage(userId)))
+            .then(() => {
+                dataBase.logUserExtensionInteraction("SIGNED:IN", userId);
+                loggingConstants.userId = userId;
+            })
+            .then(() => navigate(Paths.fetchingStudyData))
             .catch((error) => extractAndSetError(error, setLoginError))
             .finally(() => enableButtons());
     }

@@ -3,10 +3,7 @@ const tasksPage = "/tasksPage";
 const fetchingStudyData = '/fetchingStudyData';
 const demographicsPage = '/demographicsPage';
 const postQuestionnaire = '/postQuestionnaire';
-
-function idDisplayPage(id = ':id') {
-    return `/idDisplayPage/${id}`;
-}
+const idDisplayPage = '/idDisplayPage';
 
 function preQuestionnairePage(taskId = ':taskId') {
     return `/preQuestionnairePage/${taskId}`;

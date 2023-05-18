@@ -16,6 +16,8 @@ import {
 import {MultipleChoiceQuestion} from "@pages/popup/model/question/MultipleChoiceQuestion";
 import {TextQuestion} from "@pages/popup/model/question/TextQuestion";
 import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
+import {UserExtensionAction} from "@pages/popup/Types";
+import {getUTCDateTime} from "@pages/popup/UtilityFunctions";
 
 
 class DataBase extends Dexie {
@@ -153,8 +155,23 @@ class DataBase extends Dexie {
         return dataBase.task.get(taskId).then(iTask => iTask?.iPostQuestions.length !== 0);
     }
 
-    logUserExtensionInteraction(interaction: IUserExtensionInteraction): void {
-        console.log(interaction);
+    logUserExtensionInteraction(action: UserExtensionAction, userId?: string, studyId?: string): void {
+        const log = {
+            action: action,
+            timeStamp: getUTCDateTime(),
+            userId: userId,
+            studyId: studyId,
+        }
+
+        dataBase.userExtensionInteraction.add(log);
+    }
+
+    saveStudyInfo(study: IStudy, tasks: ITask[], multipleChoiceQuestions: IMultipleChoiceQuestion[], textQuestions: ITextQuestion[], rangeQuestions: IRangeQuestion[]) {
+        dataBase.study.add(study)
+        dataBase.task.bulkAdd(tasks)
+        dataBase.multipleChoiceQuestion.bulkAdd(multipleChoiceQuestions);
+        dataBase.textQuestion.bulkAdd(textQuestions);
+        dataBase.rangeQuestion.bulkAdd(rangeQuestions);
     }
 }
 
