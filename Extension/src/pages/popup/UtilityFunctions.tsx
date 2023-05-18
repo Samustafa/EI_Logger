@@ -1,9 +1,14 @@
-import {IApiException, IQuestionAnswer} from "@pages/popup/Interfaces";
-import {QuestionType} from "@pages/popup/Types";
+import {IApiException, IQuestionAnswer, IUserExtensionInteraction} from "@pages/popup/Interfaces";
+import {QuestionType, UserExtensionAction} from "@pages/popup/Types";
 import {MultipleChoiceQuestion} from "@pages/popup/model/question/MultipleChoiceQuestion";
 import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
 import {TextQuestion} from "@pages/popup/model/question/TextQuestion";
 import {Question} from "@pages/popup/model/question/Question";
+import utc from "dayjs/plugin/utc";
+import dayjs from "dayjs";
+
+dayjs.extend(utc);
+
 
 /**
  * Extracts the server exception from response or extracts error message if server didn't respond
@@ -11,7 +16,7 @@ import {Question} from "@pages/popup/model/question/Question";
  * @param setError
  */
 export function extractAndSetError(error: any, setError: (error: string) => void) {
-    console.log(error)
+    console.error(error)
     const serverException: IApiException = error.response?.data;
     setError(serverException ? serverException.message : error.message);
 }
@@ -44,4 +49,28 @@ export function addOrUpdateAnswers(iQuestionAnswers: IQuestionAnswer[], answer: 
 
 export function display(message: string) {
     return (<div>{message}</div>);
+}
+
+export function getUserExtensionInteraction(action: UserExtensionAction, userId?: string): IUserExtensionInteraction {
+
+    switch (action) {
+        case "SIGNED:UP":
+            return {
+                action: action,
+                timeStamp: getUTCDateTime(),
+                userId: userId,
+                studyId: undefined,
+            }
+        case "SIGNED:IN":
+            return {
+                action: action,
+                timeStamp: getUTCDateTime(),
+                userId: userId,
+                studyId: undefined,
+            }
+    }
+}
+
+export function getUTCDateTime(): string {
+    return dayjs.utc().format("YYYY-MM-DD HH:mm:ss");
 }
