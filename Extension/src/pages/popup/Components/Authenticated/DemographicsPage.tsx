@@ -18,6 +18,7 @@ export function DemographicsPage() {
     const [isValidating,] = useState<boolean>(false);
     const demographicsPrimaryKey = '0';
     const [generalError, setGeneralError] = useState<string>('');
+    const [isStudyExists, setIsStudyExists] = useState<boolean>(false);
 
 
     const birthDateInput = "birthDate";
@@ -68,6 +69,12 @@ export function DemographicsPage() {
         dataBase.logUserExtensionInteraction('OPENED:DEMOGRAPHICS', loggingConstants.userId)
     }, []);
 
+    useEffect(function checkIfStudyExists() {
+        dataBase.isStudyExists()
+            .then((isStudyExists) => setIsStudyExists(isStudyExists))
+            .catch((error) => extractAndSetError(error, setGeneralError))
+    }, []);
+
     function isFormValid() {
         return isDateValid(birthDate) && isSexSelected() && job !== '';
     }
@@ -108,7 +115,7 @@ export function DemographicsPage() {
         }
         dataBase.setDemographics(demographics)
             .then(() => dataBase.logUserExtensionInteraction('SUBMITTED:DEMOGRAPHICS', loggingConstants.userId))
-            .then(() => navigate(Paths.fetchingStudyData))
+            .then(() => navigate(isStudyExists ? Paths.tasksPage : Paths.fetchingStudyData))
             .catch((error) => extractAndSetError(error, setGeneralError))
     }
 

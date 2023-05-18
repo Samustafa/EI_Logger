@@ -173,6 +173,10 @@ class DataBase extends Dexie {
         dataBase.textQuestion.bulkAdd(textQuestions);
         dataBase.rangeQuestion.bulkAdd(rangeQuestions);
     }
+
+    isStudyExists(): Promise<boolean> {
+        return dataBase.study.count().then(count => count > 0);
+    }
 }
 
 export const dataBase = new DataBase();
