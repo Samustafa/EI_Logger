@@ -10,11 +10,11 @@ import {
     TabAction,
     TabWithGroupId
 } from "@pages/popup/Types";
-import dayjs from "dayjs";
 import {ITab} from "@pages/popup/Interfaces";
 import {loggingConstants} from "@pages/background/LoggingConstants";
 import {dataBase} from "@pages/popup/database";
 import {tabs} from "webextension-polyfill";
+import {getUTCDateTime} from "@pages/popup/UtilityFunctions";
 
 
 const openedTabsCache = new Map<number, string>();
@@ -45,7 +45,7 @@ export function handleTabRemoved(tabId: number) {
             if (!iTab) throw new Error(`handleTabRemoved: Couldn't fetch tab with the ID ${tabId}`)
             dataBase.saveTabInfo(prePareITabFromITab(iTab, "TAB:CLOSED"));
         })
-        .catch((e) => console.error("e -->", e))
+        .catch((e) => console.error("handleTabRemoved " + JSON.stringify(e)))
 }
 
 export function handleTabActivated(onActivatedActiveInfoType: OnActivatedActiveInfoType) {
@@ -54,16 +54,16 @@ export function handleTabActivated(onActivatedActiveInfoType: OnActivatedActiveI
             if (!iTab) throw new Error(`handleTabActivated: Couldn't fetch tab with the ID ${onActivatedActiveInfoType.tabId}`)
             dataBase.saveTabInfo(prePareITabFromITab(iTab, "TAB:ACTIVATED"))
         })
-        .catch((e) => console.error("e -->", e))
+        .catch((e) => console.error("handleTabActivated " + JSON.stringify(e)))
 }
 
 export function handleBookmarkCreated(id: string, bookmark: BookMark) {
-    const iTab = prePareITabFromBookMark(bookmark, "TAB:BOOKMARK:ADDED");
+    const iTab = prepareITabFromBookMark(bookmark, "TAB:BOOKMARK:ADDED");
     dataBase.saveTabInfo(iTab);
 }
 
 export function handleBookmarkRemoved(id: string, removeInfo: RemoveInfo) {
-    const iTab = prePareITabFromBookMark(removeInfo.node, "TAB:BOOKMARK:REMOVED");
+    const iTab = prepareITabFromBookMark(removeInfo.node, "TAB:BOOKMARK:REMOVED");
     dataBase.saveTabInfo(iTab);
 }
 
@@ -76,7 +76,7 @@ export async function handleTabAttached(tabId: number, attachInfo: AttachInfo) {
         tabId: tabId,
         tabIndex: attachInfo.newPosition,
         taskId: loggingConstants.taskId,
-        timeStamp: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+        timeStamp: getUTCDateTime(),
         title: tab?.title ?? "",
         url: tab?.url ?? "",
         userId: loggingConstants.userId,
@@ -95,13 +95,12 @@ export async function handleTabDetached(tabId: number, detachInfo: DetachInfo) {
         tabId: tabId,
         tabIndex: detachInfo.oldPosition,
         taskId: loggingConstants.taskId,
-        timeStamp: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+        timeStamp: getUTCDateTime(),
         title: tab?.title ?? "",
         url: tab?.url ?? "",
         userId: loggingConstants.userId,
         windowId: detachInfo.oldWindowId,
     }
-    console.log("detached tab -->", iTab);
     dataBase.saveTabInfo(iTab);
 }
 
@@ -109,11 +108,9 @@ export async function handleTabDetached(tabId: number, detachInfo: DetachInfo) {
 function prePareITabFromTab(tab: Tab, tabAction: TabAction): ITab {
     const tabExtended = tab as TabWithGroupId;
 
-    const timeStamp = dayjs().format("YYYY-MM-DD HH:mm:ss");
-
     return {
         action: tabAction,
-        timeStamp: timeStamp,
+        timeStamp: getUTCDateTime(),
         userId: loggingConstants.userId,
         studyId: loggingConstants.studyId,
         taskId: loggingConstants.taskId,
@@ -128,11 +125,9 @@ function prePareITabFromTab(tab: Tab, tabAction: TabAction): ITab {
 
 function prePareITabFromITab(tab: ITab, tabAction: TabAction): ITab {
 
-    const timeStamp = dayjs().format("YYYY-MM-DD HH:mm:ss");
-
     return {
         action: tabAction,
-        timeStamp: timeStamp,
+        timeStamp: getUTCDateTime(),
         userId: loggingConstants.userId,
         studyId: loggingConstants.studyId,
         taskId: loggingConstants.taskId,
@@ -150,10 +145,10 @@ function prePareITabFromITab(tab: ITab, tabAction: TabAction): ITab {
  * @param bookmark the bookmark node
  * @param tabAction
  */
-function prePareITabFromBookMark(bookmark: BookMark, tabAction: "TAB:BOOKMARK:REMOVED" | "TAB:BOOKMARK:ADDED"): ITab {
+function prepareITabFromBookMark(bookmark: BookMark, tabAction: "TAB:BOOKMARK:REMOVED" | "TAB:BOOKMARK:ADDED"): ITab {
     return {
         action: tabAction,
-        timeStamp: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+        timeStamp: getUTCDateTime(),
         userId: loggingConstants.userId,
         studyId: loggingConstants.studyId,
         taskId: loggingConstants.taskId,
