@@ -1,6 +1,7 @@
 package de.ude.backend;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import de.ude.backend.exceptions.custom_exceptions.NoUserFoundException;
 import de.ude.backend.exceptions.custom_exceptions.RegistrationCodeNotValid;
 import de.ude.backend.model.Study;
 import de.ude.backend.service.RegistrationCodeService;
@@ -32,6 +33,16 @@ public class BackendController {
 
         log.info("registerNewUserIfRegistrationCodeIsValid(): User added: " + userJson);
         return new ResponseEntity<>(userJson, HttpStatus.OK);
+    }
+
+    @GetMapping("/authenticateUser/{userId}")
+    public HttpStatus authenticateUSer(@PathVariable String userId) {
+        if (userService.userExists(userId)) {
+            log.info("authenticateUSer(): User authenticated: " + userId);
+            return HttpStatus.OK;
+        } else {
+            throw new NoUserFoundException("User not found.");
+        }
     }
 
     @GetMapping("/createRegistrationCode/{numberOfRegistrationCode}")

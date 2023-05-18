@@ -25,3 +25,7 @@ export async function getStudy(): Promise<Study> {
     const tasks: Task[] = [task1, task2, task3, task4];
     return new Study("64456e83d6b1e3463ca52923", "study 1", tasks);
 }
+
+export async function login(userId: string) {
+    return await axios.get(`http://localhost:8080/logger/authenticateUser/${userId}`);
+}
