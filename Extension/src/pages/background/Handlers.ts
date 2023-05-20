@@ -30,13 +30,15 @@ export function handleOnCompleted(details: OnCompletedDetailsType) {
 
 export function handleTabUpdated(id: number, changeInfo: OnUpdatedChangeInfoType, tab: Tab) {
 
-    const isNewURL = (changeInfo.url !== undefined) && (changeInfo.url !== openedTabsCache.get(id))
+    const urlFromTabId = openedTabsCache.get(id);
+    const isNewURL = (changeInfo.url !== undefined) && (urlFromTabId !== undefined) && (changeInfo.url !== urlFromTabId);
 
     if (isNewURL) handleSaveAfterNewTabOrNewUrl(tab, "TAB:URL_CHANGED")
     else if (changeInfo.pinned !== undefined) {
         const iTab = prePareITabFromTab(tab, changeInfo.pinned ? "TAB:PINNED" : "TAB:UNPINNED");
         dataBase.saveTabInfo(iTab);
     }
+
 }
 
 export function handleTabRemoved(tabId: number) {
@@ -165,5 +167,14 @@ function handleSaveAfterNewTabOrNewUrl(tab: Tab, tabAction: TabAction) {
     const iTab = prePareITabFromTab(tab, tabAction);
     dataBase.saveTabInfo(iTab);
     openedTabsCache.set(iTab.tabId, iTab.url)
+}
+
+export function handleLogAllExistingTabs() {
+    tabs.query({}).then((tabs) => {
+        tabs.forEach((tab) => {
+            const iTab = prePareITabFromTab(tab, "TAB:OLD");
+            dataBase.saveTabInfo(iTab);
+        })
+    })
 }
 

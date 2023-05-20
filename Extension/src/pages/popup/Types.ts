@@ -26,7 +26,8 @@ export type RemoveInfo = { parentId: string, index: number, node: BookMark }
 export type AttachInfo = { newWindowId: number, newPosition: number }
 export type DetachInfo = { oldWindowId: number, oldPosition: number }
 export type TabAction =
-    "TAB:CREATED"
+    "TAB:OLD"
+    | "TAB:CREATED"
     | "TAB:CLOSED"
     | "TAB:URL_CHANGED"
     | "TAB:ACTIVATED"

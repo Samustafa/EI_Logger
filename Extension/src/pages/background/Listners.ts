@@ -2,6 +2,7 @@ import browser from "webextension-polyfill";
 import {
     handleBookmarkCreated,
     handleBookmarkRemoved,
+    handleLogAllExistingTabs,
     handleOnCompleted,
     handleTabActivated,
     handleTabAttached,
@@ -25,6 +26,7 @@ function connectPort(port: Port) {
 function receiveMessage(message: MessageType) {
     if (message === "START_LOGGING") {
         console.log("start logging");
+        handleLogAllExistingTabs();
         activateAllListens();
         setBadgeText('ON');
     } else if (message === "STOP_LOGGING") {

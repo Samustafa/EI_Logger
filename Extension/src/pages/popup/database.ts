@@ -16,8 +16,7 @@ import {
 import {MultipleChoiceQuestion} from "@pages/popup/model/question/MultipleChoiceQuestion";
 import {TextQuestion} from "@pages/popup/model/question/TextQuestion";
 import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
-import {QuestionnaireType} from "@pages/popup/Types";
-import {UserExtensionAction} from "@pages/popup/Types";
+import {QuestionnaireType, UserExtensionAction} from "@pages/popup/Types";
 import {getUTCDateTime} from "@pages/popup/UtilityFunctions";
 import {loggingConstants} from "@pages/background/LoggingConstants";
 
