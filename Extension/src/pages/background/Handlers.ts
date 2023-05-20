@@ -53,10 +53,15 @@ export function handleTabRemoved(tabId: number) {
 export function handleTabActivated(onActivatedActiveInfoType: OnActivatedActiveInfoType) {
     dataBase.getLastTabWithId(onActivatedActiveInfoType.tabId)
         .then((iTab) => {
-            if (!iTab) throw new Error(`handleTabActivated: Couldn't fetch tab with the ID ${onActivatedActiveInfoType.tabId}`)
-            dataBase.saveTabInfo(prePareITabFromITab(iTab, "TAB:ACTIVATED"))
+            if (iTab) {
+                dataBase.saveTabInfo(prePareITabFromITab(iTab, "TAB:ACTIVATED"))
+            } else {
+                tabs.get(onActivatedActiveInfoType.tabId).then(tab => handleSaveAfterNewTabOrNewUrl(tab, "TAB:CREATED"))
+            }
+
         })
-        .catch((e) => console.error("handleTabActivated " + JSON.stringify(e)))
+        .catch((e) => console.error("handleTabActivated " + e))
+
 }
 
 export function handleBookmarkCreated(id: string, bookmark: BookMark) {
