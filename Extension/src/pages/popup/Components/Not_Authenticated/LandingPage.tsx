@@ -65,8 +65,8 @@ export default function LandingPage() {
 
         login(userId)
             .then(() => {
-                dataBase.logUserExtensionInteraction("SIGNED:IN");
                 loggingConstants.userId = userId;
+                dataBase.logUserExtensionInteraction("SIGNED:IN");
             })
             .then(() => navigate(Paths.fetchingStudyData))
             .catch((error) => extractAndSetError(error, setLoginError))
