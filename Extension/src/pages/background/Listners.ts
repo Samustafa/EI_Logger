@@ -12,6 +12,7 @@ import {
 } from "@pages/background/Handlers";
 import {MessageType, Port} from "@pages/popup/Types";
 import {setBadgeText} from "@pages/background/backgroundFunctions";
+import {dataBase} from "@pages/popup/database";
 
 
 export function startListening() {
@@ -29,10 +30,13 @@ function receiveMessage(message: MessageType) {
         handleLogAllExistingTabs();
         activateAllListens();
         setBadgeText('ON');
+        dataBase.logUserExtensionInteraction("STARTED:LOGGING");
     } else if (message === "STOP_LOGGING") {
         console.log("stop logging");
         disRegardAllListeners();
         setBadgeText('OFF');
+        dataBase.logUserExtensionInteraction("STOPPED:LOGGING");
+
     }
 }
 
