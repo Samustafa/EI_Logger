@@ -177,6 +177,7 @@ class DataBase extends Dexie {
             timeStamp: getUTCDateTime(),
             userId: loggingConstants.userId,
             studyId: loggingConstants.studyId,
+            taskId: loggingConstants.taskId
         }
 
         dataBase.userExtensionInteraction.add(log);
