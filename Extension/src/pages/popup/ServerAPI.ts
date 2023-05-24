@@ -8,8 +8,9 @@ import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
 
 
 export async function registerUser(code: string) {
-    const axiosResponse = await axios.post<IUser>(`http://localhost:8080/logger/registerUser/${code}`);
-    return axiosResponse.data;
+    const axiosResponse = await axios.post<{ userId: string }>(`http://localhost:8080/logger/registerUser/${code}`);
+    
+    return {id: 0, userId: axiosResponse.data.userId} as IUser;
 }
 
 export async function getStudy(): Promise<Study> {

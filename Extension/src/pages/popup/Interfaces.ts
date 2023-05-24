@@ -7,6 +7,7 @@ export interface IApiException {
 }
 
 export interface IUser {
+    id: 0;
     userId: string;
 }
 

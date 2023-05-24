@@ -37,8 +37,8 @@ class DataBase extends Dexie {
 
     constructor() {
         super('DataBase');
-        this.version(6).stores({
-            user: '++id',
+        this.version(7).stores({
+            user: 'id, userId',
             study: 'studyId',
             task: 'taskId, text, iPreQuestions, iPostQuestions, isPreQuestionsSubmitted, isPostQuestionsSubmitted',
             multipleChoiceQuestion: 'questionId, questionText, type, choices',
@@ -52,7 +52,7 @@ class DataBase extends Dexie {
     }
 
     addUserToDataBase(userId: IUser) {
-        dataBase.user.add(userId);
+        dataBase.user.put(userId);
     }
 
     async getITasks() {

@@ -8,6 +8,7 @@ import {dataBase} from "@pages/popup/database";
 import {Input36Component} from "@pages/popup/SharedComponents/Input36Component";
 import {extractAndSetError} from "@pages/popup/UtilityFunctions";
 import {loggingConstants} from "@pages/background/LoggingConstants";
+import {IUser} from "@pages/popup/Interfaces";
 //99746344-7382-4d7c-9e60-6ed3a3cef427
 export default function LandingPage() {
 
@@ -65,6 +66,8 @@ export default function LandingPage() {
 
         login(userId)
             .then(() => {
+                const iUser: IUser = {id: 0, userId: userId}
+                dataBase.addUserToDataBase(iUser);
                 loggingConstants.userId = userId;
                 dataBase.logUserExtensionInteraction("SIGNED:IN");
             })
