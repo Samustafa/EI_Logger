@@ -16,7 +16,7 @@ import {
 import {Study} from "@pages/popup/model/Study";
 import {Task} from "@pages/popup/model/Task";
 import Paths from "@pages/popup/Consts/Paths";
-import {loggingConstants} from "@pages/popup/Consts/LoggingConstants";
+import {fgLoggingConstants} from "@pages/popup/Consts/FgLoggingConstants";
 
 export function FetchingStudyData() {
     const [loading, setLoading] = useState<boolean>(true);
@@ -29,7 +29,7 @@ export function FetchingStudyData() {
         setLoading(true);
         getStudy()
             .then((response) => saveStudyInDatabase(new Study(response.studyId, response.name, response.tasks)))
-            .then(studyId => loggingConstants.studyId = studyId)
+            .then(studyId => fgLoggingConstants.studyId = studyId)
             .then(() => navigate(Paths.tasksPage))
             .catch(error => extractAndSetError(error, setError))
             .finally(() => setLoading(false));

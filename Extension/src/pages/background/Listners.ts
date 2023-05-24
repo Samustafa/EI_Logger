@@ -10,8 +10,9 @@ import {
     handleTabRemoved,
     handleTabUpdated
 } from "@pages/background/Handlers";
-import {MessageType, Port} from "@pages/popup/Types";
+import {LoggingConstantsMessage, LoggingMessage, MessageType, Port, PortName} from "@pages/popup/Types";
 import {setBadgeText} from "@pages/background/backgroundFunctions";
+import {bgLoggingConstants} from "@pages/background/BGLoggingConstants";
 
 
 export function startListening() {
@@ -19,11 +20,26 @@ export function startListening() {
 }
 
 function connectPort(port: Port) {
-    console.log(`service worker connected to port ${port.name}`);
-    port.onMessage.addListener(receiveMessage);
+    const portName = port.name as PortName;
+    console.log(`service worker connected to port ${portName}`);
+
+    switch (portName) {
+        case 'loggingPort':
+            port.onMessage.addListener(loggingPortMR)
+            break;
+        case 'loggingConstantsPort':
+            port.onMessage.addListener(loggingConstantsMR)
+            break;
+    }
 }
 
-async function receiveMessage(message: MessageType) {
+
+/**
+ * loggingPort message receiver
+ * @param message
+ */
+async function loggingPortMR(message: MessageType) {
+    message = message as LoggingMessage;
     if (message === "START_LOGGING") {
         await handleLogAllExistingTabs();
         activateAllListens();
@@ -33,6 +49,19 @@ async function receiveMessage(message: MessageType) {
         setBadgeText('OFF');
     }
 }
+
+/**
+ * loggingConstantsPort message receiver
+ * @param message
+ */
+function loggingConstantsMR(message: MessageType) {
+    message = message as LoggingConstantsMessage;
+
+    bgLoggingConstants.studyId = message.studyId ?? bgLoggingConstants.studyId;
+    bgLoggingConstants.userId = message.userId ?? bgLoggingConstants.userId;
+    bgLoggingConstants.taskId = message.taskId ?? bgLoggingConstants.taskId;
+}
+
 
 function activateAllListens() {
     listenOnCompleted();

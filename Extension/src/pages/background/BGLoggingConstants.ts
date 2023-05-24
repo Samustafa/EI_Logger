@@ -1,4 +1,8 @@
-class LoggingConstants {
+/**
+ * Background Logging Constants
+ * This class is used to store the logging constants that are used in the background script.
+ */
+class BGLoggingConstants {
     private _studyId?: string;
     private _userId?: string;
     private _taskId?: string;
@@ -32,11 +36,6 @@ class LoggingConstants {
     set taskId(value: string) {
         this._taskId = value;
     }
-
-    setUserIdAndStudyId(userId: string, studyId: string) {
-        this.userId = userId;
-        this.studyId = studyId;
-    }
 }
 
-export const loggingConstants = new LoggingConstants(undefined, undefined, undefined);
+export const bgLoggingConstants = new BGLoggingConstants(undefined, undefined, undefined);

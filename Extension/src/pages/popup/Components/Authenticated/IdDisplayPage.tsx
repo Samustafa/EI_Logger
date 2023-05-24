@@ -3,10 +3,10 @@ import CopyToClipboardButton from "@pages/popup/SharedComponents/CopyToClipboard
 import React from "react";
 import {buttonStyle} from "@pages/popup/Consts/Styles";
 import Paths from "@pages/popup/Consts/Paths";
-import {loggingConstants} from "@pages/popup/Consts/LoggingConstants";
+import {fgLoggingConstants} from "@pages/popup/Consts/FgLoggingConstants";
 
 export function IdDisplayPage() {
-    const id = loggingConstants.userId;
+    const id = fgLoggingConstants.userId;
     const navigate = useNavigate();
     return (
         <>

@@ -11,12 +11,12 @@ import {SuccessMessage} from "@pages/popup/SharedComponents/SuccessMessage";
 import {v4 as uuidv4} from 'uuid';
 import Paths from "@pages/popup/Consts/Paths";
 import {buttonDisabledStyle, buttonStyle} from "@pages/popup/Consts/Styles";
-import {loggingConstants} from "@pages/popup/Consts/LoggingConstants";
+import {fgLoggingConstants} from "@pages/popup/Consts/FgLoggingConstants";
 
 
 export function QuestionnairePage() {
     const {questionnaireType} = useParams<string>();
-    const taskId = loggingConstants.taskId;
+    const taskId = fgLoggingConstants.taskId;
     const [iQuestions, setIQuestions] = useState<IQuestion[]>([]);
     const [isValidating, setIsValidating] = useState<boolean>(false);
     const [isNextDisabled, setIsNextDisabled] = useState<boolean>(true);
@@ -52,8 +52,8 @@ export function QuestionnairePage() {
         setError("");
         setIsSuccess(false);
 
-        const studyId = loggingConstants.studyId;
-        const userId = loggingConstants.userId;
+        const studyId = fgLoggingConstants.studyId;
+        const userId = fgLoggingConstants.userId;
         const iAnswers = answers.map(answer => mapIQuestionAnswerToIAnswer(answer, studyId, userId));
 
         dataBase.submitQuestionnaire(taskId, iAnswers, questionnaireType)

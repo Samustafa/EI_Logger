@@ -6,8 +6,10 @@ import browser from "webextension-polyfill";
 export type QuestionTypeAsString = "TextQuestion" | "MultipleChoiceQuestion" | "RangeQuestion";
 export type QuestionType = TextQuestion | MultipleChoiceQuestion | RangeQuestion;
 
-export type MessageType = "START_LOGGING" | "STOP_LOGGING"
-export type PortName = "port1" | "port2"
+export type MessageType = LoggingMessage | LoggingConstantsMessage;
+export type LoggingMessage = "START_LOGGING" | "STOP_LOGGING";
+export type LoggingConstantsMessage = { studyId?: string, userId?: string, taskId?: string };
+export type PortName = "loggingPort" | "loggingConstantsPort";
 
 
 export type BadgeText = 'ON' | 'OFF'

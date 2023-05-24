@@ -11,10 +11,10 @@ import {
     TabWithGroupId
 } from "@pages/popup/Types";
 import {ITab} from "@pages/popup/Interfaces";
-import {loggingConstants} from "@pages/popup/Consts/LoggingConstants";
 import {dataBase} from "@pages/popup/database";
 import {tabs} from "webextension-polyfill";
 import {getUTCDateTime} from "@pages/popup/UtilityFunctions";
+import {bgLoggingConstants} from "@pages/background/BGLoggingConstants";
 
 
 const openedTabsCache = new Map<number, string>();
@@ -79,14 +79,14 @@ export async function handleTabAttached(tabId: number, attachInfo: AttachInfo) {
     const iTab: ITab = {
         action: "TAB:ATTACHED:TO:WINDOW",
         groupId: -1,
-        studyId: loggingConstants.studyId,
+        studyId: bgLoggingConstants.studyId,
         tabId: tabId,
         tabIndex: attachInfo.newPosition,
-        taskId: loggingConstants.taskId,
+        taskId: bgLoggingConstants.taskId,
         timeStamp: getUTCDateTime(),
         title: tab?.title ?? "",
         url: tab?.url ?? "",
-        userId: loggingConstants.userId,
+        userId: bgLoggingConstants.userId,
         windowId: attachInfo.newWindowId,
     };
     console.log("attached tab -->", iTab);
@@ -98,14 +98,14 @@ export async function handleTabDetached(tabId: number, detachInfo: DetachInfo) {
     const iTab: ITab = {
         action: "TAB:DETACHED:FROM:WINDOW",
         groupId: -1,
-        studyId: loggingConstants.studyId,
+        studyId: bgLoggingConstants.studyId,
         tabId: tabId,
         tabIndex: detachInfo.oldPosition,
-        taskId: loggingConstants.taskId,
+        taskId: bgLoggingConstants.taskId,
         timeStamp: getUTCDateTime(),
         title: tab?.title ?? "",
         url: tab?.url ?? "",
-        userId: loggingConstants.userId,
+        userId: bgLoggingConstants.userId,
         windowId: detachInfo.oldWindowId,
     }
     dataBase.saveTabInfo(iTab);
@@ -118,9 +118,9 @@ function prePareITabFromTab(tab: Tab, tabAction: TabAction): ITab {
     return {
         action: tabAction,
         timeStamp: getUTCDateTime(),
-        userId: loggingConstants.userId,
-        studyId: loggingConstants.studyId,
-        taskId: loggingConstants.taskId,
+        userId: bgLoggingConstants.userId,
+        studyId: bgLoggingConstants.studyId,
+        taskId: bgLoggingConstants.taskId,
         groupId: tabExtended.groupId,
         tabId: tab?.id ?? -1,
         tabIndex: tab.index,
@@ -135,9 +135,9 @@ function prePareITabFromITab(tab: ITab, tabAction: TabAction): ITab {
     return {
         action: tabAction,
         timeStamp: getUTCDateTime(),
-        userId: loggingConstants.userId,
-        studyId: loggingConstants.studyId,
-        taskId: loggingConstants.taskId,
+        userId: bgLoggingConstants.userId,
+        studyId: bgLoggingConstants.studyId,
+        taskId: bgLoggingConstants.taskId,
         groupId: tab.groupId,
         tabId: tab.tabId,
         tabIndex: tab.tabIndex,
@@ -156,9 +156,9 @@ function prepareITabFromBookMark(bookmark: BookMark, tabAction: "TAB:BOOKMARK:RE
     return {
         action: tabAction,
         timeStamp: getUTCDateTime(),
-        userId: loggingConstants.userId,
-        studyId: loggingConstants.studyId,
-        taskId: loggingConstants.taskId,
+        userId: bgLoggingConstants.userId,
+        studyId: bgLoggingConstants.studyId,
+        taskId: bgLoggingConstants.taskId,
         groupId: -1,
         tabId: -1,
         tabIndex: -1,

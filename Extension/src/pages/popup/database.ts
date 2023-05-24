@@ -18,7 +18,7 @@ import {TextQuestion} from "@pages/popup/model/question/TextQuestion";
 import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
 import {QuestionnaireType, UserExtensionAction} from "@pages/popup/Types";
 import {getUTCDateTime} from "@pages/popup/UtilityFunctions";
-import {loggingConstants} from "@pages/popup/Consts/LoggingConstants";
+import {fgLoggingConstants} from "@pages/popup/Consts/FgLoggingConstants";
 
 
 class DataBase extends Dexie {
@@ -175,9 +175,9 @@ class DataBase extends Dexie {
         const log = {
             action: action,
             timeStamp: getUTCDateTime(),
-            userId: loggingConstants.userId,
-            studyId: loggingConstants.studyId,
-            taskId: loggingConstants.taskId
+            userId: fgLoggingConstants.userId,
+            studyId: fgLoggingConstants.studyId,
+            taskId: fgLoggingConstants.taskId
         }
 
         dataBase.userExtensionInteraction.add(log);

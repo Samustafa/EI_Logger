@@ -9,9 +9,18 @@ import {FetchingStudyData} from "@pages/popup/Components/Authenticated/FetchingS
 import {DemographicsPage} from "@pages/popup/Components/Authenticated/DemographicsPage";
 import {LoggerReadyPage} from "@pages/popup/Components/Authenticated/LoggerReady/LoggerReadyPage";
 import {QuestionnairePage} from "@pages/popup/Components/Authenticated/QuestionnairePage";
-
+import {dataBase} from "@pages/popup/database";
+import {fgLoggingConstants} from "@pages/popup/Consts/FgLoggingConstants";
 
 export default function Popup() {
+    function initializeFGLoggingConstants() {
+        dataBase.getLoggingConstants()
+            .then((response) => fgLoggingConstants.initialize(response.userId, response.studyId))
+            .catch((err) => console.warn("Couldn't initialize LoggingConstants", err));
+    }
+
+    initializeFGLoggingConstants();
+
     return (
         <div className={generalStyle}>
             <Routes>
