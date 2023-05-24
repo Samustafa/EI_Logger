@@ -16,7 +16,7 @@ import {
 import {Study} from "@pages/popup/model/Study";
 import {Task} from "@pages/popup/model/Task";
 import Paths from "@pages/popup/Consts/Paths";
-import {loggingConstants} from "@pages/background/LoggingConstants";
+import {loggingConstants} from "@pages/popup/Consts/LoggingConstants";
 
 export function FetchingStudyData() {
     const [loading, setLoading] = useState<boolean>(true);

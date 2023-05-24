@@ -7,7 +7,7 @@ import {Paper} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import {ITask} from "@pages/popup/Interfaces";
 import Paths from "@pages/popup/Consts/Paths";
-import {loggingConstants} from "@pages/background/LoggingConstants";
+import {loggingConstants} from "@pages/popup/Consts/LoggingConstants";
 
 interface Props {
     iTasks: ITask[];

@@ -2,7 +2,7 @@ import browser from "webextension-polyfill";
 import {startListening} from "@pages/background/Listners";
 import {BadgeText} from "@pages/popup/Types";
 import {dataBase} from "@pages/popup/database";
-import {loggingConstants} from "@pages/background/LoggingConstants";
+import {loggingConstants} from "@pages/popup/Consts/LoggingConstants";
 
 export async function initializeBackground() {
     browser.runtime.onInstalled.addListener(() => setBadgeText('OFF'));

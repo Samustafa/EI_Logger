@@ -11,7 +11,7 @@ import {SuccessMessage} from "@pages/popup/SharedComponents/SuccessMessage";
 import {v4 as uuidv4} from 'uuid';
 import Paths from "@pages/popup/Consts/Paths";
 import {buttonDisabledStyle, buttonStyle} from "@pages/popup/Consts/Styles";
-import {loggingConstants} from "@pages/background/LoggingConstants";
+import {loggingConstants} from "@pages/popup/Consts/LoggingConstants";
 
 
 export function QuestionnairePage() {

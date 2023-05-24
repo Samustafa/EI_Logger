@@ -7,7 +7,7 @@ import {login, registerUser} from "@pages/popup/ServerAPI";
 import {dataBase} from "@pages/popup/database";
 import {Input36Component} from "@pages/popup/SharedComponents/Input36Component";
 import {extractAndSetError} from "@pages/popup/UtilityFunctions";
-import {loggingConstants} from "@pages/background/LoggingConstants";
+import {loggingConstants} from "@pages/popup/Consts/LoggingConstants";
 import {IUser} from "@pages/popup/Interfaces";
 //99746344-7382-4d7c-9e60-6ed3a3cef427
 export default function LandingPage() {

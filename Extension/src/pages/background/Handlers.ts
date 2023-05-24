@@ -11,7 +11,7 @@ import {
     TabWithGroupId
 } from "@pages/popup/Types";
 import {ITab} from "@pages/popup/Interfaces";
-import {loggingConstants} from "@pages/background/LoggingConstants";
+import {loggingConstants} from "@pages/popup/Consts/LoggingConstants";
 import {dataBase} from "@pages/popup/database";
 import {tabs} from "webextension-polyfill";
 import {getUTCDateTime} from "@pages/popup/UtilityFunctions";

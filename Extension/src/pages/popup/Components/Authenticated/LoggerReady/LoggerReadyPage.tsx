@@ -3,7 +3,7 @@ import {Paused} from "@pages/popup/Components/Authenticated/LoggerReady/Paused/P
 import {useEffect, useState} from "react";
 import {buttonDisabledStyle, buttonStyle} from "@pages/popup/Consts/Styles";
 import {dataBase} from "@pages/popup/database";
-import {loggingConstants} from "@pages/background/LoggingConstants";
+import {loggingConstants} from "@pages/popup/Consts/LoggingConstants";
 import {useNavigate} from "react-router-dom";
 import Paths from "@pages/popup/Consts/Paths";
 import {connectToPort} from "@pages/popup/UtilityFunctions";
