@@ -18,7 +18,7 @@ interface Mark {
 }
 
 
-export function RangeQuestionElement({question, index, setAnswers, isValidating}: Props) {
+export function RangeQuestionComponent({question, index, setAnswers, isValidating}: Props) {
     const max = question.range;
     const [value, setValue] = useState<number>(0);
 

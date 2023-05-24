@@ -11,7 +11,7 @@ interface Props {
     isValidating: boolean;
 }
 
-export function MultipleChoiceQuestionElement({question, index, setAnswers, isValidating}: Props) {
+export function MultipleChoiceQuestionComponent({question, index, setAnswers, isValidating}: Props) {
     const [value, setValue] = useState(question.choices[0]);
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const answer = (event.target as HTMLInputElement).value;

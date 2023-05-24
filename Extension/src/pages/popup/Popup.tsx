@@ -8,7 +8,7 @@ import {TasksPage} from "@pages/popup/Components/Authenticated/TasksPage";
 import {FetchingStudyData} from "@pages/popup/Components/Authenticated/FetchingStudyData";
 import {DemographicsPage} from "@pages/popup/Components/Authenticated/DemographicsPage";
 import {LoggerReadyPage} from "@pages/popup/Components/Authenticated/LoggerReady/LoggerReadyPage";
-import {QuestionnairePage} from "@pages/popup/Components/Authenticated/QuestionnairePage";
+import {QuestionnairePage} from "@pages/popup/Components/Authenticated/Questions/QuestionnairePage";
 import {dataBase} from "@pages/popup/database";
 import {fgLoggingConstants} from "@pages/popup/Consts/FgLoggingConstants";
 

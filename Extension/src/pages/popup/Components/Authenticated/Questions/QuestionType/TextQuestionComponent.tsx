@@ -11,7 +11,7 @@ interface Props {
     isValidating: boolean;
 }
 
-export function TextQuestionElement({question, index, setAnswers, isValidating}: Props) {
+export function TextQuestionComponent({question, index, setAnswers, isValidating}: Props) {
 
     const [answer, setAnswer] = useState<string>("");
 

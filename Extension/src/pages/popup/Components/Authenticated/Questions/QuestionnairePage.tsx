@@ -1,7 +1,7 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {dataBase} from "@pages/popup/database";
-import {QuestionElement} from "@pages/popup/Components/Authenticated/QuestionElement";
+import {QuestionComponent} from "@pages/popup/Components/Authenticated/Questions/QuestionComponent";
 import {IAnswer, IQuestion, IQuestionAnswer} from "@pages/popup/Interfaces";
 import {Paper} from "@mui/material";
 import {LoadingButton} from "@pages/popup/SharedComponents/LoadingButton";
@@ -82,6 +82,14 @@ export function QuestionnairePage() {
         return questionnaireType === 'pre' ? <h1>Pre Questionnaire</h1> : <h1>Post Questionnaire</h1>;
     }
 
+    function getQuestions() {
+        return iQuestions.map((iQuestion, index) => <QuestionComponent key={iQuestion.questionId}
+                                                                       index={index}
+                                                                       iQuestion={iQuestion}
+                                                                       setAnswers={setAnswers}
+                                                                       isValidating={isValidating}/>);
+    }
+
     return (
         <>
             {getTitle(questionnaireType)}
@@ -92,11 +100,7 @@ export function QuestionnairePage() {
                 Next
             </button>
             <Paper style={{maxHeight: 200, overflow: 'auto', backgroundColor: '#FFFFFF'}}>
-                {iQuestions.map((iQuestion, index) => <QuestionElement key={iQuestion.questionId}
-                                                                       index={index}
-                                                                       iQuestion={iQuestion}
-                                                                       setAnswers={setAnswers}
-                                                                       isValidating={isValidating}/>)}
+                {getQuestions()}
                 <LoadingButton text={"Submit"} loadingText={"Loading..."} isLoading={isValidating}
                                onClick={handleSubmit}/>
 
