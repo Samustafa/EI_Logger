@@ -4,10 +4,17 @@ import React from "react";
 import {buttonStyle} from "@pages/popup/Consts/Styles";
 import Paths from "@pages/popup/Consts/Paths";
 import {fgLoggingConstants} from "@pages/popup/Consts/FgLoggingConstants";
+import {dataBase} from "@pages/popup/database";
 
 export function IdDisplayPage() {
     const id = fgLoggingConstants.userId;
     const navigate = useNavigate();
+
+    function handleNext() {
+        dataBase.setExtensionState('TASKS_PAGE');
+        navigate(Paths.demographicsPage);
+    }
+
     return (
         <>
             <p>Registration Successful!</p>
@@ -22,7 +29,7 @@ export function IdDisplayPage() {
                 the study!</p>
             <p>You will need your ID, if you decide to log-in from another device!</p>
             <p>You&lsquo;ll be able to call your id from the app</p>
-            <button className={buttonStyle} onClick={() => navigate(Paths.demographicsPage)}>Next</button>
+            <button className={buttonStyle} onClick={() => handleNext()}>Next</button>
         </>
     );
 }

@@ -27,51 +27,55 @@ export function FetchingStudyData() {
 
     useEffect(function fetchStudy() {
         setLoading(true);
+
         getStudy()
-            .then((response) => saveStudyInDatabase(new Study(response.studyId, response.name, response.tasks)))
-            .then(studyId => fgLoggingConstants.studyId = studyId)
-            .then(() => navigate(Paths.tasksPage))
+            .then((response) => handlePostGet(response))
             .catch(error => extractAndSetError(error, setError))
             .finally(() => setLoading(false));
-    }, [retryFlag]);
 
-    function saveStudyInDatabase(studyData: Study) {
-        const {
-            study,
-            tasks,
-            multipleChoiceQuestions,
-            textQuestions,
-            rangeQuestions
-        } = extractStudyData(studyData);
-
-
-        dataBase.saveStudyInfo(study, tasks, multipleChoiceQuestions, textQuestions, rangeQuestions);
-
-        return study.studyId;
-    }
-
-    function extractStudyData(studyData: Study) {
-        const study: IStudy = {
-            studyId: studyData.studyId,
-            name: studyData.name,
+        function handlePostGet(response: Study) {
+            saveStudyInDatabase(new Study(response.studyId, response.name, response.tasks));
+            fgLoggingConstants.studyId = response.studyId;
+            navigate(Paths.tasksPage)
         }
 
-        const tasks = studyData.tasks.map((task: Task): ITask => ({
-            taskId: task.taskId,
-            text: task.text,
-            isPreQuestionsSubmitted: false,
-            isPostQuestionsSubmitted: false,
-            iPreQuestions: task.getIPreQuestions(),
-            iPostQuestions: task.getIPostQuestions(),
-        }))
+        function saveStudyInDatabase(studyData: Study) {
+            const {
+                study,
+                tasks,
+                multipleChoiceQuestions,
+                textQuestions,
+                rangeQuestions
+            } = extractStudyData(studyData);
 
-        const questions: IQuestion[] = studyData.getIQuestions();
-        const multipleChoiceQuestions = questions.filter(question => question.type === "MultipleChoiceQuestion") as IMultipleChoiceQuestion[]
-        const textQuestions = questions.filter(question => question.type === "TextQuestion") as ITextQuestion[]
-        const rangeQuestions = questions.filter(question => question.type === "RangeQuestion") as IRangeQuestion[]
+            dataBase.saveStudyInfo(study, tasks, multipleChoiceQuestions, textQuestions, rangeQuestions);
+        }
 
-        return {study, tasks, multipleChoiceQuestions, textQuestions, rangeQuestions}
-    }
+        function extractStudyData(studyData: Study) {
+            const study: IStudy = {
+                studyId: studyData.studyId,
+                name: studyData.name,
+            }
+
+            const tasks = studyData.tasks.map((task: Task): ITask => ({
+                taskId: task.taskId,
+                text: task.text,
+                isPreQuestionsSubmitted: false,
+                isPostQuestionsSubmitted: false,
+                iPreQuestions: task.getIPreQuestions(),
+                iPostQuestions: task.getIPostQuestions(),
+            }))
+
+            const questions: IQuestion[] = studyData.getIQuestions();
+            const multipleChoiceQuestions = questions.filter(question => question.type === "MultipleChoiceQuestion") as IMultipleChoiceQuestion[]
+            const textQuestions = questions.filter(question => question.type === "TextQuestion") as ITextQuestion[]
+            const rangeQuestions = questions.filter(question => question.type === "RangeQuestion") as IRangeQuestion[]
+
+            return {study, tasks, multipleChoiceQuestions, textQuestions, rangeQuestions}
+        }
+
+
+    }, [retryFlag]);
 
     function retry() {
         setRetryFlag(!retryFlag)
