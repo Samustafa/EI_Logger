@@ -103,7 +103,7 @@ export function DemographicsPage() {
         clearErrors();
         if (!isFormValid()) {
             setCorrespondingError();
-            return
+            return;
         }
 
         const demographics: IDemographics = {
@@ -112,10 +112,16 @@ export function DemographicsPage() {
             job: job,
             sex: sex
         }
+
         dataBase.setDemographics(demographics)
-            .then(() => dataBase.logUserExtensionInteraction('SUBMITTED:DEMOGRAPHICS'))
-            .then(() => navigate(isStudyExists ? Paths.tasksPage : Paths.fetchingStudyData))
+            .then(() => handlePostSave())
             .catch((error) => extractAndSetError(error, setGeneralError))
+
+        function handlePostSave() {
+            dataBase.logUserExtensionInteraction('SUBMITTED:DEMOGRAPHICS');
+            dataBase.setExtensionState('TASKS_PAGE');
+            navigate(isStudyExists ? Paths.tasksPage : Paths.fetchingStudyData);
+        }
     }
 
     return (
