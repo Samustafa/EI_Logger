@@ -52,10 +52,17 @@ export function Tasks({iTasks}: Props) {
     }
 
     function handleListItemClick(taskId: string) {
-        const hasPreQuestionnaire = doesTaskHasPreQuestionnaire(taskId);
         fgLoggingConstants.taskId = taskId;
-        if (hasPreQuestionnaire) navigate(Paths.questionnairePage('pre'));
-        else navigate(Paths.loggerPage)
+        dataBase.setCurrentTaskId(taskId);
+
+        const hasPreQuestionnaire = doesTaskHasPreQuestionnaire(taskId);
+        if (hasPreQuestionnaire) {
+            dataBase.setExtensionState('PRE_QUESTIONNAIRE');
+            navigate(Paths.questionnairePage('pre'));
+        } else {
+            dataBase.setExtensionState('LOGGER_READY');
+            navigate(Paths.loggerPage);
+        }
     }
 
     return (
