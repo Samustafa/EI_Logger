@@ -1,6 +1,7 @@
 import {QuestionnaireType} from "@pages/popup/Types";
 
-const landingPage = '/';
+const initializationPage = '/'
+const landingPage = '/landingPage';
 const tasksPage = "/tasksPage";
 const fetchingStudyData = '/fetchingStudyData';
 const demographicsPage = '/demographicsPage';
@@ -15,6 +16,7 @@ function questionnairePage(questionnaireType: QuestionnaireType) {
 
 
 export default {
+    initializationPage,
     landingPage,
     idDisplayPage,
     tasksPage,

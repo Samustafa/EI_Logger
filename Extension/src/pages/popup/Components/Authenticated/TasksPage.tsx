@@ -5,7 +5,7 @@ import {ITask} from "@pages/popup/Interfaces";
 import {useNavigate} from "react-router-dom";
 import {fgLoggingConstants} from "@pages/popup/Consts/FgLoggingConstants";
 import Paths from "@pages/popup/Consts/Paths";
-import {Paper, Snackbar} from "@mui/material";
+import {Snackbar} from "@mui/material";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
@@ -44,26 +44,18 @@ export function TasksPage() {
 
     return (
         <div>
-            <Paper style={{
-                maxHeight: 400,
-                overflow: 'auto',
-                backgroundColor: '#2d3748',
-                color: '#FFFFFF',
-                padding: '20px'
-            }}>
-                <h1>Tasks</h1>
-                <Tasks iTasks={iTasks}/>
-                <button className={buttonStyle} onClick={() => handleLogOut()}>log Out</button>
-                <button className={buttonStyle} onClick={() => handleUpload()}>Upload</button>
-                <button className={buttonStyle} onClick={() => goToDemographics()}>Edit Demographics</button>
-                <Snackbar
-                    message={messageToClipboard}
-                    anchorOrigin={{vertical: "bottom", horizontal: "center"}}
-                    autoHideDuration={2000}
-                    onClose={() => setOpen(false)}
-                    open={open}
-                />
-            </Paper>
+            <h1>Tasks</h1>
+            <Tasks iTasks={iTasks}/>
+            <button className={buttonStyle} onClick={() => handleLogOut()}>log Out</button>
+            <button className={buttonStyle} onClick={() => handleUpload()}>Upload</button>
+            <button className={buttonStyle} onClick={() => goToDemographics()}>Edit Demographics</button>
+            <Snackbar
+                message={messageToClipboard}
+                anchorOrigin={{vertical: "bottom", horizontal: "center"}}
+                autoHideDuration={2000}
+                onClose={() => setOpen(false)}
+                open={open}
+            />
         </div>
     );
 

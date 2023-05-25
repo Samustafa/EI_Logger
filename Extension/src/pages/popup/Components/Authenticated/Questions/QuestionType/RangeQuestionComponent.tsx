@@ -35,9 +35,8 @@ export function RangeQuestionComponent({question, index, setAnswers, isValidatin
 
     return <>
         <div>{index}) {question.questionText}</div>
-        <div className={"text-white"}>
+        <div>
             <Slider
-                style={{}}
                 aria-label="answer-value"
                 defaultValue={0}
                 getAriaValueText={(value,) => `${value}`}

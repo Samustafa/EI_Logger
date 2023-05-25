@@ -10,7 +10,6 @@ interface Props {
 }
 
 export function Input36Component({isError, value, changeValue, isDisabled, name}: Props) {
-    console.log("99746344-7382-4d7c-9e60-6ed3a3cef427".length)
     return (<input
         className={isError ? inputErrorStyle : inputDefaultStyle}
         type="text"
