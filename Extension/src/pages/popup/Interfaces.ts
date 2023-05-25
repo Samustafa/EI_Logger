@@ -1,4 +1,4 @@
-import {ExtensionState, QuestionTypeAsString, TabAction, UserExtensionAction} from "@pages/popup/Types";
+import {ExtensionState, QuestionTypeAsString, SexType, TabAction, UserExtensionAction} from "@pages/popup/Types";
 
 export interface IApiException {
     httpStatus: string
@@ -79,7 +79,7 @@ export interface IDemographics {
     id: string;
     birthDate: string;
     job: string;
-    sex: string;
+    sex: SexType;
 
 }
 

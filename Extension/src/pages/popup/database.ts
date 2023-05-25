@@ -225,6 +225,11 @@ class DataBase extends Dexie {
     }
 
 
+    async getDemographics() {
+        const deFaultDemographics: IDemographics = {id: '0', job: "", sex: "sex", birthDate: ''};
+        const demographics = await this.demographics.toArray()
+        return demographics[0] ?? deFaultDemographics;
+    }
 }
 
 export const dataBase = new DataBase();

@@ -11,6 +11,7 @@ export type LoggingMessage = "START_LOGGING" | "STOP_LOGGING";
 export type LoggingConstantsMessage = { studyId?: string, userId?: string, taskId?: string };
 export type PortName = "loggingPort" | "loggingConstantsPort";
 
+export type SexType = "m" | "f" | "sex";
 
 export type BadgeText = 'ON' | 'OFF'
 

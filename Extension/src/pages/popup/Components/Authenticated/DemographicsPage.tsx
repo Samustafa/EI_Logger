@@ -9,6 +9,7 @@ import {useNavigate} from "react-router-dom";
 import Paths from "@pages/popup/Consts/Paths";
 import {extractAndSetError} from "@pages/popup/UtilityFunctions";
 import {ErrorMessage} from "@pages/popup/SharedComponents/ErrorMessage";
+import {SexType} from "@pages/popup/Types";
 
 export function DemographicsPage() {
 
@@ -57,7 +58,7 @@ export function DemographicsPage() {
         />
     </>
 
-    const [sex, setSex] = useState<"m" | "f" | "sex">("sex")
+    const [sex, setSex] = useState<SexType>("sex")
     const [sexError, setSexError] = useState<string>('');
     const sexSection = <>
         <label>Choose Sex</label>
@@ -73,6 +74,18 @@ export function DemographicsPage() {
             .then((isStudyExists) => setIsStudyExists(isStudyExists))
             .catch((error) => extractAndSetError(error, setGeneralError))
     }, []);
+
+    useEffect(function loadSavedDataIfExists() {
+        dataBase.getDemographics()
+            .then((demographics) => initializeForms(demographics))
+            .catch((error) => extractAndSetError(error, setGeneralError))
+
+        function initializeForms(demographics: IDemographics) {
+            setSex(demographics.sex);
+            setBirthDate(demographics.birthDate);
+            setJob(demographics.job);
+        }
+    }, [])
 
     function isFormValid() {
         return isDateValid(birthDate) && isSexSelected() && job !== '';
@@ -110,7 +123,7 @@ export function DemographicsPage() {
             id: demographicsPrimaryKey,
             birthDate: birthDate,
             job: job,
-            sex: sex
+            sex: sex as SexType
         }
 
         dataBase.setDemographics(demographics)
