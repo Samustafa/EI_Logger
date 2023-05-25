@@ -7,8 +7,8 @@ import {login, registerUser} from "@pages/popup/ServerAPI";
 import {dataBase} from "@pages/popup/database";
 import {Input36Component} from "@pages/popup/SharedComponents/Input36Component";
 import {extractAndSetError} from "@pages/popup/UtilityFunctions";
-import {fgLoggingConstants} from "@pages/popup/Consts/FgLoggingConstants";
 import {IUser} from "@pages/popup/Interfaces";
+import {fgLoggingConstants} from "@pages/popup/Consts/FgLoggingConstants";
 //99746344-7382-4d7c-9e60-6ed3a3cef427
 export default function LandingPage() {
 
@@ -39,41 +39,54 @@ export default function LandingPage() {
         setLoginError(null);
     }
 
-
     function handleRegister(event: FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-        clearErrors();
-        disableButtons();
-        setUserId("");
+        handlePreRegister();
 
         registerUser(registrationCode)
-            .then(iUser => {
-                dataBase.addUserToDataBase(iUser) //TODO: add try catch on original function to throw more comprehensive custom errors
-                dataBase.logUserExtensionInteraction("SIGNED:UP");
-                fgLoggingConstants.userId = iUser.userId;
-            })
-            .then(() => navigate(Paths.idDisplayPage))
+            .then(iUser => handlePostRegister(iUser))
             .catch(error => extractAndSetError(error, setRegistrationError))
             .finally(() => enableButtons());
+
+        function handlePreRegister() {
+            event.preventDefault();
+            clearErrors();
+            disableButtons();
+            setUserId("");
+        }
+
+        function handlePostRegister(iUser: IUser) {
+            dataBase.addUserToDataBase(iUser) //TODO: add try catch on original function to throw more comprehensive custom errors
+            dataBase.logUserExtensionInteraction("SIGNED:UP");
+            dataBase.setExtensionState('DISPLAYING_ID');
+            fgLoggingConstants.userId = iUser.userId;
+            navigate(Paths.idDisplayPage);
+        }
 
     }
 
     function handleLogin(event: FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-        clearErrors();
-        disableButtons();
-        setRegistrationCode("");
+        handlePreLogIn();
 
         login(userId)
-            .then(() => {
-                const iUser: IUser = {id: 0, userId: userId}
-                dataBase.addUserToDataBase(iUser);
-                fgLoggingConstants.userId = userId;
-                dataBase.logUserExtensionInteraction("SIGNED:IN");
-            })
-            .then(() => navigate(Paths.fetchingStudyData))
+            .then(() => handlePostLogIn())
             .catch((error) => extractAndSetError(error, setLoginError))
             .finally(() => enableButtons());
+
+        function handlePreLogIn() {
+            event.preventDefault();
+            clearErrors();
+            disableButtons();
+            setRegistrationCode("");
+        }
+
+        function handlePostLogIn() {
+            const iUser: IUser = {id: 0, userId: userId}
+            dataBase.addUserToDataBase(iUser);
+            dataBase.logUserExtensionInteraction("SIGNED:IN");
+            dataBase.setExtensionState('TASKS_PAGE');
+            fgLoggingConstants.userId = userId;
+            navigate(Paths.fetchingStudyData)
+        }
     }
 
     return (

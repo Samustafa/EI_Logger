@@ -18,9 +18,8 @@ export type QuestionnaireType = 'pre' | 'post';
 
 export type ExtensionState =
     'NOT_AUTHENTICATED'
-    | 'SHOWING_ID'    //id
+    | 'DISPLAYING_ID'    //id
     | 'DEMOGRAPHICS'  //old demographics
-    | 'GETTING_STUDY'      //studyId
     | 'TASKS_PAGE'
     | 'PRE_QUESTIONNAIRE' //taskId
     | 'LOGGER_READY'      //taskId
