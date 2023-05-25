@@ -16,6 +16,16 @@ export type BadgeText = 'ON' | 'OFF'
 
 export type QuestionnaireType = 'pre' | 'post';
 
+export type ExtensionState =
+    'NOT_AUTHENTICATED'
+    | 'SHOWING_ID'    //id
+    | 'DEMOGRAPHICS'  //old demographics
+    | 'GETTING_STUDY'      //studyId
+    | 'TASKS_PAGE'
+    | 'PRE_QUESTIONNAIRE' //taskId
+    | 'LOGGER_READY'      //taskId
+    | 'POST_QUESTIONNAIRE'//taskId
+    | 'LOGGING';          //taskId
 
 export type OnUpdatedChangeInfoType = browser.Tabs.OnUpdatedChangeInfoType;
 export type Tab = browser.Tabs.Tab;
