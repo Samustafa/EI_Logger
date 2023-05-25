@@ -2,7 +2,9 @@
 import Dexie, {Table} from 'dexie';
 import {
     IAnswer,
+    ICurrentTaskId,
     IDemographics,
+    IExtensionState,
     IMultipleChoiceQuestion,
     IQuestion,
     IRangeQuestion,
@@ -16,7 +18,7 @@ import {
 import {MultipleChoiceQuestion} from "@pages/popup/model/question/MultipleChoiceQuestion";
 import {TextQuestion} from "@pages/popup/model/question/TextQuestion";
 import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
-import {QuestionnaireType, UserExtensionAction} from "@pages/popup/Types";
+import {ExtensionState, QuestionnaireType, UserExtensionAction} from "@pages/popup/Types";
 import {getUTCDateTime} from "@pages/popup/UtilityFunctions";
 import {fgLoggingConstants} from "@pages/popup/Consts/FgLoggingConstants";
 
@@ -32,12 +34,14 @@ class DataBase extends Dexie {
     answers!: Table<IAnswer, string>;
     tabs!: Table<ITab, string>;
     userExtensionInteraction!: Table<IUserExtensionInteraction, string>;
+    currentTaskId!: Table<ICurrentTaskId, string>;
+    extensionState!: Table<IExtensionState, string>;
 
     //...other tables goes here...
 
     constructor() {
         super('DataBase');
-        this.version(7).stores({
+        this.version(8).stores({
             user: 'id, userId',
             study: 'studyId',
             task: 'taskId, text, iPreQuestions, iPostQuestions, isPreQuestionsSubmitted, isPostQuestionsSubmitted',
@@ -47,7 +51,9 @@ class DataBase extends Dexie {
             demographics: 'id, birthDate, job, sex',
             answers: 'answerId, userId, studyId, taskId, questionId, answer',
             tabs: '++id, tabId, action, timeStamp, userId, studyId, taskId, groupId, tabIndex, windowId, title, url',
-            userExtensionInteraction: '++id, action, timeStamp, userId, studyId, taskId'
+            userExtensionInteraction: '++id, action, timeStamp, userId, studyId, taskId',
+            currentTaskId: 'id, taskId',
+            extensionState: 'id, state'
         });
     }
 
@@ -134,6 +140,27 @@ class DataBase extends Dexie {
         return users[0]?.userId;
     }
 
+    async getCurrentTaskId(): Promise<string | undefined> {
+        const ids = await dataBase.currentTaskId.toArray();
+        return ids[0]?.taskId;
+    }
+
+    setCurrentTaskId(taskId: string) {
+        const iCurrentTaskId: ICurrentTaskId = {id: 0, taskId: taskId};
+        dataBase.currentTaskId.put(iCurrentTaskId);
+    }
+
+    async getExtensionState(): Promise<ExtensionState | undefined> {
+        const states = await dataBase.extensionState.toArray();
+        return states[0]?.state;
+    }
+
+    setExtensionState(state: ExtensionState) {
+        const iExtensionState: IExtensionState = {id: 0, state: state};
+        dataBase.extensionState.put(iExtensionState);
+    }
+
+
     async isQuestionnaireSubmitted(taskId: string, questionnaireType: string | undefined) {
         const isQuestionnaireTypeLegal = questionnaireType === 'pre' || questionnaireType === 'post';
         if (!isQuestionnaireTypeLegal) throw new Error("questionnaireType is not legal");
@@ -152,9 +179,10 @@ class DataBase extends Dexie {
     async getLoggingConstants() {
         const userId = await this.getUserId();
         const studyId = await this.getStudyId();
+        const taskId = await this.getCurrentTaskId() ?? "";
 
         if (userId === undefined || studyId === undefined) throw new Error('User or study id is undefined');
-        return {userId: userId, studyId: studyId};
+        return {userId: userId, studyId: studyId, taskId: taskId};
     }
 
     saveTabInfo(iTab: ITab) {
@@ -194,6 +222,8 @@ class DataBase extends Dexie {
     isStudyExists(): Promise<boolean> {
         return dataBase.study.count().then(count => count > 0);
     }
+
+
 }
 
 export const dataBase = new DataBase();

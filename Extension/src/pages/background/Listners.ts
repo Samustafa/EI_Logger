@@ -4,21 +4,19 @@ import {
     handleBookmarkRemoved,
     handleLogAllExistingTabs,
     handleOnCompleted,
+    handleOnInstalled,
     handleTabActivated,
     handleTabAttached,
     handleTabDetached,
     handleTabRemoved,
-    handleTabUpdated
+    handleTabUpdated,
+    setBadgeText
 } from "@pages/background/Handlers";
 import {LoggingConstantsMessage, LoggingMessage, MessageType, Port, PortName} from "@pages/popup/Types";
-import {setBadgeText} from "@pages/background/backgroundFunctions";
 import {bgLoggingConstants} from "@pages/background/BGLoggingConstants";
 
 
-export function startListening() {
-    browser.runtime.onConnect.addListener(connectPort);
-}
-
+//--------------- Communication functions ---------------//
 function connectPort(port: Port) {
     const portName = port.name as PortName;
     console.log(`service worker connected to port ${portName}`);
@@ -32,7 +30,6 @@ function connectPort(port: Port) {
             break;
     }
 }
-
 
 /**
  * loggingPort message receiver
@@ -62,6 +59,13 @@ function loggingConstantsMR(message: MessageType) {
     bgLoggingConstants.taskId = message.taskId ?? bgLoggingConstants.taskId;
 }
 
+//--------------- end Communication functions ---------------//
+
+
+export function startListening() {
+    browser.runtime.onInstalled.addListener(() => handleOnInstalled());
+    browser.runtime.onConnect.addListener(connectPort);
+}
 
 function activateAllListens() {
     listenOnCompleted();

@@ -1,4 +1,4 @@
-import {QuestionTypeAsString, TabAction, UserExtensionAction} from "@pages/popup/Types";
+import {ExtensionState, QuestionTypeAsString, TabAction, UserExtensionAction} from "@pages/popup/Types";
 
 export interface IApiException {
     httpStatus: string
@@ -23,6 +23,16 @@ export interface ITask {
     isPostQuestionsSubmitted: boolean;
     iPreQuestions: IQuestion[];
     iPostQuestions: IQuestion[];
+}
+
+export interface ICurrentTaskId {
+    id: 0;
+    taskId: string;
+}
+
+export interface IExtensionState {
+    id: 0;
+    state: ExtensionState;
 }
 
 export interface IQuestion {

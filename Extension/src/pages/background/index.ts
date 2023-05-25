@@ -1,3 +1,4 @@
-import {initializeBackground} from "@pages/background/backgroundFunctions";
+import {startListening} from "@pages/background/Listners";
 
-initializeBackground().then(() => console.log("background initialized"));
+startListening();
+console.log("background initialized");

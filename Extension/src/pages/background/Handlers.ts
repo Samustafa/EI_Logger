@@ -1,5 +1,6 @@
 import {
     AttachInfo,
+    BadgeText,
     BookMark,
     DetachInfo,
     OnActivatedActiveInfoType,
@@ -12,12 +13,17 @@ import {
 } from "@pages/popup/Types";
 import {ITab} from "@pages/popup/Interfaces";
 import {dataBase} from "@pages/popup/database";
-import {tabs} from "webextension-polyfill";
+import browser, {tabs} from "webextension-polyfill";
 import {getUTCDateTime} from "@pages/popup/UtilityFunctions";
 import {bgLoggingConstants} from "@pages/background/BGLoggingConstants";
 
 
 const openedTabsCache = new Map<number, string>();
+
+export function handleOnInstalled() {
+    setBadgeText('OFF');
+    dataBase.setExtensionState('NOT_AUTHENTICATED');
+}
 
 export function handleOnCompleted(details: OnCompletedDetailsType) {
     const tabFinishedLoading = 0;
@@ -111,6 +117,7 @@ export async function handleTabDetached(tabId: number, detachInfo: DetachInfo) {
     dataBase.saveTabInfo(iTab);
 }
 
+
 //Helper Functions
 function prePareITabFromTab(tab: Tab, tabAction: TabAction): ITab {
     const tabExtended = tab as TabWithGroupId;
@@ -181,5 +188,9 @@ export function handleLogAllExistingTabs() {
             dataBase.saveTabInfo(iTab);
         })
     })
+}
+
+export function setBadgeText(badgeText: BadgeText) {
+    browser.action.setBadgeText({text: badgeText}).then(() => console.log("set badge to", badgeText));
 }
 
