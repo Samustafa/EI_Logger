@@ -2,13 +2,13 @@ import {inputDefaultStyle, inputErrorStyle} from "@pages/popup/Consts/Styles";
 import React, {useEffect, useState} from "react";
 import {LoadingButton} from "@pages/popup/SharedComponents/LoadingButton";
 import CustomizedMenus from "@pages/popup/SharedComponents/CustomizedMenus";
-import {ErrorMessage} from "@pages/popup/SharedComponents/ErrorMessage";
 import dayjs from "dayjs";
 import {IDemographics} from "@pages/popup/Interfaces";
 import {dataBase} from "@pages/popup/database";
 import {useNavigate} from "react-router-dom";
 import Paths from "@pages/popup/Consts/Paths";
 import {extractAndSetError} from "@pages/popup/UtilityFunctions";
+import {ErrorMessage} from "@pages/popup/SharedComponents/ErrorMessage";
 
 export function DemographicsPage() {
 

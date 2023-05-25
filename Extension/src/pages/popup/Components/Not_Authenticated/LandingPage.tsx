@@ -54,7 +54,7 @@ export default function LandingPage() {
         }
 
         function handlePostRegister(userId: string) {
-            dataBase.addUserToDataBase(userId) //TODO: add try catch on original function to throw more comprehensive custom errors
+            dataBase.setUserId(userId) //TODO: add try catch on original function to throw more comprehensive custom errors
             dataBase.logUserExtensionInteraction("SIGNED:UP");
             dataBase.setExtensionState('DISPLAYING_ID');
             fgLoggingConstants.userId = userId;
@@ -79,7 +79,7 @@ export default function LandingPage() {
         }
 
         function handlePostLogIn() {
-            dataBase.addUserToDataBase(userId);
+            dataBase.setUserId(userId);
             dataBase.logUserExtensionInteraction("SIGNED:IN");
             dataBase.setExtensionState('TASKS_PAGE');
             fgLoggingConstants.userId = userId;
