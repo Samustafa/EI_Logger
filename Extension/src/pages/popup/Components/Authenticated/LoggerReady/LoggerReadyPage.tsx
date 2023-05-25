@@ -4,14 +4,15 @@ import {useEffect, useState} from "react";
 import {buttonDisabledStyle, buttonStyle} from "@pages/popup/Consts/Styles";
 import {dataBase} from "@pages/popup/database";
 import {fgLoggingConstants} from "@pages/popup/Consts/FgLoggingConstants";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import Paths from "@pages/popup/Consts/Paths";
 import {connectToPort, extractAndSetError} from "@pages/popup/UtilityFunctions";
 import {Port} from "@pages/popup/Types";
 import {ErrorMessage} from "@pages/popup/SharedComponents/ErrorMessage";
 
 export function LoggerReadyPage() {
-    const [logging, setLogging] = useState<boolean>(false);
+    const location = useLocation();
+    const [logging, setLogging] = useState<boolean>(location.state as boolean);
     const [port, setPort] = useState<Port | null>(null);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
