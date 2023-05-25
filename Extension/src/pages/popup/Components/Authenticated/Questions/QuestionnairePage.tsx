@@ -66,11 +66,24 @@ export function QuestionnairePage() {
     }
 
     function handleBack() {
-        navigate(questionnaireType === 'pre' ? Paths.tasksPage : Paths.loggerPage);
+        if (questionnaireType === 'pre') {
+            dataBase.setExtensionState('TASKS_PAGE');
+            navigate(Paths.tasksPage);
+        } else {
+            dataBase.setExtensionState('LOGGER_READY');
+            navigate(Paths.loggerPage);
+        }
     }
 
     function handleNext() {
-        navigate(questionnaireType === 'pre' ? Paths.loggerPage : Paths.tasksPage);
+        if (questionnaireType === 'pre') {
+            dataBase.setExtensionState('LOGGER_READY');
+            navigate(Paths.loggerPage);
+        } else {
+            dataBase.setExtensionState('TASKS_PAGE');
+            navigate(Paths.tasksPage);
+        }
+
     }
 
     function handlePostSubmit() {

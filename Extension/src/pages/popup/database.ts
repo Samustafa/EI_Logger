@@ -57,8 +57,9 @@ class DataBase extends Dexie {
         });
     }
 
-    addUserToDataBase(userId: IUser) {
-        dataBase.user.put(userId);
+    addUserToDataBase(userId: string) {
+        const iUser: IUser = {id: 0, userId: userId}
+        dataBase.user.put(iUser);
     }
 
     async getITasks() {

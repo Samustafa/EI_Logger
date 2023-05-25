@@ -7,7 +7,6 @@ import {login, registerUser} from "@pages/popup/ServerAPI";
 import {dataBase} from "@pages/popup/database";
 import {Input36Component} from "@pages/popup/SharedComponents/Input36Component";
 import {extractAndSetError} from "@pages/popup/UtilityFunctions";
-import {IUser} from "@pages/popup/Interfaces";
 import {fgLoggingConstants} from "@pages/popup/Consts/FgLoggingConstants";
 //99746344-7382-4d7c-9e60-6ed3a3cef427
 export default function LandingPage() {
@@ -43,7 +42,7 @@ export default function LandingPage() {
         handlePreRegister();
 
         registerUser(registrationCode)
-            .then(iUser => handlePostRegister(iUser))
+            .then(userId => handlePostRegister(userId))
             .catch(error => extractAndSetError(error, setRegistrationError))
             .finally(() => enableButtons());
 
@@ -54,11 +53,11 @@ export default function LandingPage() {
             setUserId("");
         }
 
-        function handlePostRegister(iUser: IUser) {
-            dataBase.addUserToDataBase(iUser) //TODO: add try catch on original function to throw more comprehensive custom errors
+        function handlePostRegister(userId: string) {
+            dataBase.addUserToDataBase(userId) //TODO: add try catch on original function to throw more comprehensive custom errors
             dataBase.logUserExtensionInteraction("SIGNED:UP");
             dataBase.setExtensionState('DISPLAYING_ID');
-            fgLoggingConstants.userId = iUser.userId;
+            fgLoggingConstants.userId = userId;
             navigate(Paths.idDisplayPage);
         }
 
@@ -80,8 +79,7 @@ export default function LandingPage() {
         }
 
         function handlePostLogIn() {
-            const iUser: IUser = {id: 0, userId: userId}
-            dataBase.addUserToDataBase(iUser);
+            dataBase.addUserToDataBase(userId);
             dataBase.logUserExtensionInteraction("SIGNED:IN");
             dataBase.setExtensionState('TASKS_PAGE');
             fgLoggingConstants.userId = userId;

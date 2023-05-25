@@ -1,5 +1,4 @@
 import axios from "axios";
-import {IUser} from "@pages/popup/Interfaces";
 import {Study} from "@pages/popup/model/Study";
 import {Task} from "@pages/popup/model/Task";
 import {TextQuestion} from "@pages/popup/model/question/TextQuestion";
@@ -9,8 +8,7 @@ import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
 
 export async function registerUser(code: string) {
     const axiosResponse = await axios.post<{ userId: string }>(`http://localhost:8080/logger/registerUser/${code}`);
-    
-    return {id: 0, userId: axiosResponse.data.userId} as IUser;
+    return axiosResponse.data.userId;
 }
 
 export async function getStudy(): Promise<Study> {
