@@ -47,15 +47,16 @@ class LoggingConstants {
         sendMessages(port, {taskId: value})
     }
 
-    initializePort() {
+    private _initializePort() {
         this._port = connectToPort('loggingConstantsPort');
     }
 
 
-    initialize(userId: string, studyId: string) {
-        this.initializePort();
+    initialize(userId: string, studyId: string, taskId: string) {
+        if (!this._port) this._initializePort();
         this.userId = userId;
         this.studyId = studyId;
+        this.taskId = taskId;
     }
 
 
