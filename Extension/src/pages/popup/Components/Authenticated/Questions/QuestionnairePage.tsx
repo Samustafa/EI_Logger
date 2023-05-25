@@ -99,7 +99,7 @@ export function QuestionnairePage() {
         console.log(iQuestions)
         console.log(fgLoggingConstants.taskId)
         return iQuestions.map((iQuestion, index) =>
-            <div key={iQuestion.questionId} className={"p-2"}>
+            <div key={iQuestion.questionId} className={"p-2 text-left"}>
                 <QuestionComponent
                     index={index}
                     iQuestion={iQuestion}

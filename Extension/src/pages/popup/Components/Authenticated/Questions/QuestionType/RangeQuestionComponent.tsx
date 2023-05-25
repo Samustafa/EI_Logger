@@ -34,7 +34,7 @@ export function RangeQuestionComponent({question, index, setAnswers, isValidatin
     }
 
     return <>
-        <div>{index}{question.questionText}</div>
+        <div>{index}) {question.questionText}</div>
         <div className={"text-white"}>
             <Slider
                 style={{}}

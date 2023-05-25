@@ -22,7 +22,7 @@ export function TextQuestionComponent({question, index, setAnswers, isValidating
     }
 
     return <>
-        <div>{index}{question.questionText}</div>
+        <div>{index}) {question.questionText}</div>
         <input
             className={inputDefaultStyle}
             type="text"
