@@ -44,18 +44,26 @@ export function TasksPage() {
 
     return (
         <div>
-            <h1>Tasks</h1>
-            <Tasks iTasks={iTasks}/>
-            <button className={buttonStyle} onClick={() => handleLogOut()}>log Out</button>
-            <button className={buttonStyle} onClick={() => handleUpload()}>Upload</button>
-            <button className={buttonStyle} onClick={() => goToDemographics()}>Edit Demographics</button>
-            <Snackbar
-                message={messageToClipboard}
-                anchorOrigin={{vertical: "bottom", horizontal: "center"}}
-                autoHideDuration={2000}
-                onClose={() => setOpen(false)}
-                open={open}
-            />
+            <Paper style={{
+                maxHeight: 400,
+                overflow: 'auto',
+                backgroundColor: '#2d3748',
+                color: '#FFFFFF',
+                padding: '20px'
+            }}>
+                <h1>Tasks</h1>
+                <Tasks iTasks={iTasks}/>
+                <button className={buttonStyle} onClick={() => handleLogOut()}>log Out</button>
+                <button className={buttonStyle} onClick={() => handleUpload()}>Upload</button>
+                <button className={buttonStyle} onClick={() => goToDemographics()}>Edit Demographics</button>
+                <Snackbar
+                    message={messageToClipboard}
+                    anchorOrigin={{vertical: "bottom", horizontal: "center"}}
+                    autoHideDuration={2000}
+                    onClose={() => setOpen(false)}
+                    open={open}
+                />
+            </Paper>
         </div>
     );
 
@@ -98,14 +106,14 @@ export function Tasks({iTasks}: Props) {
 
     return (
         <>
-            <Paper style={{maxHeight: 200, overflow: 'auto'}}>
-                <List component="nav" aria-label="main mailbox folders">
-                    {iTasks.map((iTask: ITask) =>
-                        (<ListItemButton key={iTask.taskId} onClick={() => handleListItemClick(iTask.taskId)}>
-                            <ListItemText primary={iTask.text}/><RightArrowIcon/>
-                        </ListItemButton>))}
-                </List>
-            </Paper>
+
+            <List component="nav" aria-label="main mailbox folders">
+                {iTasks.map((iTask: ITask) =>
+                    (<ListItemButton key={iTask.taskId} onClick={() => handleListItemClick(iTask.taskId)}>
+                        <ListItemText primary={iTask.text}/><RightArrowIcon/>
+                    </ListItemButton>))}
+            </List>
+
 
         </>
     );

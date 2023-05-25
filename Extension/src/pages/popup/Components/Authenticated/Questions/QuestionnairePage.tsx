@@ -96,6 +96,8 @@ export function QuestionnairePage() {
     }
 
     function getQuestions() {
+        console.log(iQuestions)
+        console.log(fgLoggingConstants.taskId)
         return iQuestions.map((iQuestion, index) => <QuestionComponent key={iQuestion.questionId}
                                                                        index={index}
                                                                        iQuestion={iQuestion}
@@ -105,21 +107,28 @@ export function QuestionnairePage() {
 
     return (
         <>
-            {getTitle(questionnaireType)}
-            <LoadingButton text={"back"} loadingText={"Loading..."} isLoading={isValidating} onClick={handleBack}/>
-            <button className={isNextDisabled ? buttonDisabledStyle : buttonStyle}
-                    onClick={handleNext}
-                    disabled={isNextDisabled}>
-                Next
-            </button>
-            <Paper style={{maxHeight: 200, overflow: 'auto', backgroundColor: '#FFFFFF'}}>
+
+            <Paper style={{
+                maxHeight: 400,
+                overflow: 'auto',
+                backgroundColor: '#2d3748',
+                color: '#FFFFFF',
+                padding: '20px'
+            }}>
+                {getTitle(questionnaireType)}
+                <LoadingButton text={"back"} loadingText={"Loading..."} isLoading={isValidating} onClick={handleBack}/>
+                <button className={isNextDisabled ? buttonDisabledStyle : buttonStyle}
+                        onClick={handleNext}
+                        disabled={isNextDisabled}>
+                    Next
+                </button>
                 {getQuestions()}
                 <LoadingButton text={"Submit"} loadingText={"Loading..."} isLoading={isValidating}
                                onClick={handleSubmit}/>
 
+                <ErrorMessage error={error}/>
+                <SuccessMessage isSuccess={isSuccess}/>
             </Paper>
-            <ErrorMessage error={error}/>
-            <SuccessMessage isSuccess={isSuccess}/>
         </>
     );
 }
