@@ -98,11 +98,14 @@ export function QuestionnairePage() {
     function getQuestions() {
         console.log(iQuestions)
         console.log(fgLoggingConstants.taskId)
-        return iQuestions.map((iQuestion, index) => <QuestionComponent key={iQuestion.questionId}
-                                                                       index={index}
-                                                                       iQuestion={iQuestion}
-                                                                       setAnswers={setAnswers}
-                                                                       isValidating={isValidating}/>);
+        return iQuestions.map((iQuestion, index) =>
+            <div key={iQuestion.questionId} className={"p-2"}>
+                <QuestionComponent
+                    index={index}
+                    iQuestion={iQuestion}
+                    setAnswers={setAnswers}
+                    isValidating={isValidating}/>
+            </div>);
     }
 
     return (

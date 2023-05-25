@@ -21,9 +21,9 @@ export function MultipleChoiceQuestionComponent({question, index, setAnswers, is
 
 
     return <>
-        <div>{index}{question.questionText}</div>
+        <div>{index}) {question.questionText}</div>
         <FormControl disabled={isValidating}>
-            <FormLabel id="demo-controlled-radio-buttons-group">Answers</FormLabel>
+            <FormLabel id="demo-controlled-radio-buttons-group" style={{color: '#FFFFFF'}}>Answers</FormLabel>
             <RadioGroup
                 row
                 aria-labelledby="demo-controlled-radio-buttons-group"
@@ -31,7 +31,8 @@ export function MultipleChoiceQuestionComponent({question, index, setAnswers, is
                 value={value}
                 onChange={handleChange}
             >
-                {question.choices.map((choice) => <FormControlLabel key={choice} value={choice} control={<Radio/>}
+                {question.choices.map((choice) => <FormControlLabel key={choice} value={choice}
+                                                                    control={<Radio size="small"/>}
                                                                     label={choice}/>)}
             </RadioGroup>
         </FormControl>
