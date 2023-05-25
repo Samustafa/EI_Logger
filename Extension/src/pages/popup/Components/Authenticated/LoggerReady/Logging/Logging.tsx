@@ -1,20 +1,26 @@
 import React from 'react';
 import {PauseButton} from "./PauseButton";
-import {display, sendMessages} from "@pages/popup/UtilityFunctions";
+import {display, extractAndSetError, sendMessages} from "@pages/popup/UtilityFunctions";
 import {Port} from "@pages/popup/Types";
 import {dataBase} from "@pages/popup/database";
 
 interface Props {
-    setLogging: React.Dispatch<React.SetStateAction<boolean>>;
     port: Port;
+    setLogging: React.Dispatch<React.SetStateAction<boolean>>;
+    setError: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-export function Logging({setLogging, port}: Props) {
+export function Logging({setLogging, port, setError}: Props) {
 
     function stopLogging() {
-        setLogging(false);
-        sendMessages(port, "STOP_LOGGING");
-        dataBase.logUserExtensionInteraction("STOPPED:LOGGING");
+        try {
+            setLogging(false);
+            sendMessages(port, "STOP_LOGGING");
+            dataBase.logUserExtensionInteraction("STOPPED:LOGGING");
+            dataBase.setExtensionState('LOGGER_READY');
+        } catch (e) {
+            extractAndSetError(e, setError);
+        }
     }
 
     return (
