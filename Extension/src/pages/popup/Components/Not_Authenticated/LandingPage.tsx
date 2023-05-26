@@ -54,7 +54,7 @@ export default function LandingPage() {
         }
 
         function handlePostRegister(userId: string) {
-            dataBase.setUserId(userId) //TODO: add try catch on original function to throw more comprehensive custom errors
+            dataBase.setUserId(userId)
             dataBase.logUserExtensionInteraction("SIGNED:UP");
             dataBase.setExtensionState('DISPLAYING_ID');
             fgLoggingConstants.userId = userId;
