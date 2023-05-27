@@ -108,11 +108,13 @@ export function QuestionnairePage() {
         (questionnaireType === 'pre') ? goToLoggerPage() : goToTasksPage();
 
         function goToLoggerPage() {
+            dataBase.logUserExtensionInteraction('SUBMITTED:PRE_QUESTIONNAIRE')
             dataBase.setExtensionState('LOGGER_READY');
             navigate(Paths.loggerPage);
         }
 
         function goToTasksPage() {
+            dataBase.logUserExtensionInteraction('SUBMITTED:PRE_QUESTIONNAIRE')
             dataBase.logUserExtensionInteraction("FINISHED:TASK");
             dataBase.setExtensionState('TASKS_PAGE');
             navigate(Paths.tasksPage);

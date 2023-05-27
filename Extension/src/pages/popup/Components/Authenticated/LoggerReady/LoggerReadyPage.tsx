@@ -38,13 +38,14 @@ export function LoggerReadyPage() {
             (hasPostQuestionnaire) ? goToPostQuestionnairePage() : goToTasksPage();
 
             function goToPostQuestionnairePage() {
+                dataBase.logUserExtensionInteraction('OPENED:POST_QUESTIONNAIRE');
                 dataBase.setExtensionState('POST_QUESTIONNAIRE');
                 navigate(Paths.questionnairePage('post'));
             }
 
             function goToTasksPage() {
-                dataBase.setExtensionState('TASKS_PAGE');
                 dataBase.logUserExtensionInteraction('FINISHED:TASK')
+                dataBase.setExtensionState('TASKS_PAGE');
                 navigate(Paths.tasksPage);
             }
         }

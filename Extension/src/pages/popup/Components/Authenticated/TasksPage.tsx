@@ -91,6 +91,7 @@ export function Tasks({iTasks}: Props) {
         }
 
         function goToPreQuestionnaire() {
+            dataBase.logUserExtensionInteraction("OPENED:PRE_QUESTIONNAIRE");
             dataBase.setExtensionState('PRE_QUESTIONNAIRE');
             navigate(Paths.questionnairePage('pre'));
         }
