@@ -62,11 +62,6 @@ export function QuestionnairePage() {
         }
 
     }, [taskId])
-    useEffect(function isNextButtonDisabled() {
-        dataBase.isQuestionnaireSubmitted(taskId, questionnaireType)
-            .then((isSubmitted) => setIsNextDisabled(!isSubmitted))
-            .catch((error) => extractAndSetError(error, setError))
-    }, [taskId]);
 
     function mapIQuestionAnswerToIAnswer(iQuestionAnswer: IQuestionAnswer, studyId: string, userId: string): IAnswer {
         return {
