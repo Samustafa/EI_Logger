@@ -1,33 +1,66 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {dataBase} from "@pages/popup/database";
-import {QuestionComponent} from "@pages/popup/Components/Authenticated/Questions/QuestionComponent";
-import {IAnswer, IQuestion, IQuestionAnswer} from "@pages/popup/Interfaces";
+import {IAnswer, IQuestionAnswer} from "@pages/popup/Interfaces";
 import {LoadingButton} from "@pages/popup/SharedComponents/LoadingButton";
 import {ErrorMessage} from "@pages/popup/SharedComponents/ErrorMessage";
-import {extractAndSetError} from "@pages/popup/UtilityFunctions";
+import {addOrUpdateAnswers, extractAndSetError} from "@pages/popup/UtilityFunctions";
 import {SuccessMessage} from "@pages/popup/SharedComponents/SuccessMessage";
-import {v4 as uuidv4} from 'uuid';
 import Paths from "@pages/popup/Consts/Paths";
 import {buttonDisabledStyle, buttonStyle} from "@pages/popup/Consts/Styles";
 import {fgLoggingConstants} from "@pages/popup/Consts/FgLoggingConstants";
+import {AnswersContext} from "@pages/popup/Contexts";
+import {Question} from "@pages/popup/model/question/Question";
+import {
+    MultipleChoiceQuestionComponent
+} from "@pages/popup/Components/Authenticated/Questions/QuestionType/MultipleChoiceQuestionComponent";
+import {MultipleChoiceQuestion} from "@pages/popup/model/question/MultipleChoiceQuestion";
+import {
+    TextQuestionComponent
+} from "@pages/popup/Components/Authenticated/Questions/QuestionType/TextQuestionComponent";
+import {TextQuestion} from "@pages/popup/model/question/TextQuestion";
+import {
+    RangeQuestionComponent
+} from "@pages/popup/Components/Authenticated/Questions/QuestionType/RangeQuestionComponent";
+import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
 
 
 export function QuestionnairePage() {
+    const navigate = useNavigate();
     const {questionnaireType} = useParams<string>();
     const taskId = fgLoggingConstants.taskId;
-    const [iQuestions, setIQuestions] = useState<IQuestion[]>([]);
+
+    const [questions, setQuestions] = useState<Question[]>([]);
+    const [answers, setAnswers] = useState<IQuestionAnswer[]>([]);
+
     const [isValidating, setIsValidating] = useState<boolean>(false);
     const [isNextDisabled, setIsNextDisabled] = useState<boolean>(true);
-    const [error, setError] = useState<string>("");
-    const [answers, setAnswers] = useState<IQuestionAnswer[]>([]);
-    const [isSuccess, setIsSuccess] = useState<boolean>(false);
-    const navigate = useNavigate();
 
-    useEffect(function fetchQuestions() {
+    const [error, setError] = useState<string>("");
+    const [isSuccess, setIsSuccess] = useState<boolean>(false);
+
+
+    useEffect(function fetchQuestionsThenSetInitialAnswers() {
         dataBase.getQuestionnaire(taskId, questionnaireType)
-            .then((questions) => setIQuestions(questions))
-            .catch((error) => extractAndSetError(error, setError))
+            .then((questions) => {
+                setQuestions(questions);
+                setInitialAnswers(questions);
+            })
+            .catch((error) => extractAndSetError(error, setError));
+
+        function setInitialAnswers(questions: Question[]) {
+            questions?.forEach(question => {
+                if (question instanceof TextQuestion) {
+                    updateAnswers(question.questionId, "");
+                } else if (question instanceof MultipleChoiceQuestion) {
+                    updateAnswers(question.questionId, question.choices[0]);
+                } else if (question instanceof RangeQuestion) {
+                    updateAnswers(question.questionId, '0');
+                }
+            })
+
+        }
+
     }, [taskId])
     useEffect(function isNextButtonDisabled() {
         dataBase.isQuestionnaireSubmitted(taskId, questionnaireType)
@@ -37,7 +70,6 @@ export function QuestionnairePage() {
 
     function mapIQuestionAnswerToIAnswer(iQuestionAnswer: IQuestionAnswer, studyId: string, userId: string): IAnswer {
         return {
-            answerId: uuidv4(),
             questionId: iQuestionAnswer.questionId,
             taskId: taskId,
             answer: iQuestionAnswer.answer,
@@ -54,14 +86,16 @@ export function QuestionnairePage() {
         const studyId = fgLoggingConstants.studyId;
         const userId = fgLoggingConstants.userId;
         const iAnswers = answers.map(answer => mapIQuestionAnswerToIAnswer(answer, studyId, userId));
-
         dataBase.submitQuestionnaire(taskId, iAnswers, questionnaireType)
             .then(() => dataBase.setQuestionnaireSubmitted(taskId, questionnaireType))
             .then(() => handlePostSubmit())
             .catch((error) => extractAndSetError(error, setError))
             .finally(() => setIsValidating(false));
 
-
+        function handlePostSubmit() {
+            setIsSuccess(true);
+            setIsNextDisabled(false);
+        }
     }
 
     function handleBack() {
@@ -85,41 +119,63 @@ export function QuestionnairePage() {
 
     }
 
-    function handlePostSubmit() {
-        setIsSuccess(true);
-        setIsNextDisabled(false);
-    }
-
     function getTitle(questionnaireType: string | undefined) {
         return questionnaireType === 'pre' ? <h1>Pre Questionnaire</h1> : <h1>Post Questionnaire</h1>;
     }
 
+    function getQuestionFromParent(question: Question | undefined, index: number) {
+        switch (question?.type) {
+            case "MultipleChoiceQuestion":
+                return <MultipleChoiceQuestionComponent question={question as MultipleChoiceQuestion}
+                                                        index={index}
+                                                        isValidating={isValidating}/>;
+            case "TextQuestion":
+                return <TextQuestionComponent question={question as TextQuestion}
+                                              index={index}
+                                              isValidating={isValidating}/>;
+            case "RangeQuestion":
+                return <RangeQuestionComponent question={question as RangeQuestion}
+                                               index={index}
+                                               isValidating={isValidating}/>;
+            default:
+                return <TextQuestionComponent question={new TextQuestion("-1", "Error", -1)}
+                                              index={-1}
+                                              isValidating={isValidating}/>;
+
+        }
+    }
+
     function getQuestions() {
-        return iQuestions.map((iQuestion, index) =>
+        return questions?.map((iQuestion, index) =>
             <div key={iQuestion.questionId} className={"p-2 text-left"}>
-                <QuestionComponent
-                    index={index}
-                    iQuestion={iQuestion}
-                    setAnswers={setAnswers}
-                    isValidating={isValidating}/>
-            </div>);
+                {getQuestionFromParent(iQuestion, index)}
+            </div>
+        );
+    }
+
+    function updateAnswers(questionId: string, value: string) {
+        setAnswers(prev => addOrUpdateAnswers(prev, {questionId: questionId, answer: value}))
     }
 
     return (
         <>
-            {getTitle(questionnaireType)}
-            <LoadingButton text={"back"} loadingText={"Loading..."} isLoading={isValidating} onClick={handleBack}/>
-            <button className={isNextDisabled ? buttonDisabledStyle : buttonStyle}
-                    onClick={handleNext}
-                    disabled={isNextDisabled}>
-                Next
-            </button>
-            {getQuestions()}
-            <LoadingButton text={"Submit"} loadingText={"Loading..."} isLoading={isValidating}
-                           onClick={handleSubmit}/>
+            <AnswersContext.Provider value={{answers, updateAnswers}}>
+                {getTitle(questionnaireType)}
+                <LoadingButton text={"back"} loadingText={"Loading..."} isLoading={isValidating} onClick={handleBack}/>
+                <button className={isNextDisabled ? buttonDisabledStyle : buttonStyle}
+                        onClick={handleNext}
+                        disabled={isNextDisabled}>
+                    Next
+                </button>
+                {getQuestions()}
+                <LoadingButton text={"Submit"} loadingText={"Loading..."} isLoading={isValidating}
+                               onClick={handleSubmit}/>
 
-            <ErrorMessage error={error}/>
-            <SuccessMessage isSuccess={isSuccess}/>
+                <ErrorMessage error={error}/>
+                <SuccessMessage isSuccess={isSuccess}/>
+            </AnswersContext.Provider>
         </>
     );
 }
+
+

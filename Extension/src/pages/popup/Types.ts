@@ -2,6 +2,7 @@ import {TextQuestion} from "@pages/popup/model/question/TextQuestion";
 import {MultipleChoiceQuestion} from "@pages/popup/model/question/MultipleChoiceQuestion";
 import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
 import browser from "webextension-polyfill";
+import {IQuestionAnswer} from "@pages/popup/Interfaces";
 
 export type QuestionTypeAsString = "TextQuestion" | "MultipleChoiceQuestion" | "RangeQuestion";
 export type QuestionType = TextQuestion | MultipleChoiceQuestion | RangeQuestion;
@@ -57,3 +58,8 @@ export type UserExtensionAction =
     | "SUBMITTED:DEMOGRAPHICS"
     | "STOPPED:LOGGING"
     | "STARTED:LOGGING";
+
+export type AnswersContextType = {
+    answers: IQuestionAnswer[],
+    updateAnswers: (questionId: string, value: string) => void;
+}

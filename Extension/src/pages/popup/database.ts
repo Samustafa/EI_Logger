@@ -21,6 +21,7 @@ import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
 import {ExtensionState, QuestionnaireType, UserExtensionAction} from "@pages/popup/Types";
 import {getUTCDateTime} from "@pages/popup/UtilityFunctions";
 import {fgLoggingConstants} from "@pages/popup/Consts/FgLoggingConstants";
+import {Question} from "@pages/popup/model/question/Question";
 
 
 class DataBase extends Dexie {
@@ -41,7 +42,7 @@ class DataBase extends Dexie {
 
     constructor() {
         super('DataBase');
-        this.version(8).stores({
+        this.version(1).stores({
             user: 'id, userId',
             study: 'studyId',
             task: 'taskId, text, iPreQuestions, iPostQuestions, isPreQuestionsSubmitted, isPostQuestionsSubmitted',
@@ -49,7 +50,7 @@ class DataBase extends Dexie {
             rangeQuestion: 'questionId, questionText, type, range',
             textQuestion: 'questionId, questionText, type, maxCharacters',
             demographics: 'id, birthDate, job, sex',
-            answers: 'answerId, userId, studyId, taskId, questionId, answer',
+            answers: 'questionId, userId, studyId, taskId, answer',
             tabs: '++id, tabId, action, timeStamp, userId, studyId, taskId, groupId, tabIndex, windowId, title, url',
             userExtensionInteraction: '++id, action, timeStamp, userId, studyId, taskId',
             currentTaskId: 'id, taskId',
@@ -107,7 +108,7 @@ class DataBase extends Dexie {
         }
     }
 
-    async getQuestionnaire(taskId: string, questionnaireType: string | undefined) {
+    async getQuestionnaireInterfaces(taskId: string, questionnaireType: string | undefined) {
         const isQuestionnaireTypeLegal = questionnaireType === 'pre' || questionnaireType === 'post';
         if (!isQuestionnaireTypeLegal) throw new Error("questionnaireType is not legal");
 
@@ -118,6 +119,17 @@ class DataBase extends Dexie {
                 else questions = iTask?.iPostQuestions ?? []
             });
         return questions;
+    }
+
+    async getQuestionnaire(taskId: string, questionnaireType: string | undefined) {
+        const iQuestionnaire = await this.getQuestionnaireInterfaces(taskId, questionnaireType);
+
+        const questionnaire: Question[] = [];
+        for (const iQuestion of iQuestionnaire) {
+            const question = await this.getQuestionUsingInterface(iQuestion);
+            questionnaire.push(question);
+        }
+        return questionnaire;
     }
 
     async setDemographics(demographics: IDemographics) {

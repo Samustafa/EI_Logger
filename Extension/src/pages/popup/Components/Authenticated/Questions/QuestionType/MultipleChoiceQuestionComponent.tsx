@@ -1,23 +1,24 @@
 import {MultipleChoiceQuestion} from "@pages/popup/model/question/MultipleChoiceQuestion";
 import {FormControl, FormControlLabel, FormLabel, Radio, RadioGroup} from "@mui/material";
-import {ChangeEvent, Dispatch, SetStateAction, useState} from "react";
-import {IQuestionAnswer} from "@pages/popup/Interfaces";
-import {addOrUpdateAnswers} from "@pages/popup/UtilityFunctions";
+import {ChangeEvent, useState} from "react";
+import {useAnswersContext} from "@pages/popup/Contexts";
 
 interface Props {
     question: MultipleChoiceQuestion;
     index: number;
-    setAnswers: Dispatch<SetStateAction<IQuestionAnswer[]>>;
     isValidating: boolean;
 }
 
-export function MultipleChoiceQuestionComponent({question, index, setAnswers, isValidating}: Props) {
+export function MultipleChoiceQuestionComponent({question, index, isValidating}: Props) {
     const [value, setValue] = useState(question.choices[0]);
+    const {updateAnswers} = useAnswersContext();
+
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const answer = (event.target as HTMLInputElement).value;
         setValue(answer);
-        setAnswers((prev) => addOrUpdateAnswers(prev, {questionId: question.questionId, answer: answer}));
+        updateAnswers(question.questionId, answer);
     };
+    console.log("MultipleChoiceQuestionComponent", question);
 
 
     return <>

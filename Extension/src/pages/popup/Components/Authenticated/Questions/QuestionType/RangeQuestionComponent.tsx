@@ -1,14 +1,12 @@
 import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
 import {Slider} from "@mui/material";
-import {Dispatch, SetStateAction, useState} from "react";
-import {IQuestionAnswer} from "@pages/popup/Interfaces";
-import {addOrUpdateAnswers} from "@pages/popup/UtilityFunctions";
+import {useState} from "react";
+import {useAnswersContext} from "@pages/popup/Contexts";
 
 
 interface Props {
     question: RangeQuestion;
     index: number;
-    setAnswers: Dispatch<SetStateAction<IQuestionAnswer[]>>;
     isValidating: boolean;
 }
 
@@ -18,10 +16,11 @@ interface Mark {
 }
 
 
-export function RangeQuestionComponent({question, index, setAnswers, isValidating}: Props) {
+export function RangeQuestionComponent({question, index, isValidating}: Props) {
     const max = question.range;
     const [value, setValue] = useState<number>(0);
 
+    const {updateAnswers} = useAnswersContext();
 
     function getMarks(max: number): Mark[] {
         const arrayWithNumbers = Array.from(Array(max).keys());
@@ -30,7 +29,7 @@ export function RangeQuestionComponent({question, index, setAnswers, isValidatin
 
     function handleChange(value: number | number[]) {
         setValue(value as number);
-        setAnswers((prev) => addOrUpdateAnswers(prev, {questionId: question.questionId, answer: `${value}`}));
+        updateAnswers(question.questionId, `${value}`);
     }
 
     return <>
