@@ -19,6 +19,7 @@ export interface IStudy {
 export interface ITask {
     taskId: string;
     text: string;
+    isCompleted: boolean;
     isPreQuestionsSubmitted: boolean;
     isPostQuestionsSubmitted: boolean;
     iPreQuestions: IQuestion[];

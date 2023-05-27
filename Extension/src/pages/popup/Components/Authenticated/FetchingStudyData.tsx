@@ -60,6 +60,7 @@ export function FetchingStudyData() {
             const tasks = studyData.tasks.map((task: Task): ITask => ({
                 taskId: task.taskId,
                 text: task.text,
+                isCompleted: false,
                 isPreQuestionsSubmitted: false,
                 isPostQuestionsSubmitted: false,
                 iPreQuestions: task.getIPreQuestions(),
