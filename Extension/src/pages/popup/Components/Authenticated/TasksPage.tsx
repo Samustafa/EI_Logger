@@ -77,18 +77,10 @@ export function Tasks({iTasks}: Props) {
         (shouldGoToPreQuestionnaire) ? goToPreQuestionnaire() : goToLogger();
 
         function computeShouldGoToPreQuestionnaire(taskId: string) {
-            const defaultITask: ITask = {
-                taskId: "",
-                text: "",
-                isPreQuestionsSubmitted: false,
-                isPostQuestionsSubmitted: false,
-                iPreQuestions: [],
-                iPostQuestions: []
-            }
-            const iTask = iTasks.find((task) => task.taskId === taskId) ?? defaultITask;
+            const iTask = iTasks.find((task) => task.taskId === taskId);
 
-            const hasPreQuestionnaire = iTask.iPreQuestions.length > 0;
-            const isPreQuestionsSubmitted = iTask.isPreQuestionsSubmitted;
+            const hasPreQuestionnaire = (iTask?.iPreQuestions?.length ?? 0) > 0;
+            const isPreQuestionsSubmitted = iTask?.isPreQuestionsSubmitted;
 
             return hasPreQuestionnaire && !isPreQuestionsSubmitted;
         }
@@ -106,10 +98,10 @@ export function Tasks({iTasks}: Props) {
 
     return (
         <>
-
             <List component="nav" aria-label="main mailbox folders">
                 {iTasks.map((iTask: ITask) =>
-                    (<ListItemButton key={iTask.taskId} onClick={() => handleListItemClick(iTask.taskId)}>
+                    (<ListItemButton key={iTask.taskId} disabled={iTask.isCompleted}
+                                     onClick={() => handleListItemClick(iTask.taskId)}>
                         <ListItemText primary={iTask.text}/><RightArrowIcon/>
                     </ListItemButton>))}
             </List>

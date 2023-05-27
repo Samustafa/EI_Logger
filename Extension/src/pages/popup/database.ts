@@ -240,6 +240,10 @@ class DataBase extends Dexie {
         const demographics = await this.demographics.toArray()
         return demographics[0] ?? deFaultDemographics;
     }
+
+    setTaskCompleted(taskId: string) {
+        this.task.update(taskId, {isCompleted: true});
+    }
 }
 
 export const dataBase = new DataBase();

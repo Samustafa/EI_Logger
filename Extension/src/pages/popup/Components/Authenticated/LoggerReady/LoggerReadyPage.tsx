@@ -23,15 +23,21 @@ export function LoggerReadyPage() {
     }, [])
 
     function handleFinishedTask() {
+        dataBase.setTaskCompleted(fgLoggingConstants.taskId);
+
         dataBase.doesTaskHasQuestionnaire(fgLoggingConstants.taskId, 'post')
             .then((hasPostQuestionnaire) => changeStateAndNavigate(hasPostQuestionnaire))
             .catch((error) => extractAndSetError(error, setError));
 
         function changeStateAndNavigate(hasPostQuestionnaire: boolean) {
-            if (hasPostQuestionnaire) {
+            (hasPostQuestionnaire) ? goToPostQuestionnairePage() : goToTasksPage();
+
+            function goToPostQuestionnairePage() {
                 dataBase.setExtensionState('POST_QUESTIONNAIRE');
                 navigate(Paths.questionnairePage('post'));
-            } else {
+            }
+
+            function goToTasksPage() {
                 dataBase.setExtensionState('TASKS_PAGE');
                 navigate(Paths.tasksPage);
             }
