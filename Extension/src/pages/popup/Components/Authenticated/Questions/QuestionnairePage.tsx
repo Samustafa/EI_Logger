@@ -11,18 +11,18 @@ import {buttonDisabledStyle, buttonStyle} from "@pages/popup/Consts/Styles";
 import {fgLoggingConstants} from "@pages/popup/Consts/FgLoggingConstants";
 import {AnswersContext} from "@pages/popup/Contexts";
 import {Question} from "@pages/popup/model/question/Question";
+import {MultipleChoiceQuestion} from "@pages/popup/model/question/MultipleChoiceQuestion";
+import {TextQuestion} from "@pages/popup/model/question/TextQuestion";
+import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
 import {
     MultipleChoiceQuestionComponent
 } from "@pages/popup/Components/Authenticated/Questions/QuestionType/MultipleChoiceQuestionComponent";
-import {MultipleChoiceQuestion} from "@pages/popup/model/question/MultipleChoiceQuestion";
 import {
     TextQuestionComponent
 } from "@pages/popup/Components/Authenticated/Questions/QuestionType/TextQuestionComponent";
-import {TextQuestion} from "@pages/popup/model/question/TextQuestion";
 import {
     RangeQuestionComponent
 } from "@pages/popup/Components/Authenticated/Questions/QuestionType/RangeQuestionComponent";
-import {RangeQuestion} from "@pages/popup/model/question/RangeQuestion";
 
 
 export function QuestionnairePage() {

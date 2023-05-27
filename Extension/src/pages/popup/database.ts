@@ -158,7 +158,7 @@ class DataBase extends Dexie {
         return ids[0]?.taskId;
     }
 
-    setCurrentTaskId(taskId: string) {
+    async setCurrentTaskId(taskId: string) {
         const iCurrentTaskId: ICurrentTaskId = {id: 0, taskId: taskId};
         dataBase.currentTaskId.put(iCurrentTaskId);
     }

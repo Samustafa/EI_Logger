@@ -69,28 +69,36 @@ interface Props {
 export function Tasks({iTasks}: Props) {
     const navigate = useNavigate();
 
-    function doesTaskHasPreQuestionnaire(taskId: string) {
-        const defaultITask: ITask = {
-            taskId: "",
-            text: "",
-            isPreQuestionsSubmitted: false,
-            isPostQuestionsSubmitted: false,
-            iPreQuestions: [],
-            iPostQuestions: []
-        }
-        const iTask = iTasks.find((task) => task.taskId === taskId) ?? defaultITask;
-        return iTask.iPreQuestions.length > 0;
-    }
-
-    function handleListItemClick(taskId: string) {
+    async function handleListItemClick(taskId: string) {
         fgLoggingConstants.taskId = taskId;
-        dataBase.setCurrentTaskId(taskId);
+        await dataBase.setCurrentTaskId(taskId);
 
-        const hasPreQuestionnaire = doesTaskHasPreQuestionnaire(taskId);
-        if (hasPreQuestionnaire) {
+        const shouldGoToPreQuestionnaire = computeShouldGoToPreQuestionnaire(taskId);
+        (shouldGoToPreQuestionnaire) ? goToPreQuestionnaire() : goToLogger();
+
+        function computeShouldGoToPreQuestionnaire(taskId: string) {
+            const defaultITask: ITask = {
+                taskId: "",
+                text: "",
+                isPreQuestionsSubmitted: false,
+                isPostQuestionsSubmitted: false,
+                iPreQuestions: [],
+                iPostQuestions: []
+            }
+            const iTask = iTasks.find((task) => task.taskId === taskId) ?? defaultITask;
+
+            const hasPreQuestionnaire = iTask.iPreQuestions.length > 0;
+            const isPreQuestionsSubmitted = iTask.isPreQuestionsSubmitted;
+
+            return hasPreQuestionnaire && !isPreQuestionsSubmitted;
+        }
+
+        function goToPreQuestionnaire() {
             dataBase.setExtensionState('PRE_QUESTIONNAIRE');
             navigate(Paths.questionnairePage('pre'));
-        } else {
+        }
+
+        function goToLogger() {
             dataBase.setExtensionState('LOGGER_READY');
             navigate(Paths.loggerPage);
         }
