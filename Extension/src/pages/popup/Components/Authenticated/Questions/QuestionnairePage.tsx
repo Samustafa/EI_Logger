@@ -146,11 +146,14 @@ export function QuestionnairePage() {
     }
 
     function getQuestions() {
-        return questions?.map((iQuestion, index) =>
-            <div key={iQuestion.questionId} className={"p-2 text-left"}>
-                {getQuestionFromParent(iQuestion, index)}
-            </div>
-        );
+        return <>
+            <AnswersContext.Provider value={{answers, updateAnswers}}>
+                {questions?.map((iQuestion, index) =>
+                    <div key={iQuestion.questionId} className={"p-2 text-left"}>
+                        {getQuestionFromParent(iQuestion, index)}
+                    </div>)}
+            </AnswersContext.Provider>
+        </>
     }
 
     function updateAnswers(questionId: string, value: string) {
@@ -159,23 +162,22 @@ export function QuestionnairePage() {
 
     return (
         <>
-            <AnswersContext.Provider value={{answers, updateAnswers}}>
-                {getTitle(questionnaireType)}
-                <LoadingButton text={"back"} loadingText={"Loading..."} isLoading={isValidating} onClick={handleBack}/>
-                <button className={isNextDisabled ? buttonDisabledStyle : buttonStyle}
-                        onClick={handleNext}
-                        disabled={isNextDisabled}>
-                    Next
-                </button>
-                {getQuestions()}
-                <LoadingButton text={"Submit"} loadingText={"Loading..."} isLoading={isValidating}
-                               onClick={handleSubmit}/>
+            {getTitle(questionnaireType)}
+            <LoadingButton text={"back"} loadingText={"Loading..."} isLoading={isValidating} onClick={handleBack}/>
+            <button className={isNextDisabled ? buttonDisabledStyle : buttonStyle}
+                    onClick={handleNext}
+                    disabled={isNextDisabled}>
+                Next
+            </button>
+            {getQuestions()}
+            <LoadingButton text={"Submit"} loadingText={"Loading..."} isLoading={isValidating}
+                           onClick={handleSubmit}/>
 
-                <ErrorMessage error={error}/>
-                <SuccessMessage isSuccess={isSuccess}/>
-            </AnswersContext.Provider>
+            <ErrorMessage error={error}/>
+            <SuccessMessage isSuccess={isSuccess}/>
         </>
-    );
+    )
+        ;
 }
 
 
