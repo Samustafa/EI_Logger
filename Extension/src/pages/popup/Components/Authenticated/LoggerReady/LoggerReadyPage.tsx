@@ -50,20 +50,8 @@ export function LoggerReadyPage() {
     }
 
     function handleBackButton() {
-        dataBase.doesTaskHasQuestionnaire(fgLoggingConstants.taskId, 'pre')
-            .then((hasPreQuestionnaire) => changeStateAndNavigate(hasPreQuestionnaire))
-            .catch((error) => extractAndSetError(error, setError));
-
-        function changeStateAndNavigate(hasPreQuestionnaire: boolean) {
-            if (hasPreQuestionnaire) {
-                dataBase.setExtensionState('PRE_QUESTIONNAIRE');
-                navigate(Paths.questionnairePage('pre'));
-            } else {
-                dataBase.setExtensionState('TASKS_PAGE');
-                navigate(Paths.tasksPage);
-            }
-        }
-
+        dataBase.setExtensionState('TASKS_PAGE');
+        navigate(Paths.tasksPage);
     }
 
     return (
