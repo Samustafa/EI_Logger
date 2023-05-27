@@ -190,11 +190,9 @@ class DataBase extends Dexie {
     }
 
     async getLoggingConstants() {
-        const userId = await this.getUserId();
-        const studyId = await this.getStudyId();
+        const userId = await this.getUserId() ?? "";
+        const studyId = await this.getStudyId() ?? "";
         const taskId = await this.getCurrentTaskId() ?? "";
-
-        if (userId === undefined || studyId === undefined) throw new Error('User or study id is undefined');
         return {userId: userId, studyId: studyId, taskId: taskId};
     }
 
