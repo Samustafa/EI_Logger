@@ -9,13 +9,18 @@ import Paths from "@pages/popup/Consts/Paths";
 import {connectToPort, extractAndSetError} from "@pages/popup/UtilityFunctions";
 import {Port} from "@pages/popup/Types";
 import {ErrorMessage} from "@pages/popup/SharedComponents/ErrorMessage";
+import WarningDialog from "@pages/popup/SharedComponents/WarningDialog";
 
 export function LoggerReadyPage() {
     const location = useLocation();
+    const navigate = useNavigate();
+
     const [logging, setLogging] = useState<boolean>(location.state as boolean);
     const [port, setPort] = useState<Port | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const navigate = useNavigate();
+    const [openWarningDialog, setOpenWarningDialog] = useState<boolean>(false);
+
+    const warningText = "Are you sure you want to finish the task?\n Once finished you won't be able to log anymore";
 
     useEffect(function connectPort() {
         const port = connectToPort("loggingPort");
@@ -42,7 +47,6 @@ export function LoggerReadyPage() {
                 navigate(Paths.tasksPage);
             }
         }
-
     }
 
     function handleBackButton() {
@@ -74,11 +78,13 @@ export function LoggerReadyPage() {
                 </button>
                 <button className={logging ? buttonDisabledStyle : buttonStyle}
                         disabled={logging}
-                        onClick={() => handleFinishedTask()}>
+                        onClick={() => setOpenWarningDialog(true)}>
                     Finished Task
                 </button>
                 <ErrorMessage error={error}/>
             </div>
+            <WarningDialog warningText={warningText} open={openWarningDialog} setOpen={setOpenWarningDialog}
+                           acceptFunction={handleFinishedTask}/>
         </div>
     );
 }
