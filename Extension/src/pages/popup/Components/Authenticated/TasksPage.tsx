@@ -69,9 +69,14 @@ interface Props {
 export function Tasks({iTasks}: Props) {
     const navigate = useNavigate();
 
-    async function handleListItemClick(taskId: string) {
+    async function handleListItemClick(taskId: string, index: number) {
         fgLoggingConstants.taskId = taskId;
         await dataBase.setCurrentTaskId(taskId);
+
+        if (!iTasks[index].isStarted) {
+            dataBase.setTaskStarted(taskId);
+            dataBase.logUserExtensionInteraction("STARTED:TASK");
+        }
 
         const shouldGoToPreQuestionnaire = computeShouldGoToPreQuestionnaire(taskId);
         (shouldGoToPreQuestionnaire) ? goToPreQuestionnaire() : goToLogger();
@@ -99,9 +104,9 @@ export function Tasks({iTasks}: Props) {
     return (
         <>
             <List component="nav" aria-label="main mailbox folders">
-                {iTasks.map((iTask: ITask) =>
+                {iTasks.map((iTask: ITask, index) =>
                     (<ListItemButton key={iTask.taskId} disabled={iTask.isCompleted}
-                                     onClick={() => handleListItemClick(iTask.taskId)}>
+                                     onClick={() => handleListItemClick(iTask.taskId, index)}>
                         <ListItemText primary={iTask.text}/><RightArrowIcon/>
                     </ListItemButton>))}
             </List>

@@ -9,7 +9,6 @@ import {SuccessMessage} from "@pages/popup/SharedComponents/SuccessMessage";
 import Paths from "@pages/popup/Consts/Paths";
 import {buttonDisabledStyle, buttonStyle} from "@pages/popup/Consts/Styles";
 import {fgLoggingConstants} from "@pages/popup/Consts/FgLoggingConstants";
-import {AnswersContext} from "@pages/popup/Contexts";
 import {Question} from "@pages/popup/model/question/Question";
 import {MultipleChoiceQuestion} from "@pages/popup/model/question/MultipleChoiceQuestion";
 import {TextQuestion} from "@pages/popup/model/question/TextQuestion";
@@ -23,6 +22,7 @@ import {
 import {
     RangeQuestionComponent
 } from "@pages/popup/Components/Authenticated/Questions/QuestionType/RangeQuestionComponent";
+import {AnswersContext} from "@pages/popup/Contexts";
 
 
 export function QuestionnairePage() {
@@ -104,10 +104,16 @@ export function QuestionnairePage() {
     }
 
     function handleNext() {
-        if (questionnaireType === 'pre') {
+
+        (questionnaireType === 'pre') ? goToLoggerPage() : goToTasksPage();
+
+        function goToLoggerPage() {
             dataBase.setExtensionState('LOGGER_READY');
             navigate(Paths.loggerPage);
-        } else {
+        }
+
+        function goToTasksPage() {
+            dataBase.logUserExtensionInteraction("FINISHED:TASK");
             dataBase.setExtensionState('TASKS_PAGE');
             navigate(Paths.tasksPage);
         }

@@ -45,7 +45,7 @@ class DataBase extends Dexie {
         this.version(1).stores({
             user: 'id, userId',
             study: 'studyId',
-            task: 'taskId, text, iPreQuestions, iPostQuestions, isCompleted, isPreQuestionsSubmitted, isPostQuestionsSubmitted',
+            task: 'taskId, text, iPreQuestions, iPostQuestions, isStarted, isCompleted, isPreQuestionsSubmitted, isPostQuestionsSubmitted',
             multipleChoiceQuestion: 'questionId, questionText, type, choices',
             rangeQuestion: 'questionId, questionText, type, range',
             textQuestion: 'questionId, questionText, type, maxCharacters',
@@ -234,6 +234,10 @@ class DataBase extends Dexie {
 
     setTaskCompleted(taskId: string) {
         this.task.update(taskId, {isCompleted: true});
+    }
+
+    setTaskStarted(taskId: string) {
+        this.task.update(taskId, {isStarted: true});
     }
 }
 

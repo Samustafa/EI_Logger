@@ -57,7 +57,9 @@ export type UserExtensionAction =
     | "OPENED:DEMOGRAPHICS"
     | "SUBMITTED:DEMOGRAPHICS"
     | "STOPPED:LOGGING"
-    | "STARTED:LOGGING";
+    | "STARTED:LOGGING"
+    | "STARTED:TASK"
+    | "FINISHED:TASK";
 
 export type AnswersContextType = {
     answers: IQuestionAnswer[],

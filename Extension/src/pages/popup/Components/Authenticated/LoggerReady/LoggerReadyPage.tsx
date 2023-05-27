@@ -44,6 +44,7 @@ export function LoggerReadyPage() {
 
             function goToTasksPage() {
                 dataBase.setExtensionState('TASKS_PAGE');
+                dataBase.logUserExtensionInteraction('FINISHED:TASK')
                 navigate(Paths.tasksPage);
             }
         }
