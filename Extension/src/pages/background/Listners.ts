@@ -12,13 +12,17 @@ import {
     handleTabUpdated,
     setBadgeText
 } from "@pages/background/Handlers";
-import {LoggingConstantsMessage, LoggingMessage, MessageType, Port, PortName} from "@pages/popup/Types";
+import {LoggingConstantsMessage, LoggingMessage, MessageType, Port, PortNameBG} from "@pages/popup/Types";
 import {bgLoggingConstants} from "@pages/background/BGLoggingConstants";
 
 
 //--------------- Communication functions ---------------//
+/**
+ * accept connections to background ports
+ * @param port
+ */
 function connectBGPort(port: Port) {
-    const portName = port.name as PortName;
+    const portName = port.name as PortNameBG;
     console.log(`service worker connected to port ${portName}`);
 
     switch (portName) {
