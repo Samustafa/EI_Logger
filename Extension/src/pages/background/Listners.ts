@@ -17,7 +17,7 @@ import {bgLoggingConstants} from "@pages/background/BGLoggingConstants";
 
 
 //--------------- Communication functions ---------------//
-function connectPort(port: Port) {
+function connectBGPort(port: Port) {
     const portName = port.name as PortName;
     console.log(`service worker connected to port ${portName}`);
 
@@ -61,10 +61,12 @@ function loggingConstantsMR(message: MessageType) {
 
 //--------------- end Communication functions ---------------//
 
-
-export function startListening() {
+/**
+ * start listening to events in back ground
+ */
+export function startListeningBG() {
     browser.runtime.onInstalled.addListener(() => handleOnInstalled());
-    browser.runtime.onConnect.addListener(connectPort);
+    browser.runtime.onConnect.addListener(connectBGPort);
 }
 
 function activateAllListens() {
