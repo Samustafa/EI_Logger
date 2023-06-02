@@ -69,13 +69,13 @@ export function startListening() {
 
 function activateAllListens() {
     listenOnCompleted();
-    listenTabActivated();
-    listenTabRemoved();
-    listenTabUpdated();
-    listenBookmarkCreated();
-    listenBookmarkRemoved();
-    listenTabAttached();
-    listenTabDetached();
+    // listenTabActivated();
+    // listenTabRemoved();
+    // listenTabUpdated();
+    // listenBookmarkCreated();
+    // listenBookmarkRemoved();
+    // listenTabAttached();
+    // listenTabDetached();
 
 }
 
